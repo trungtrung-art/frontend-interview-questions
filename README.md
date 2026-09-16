@@ -31,6 +31,16 @@ Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend v�
 
 **Tổng cộng: ~255 câu hỏi**
 
+### Giáo án lý thuyết
+
+| # | File | Nội Dung |
+|---|------|----------|
+| 00 | [ly-thuyet/01-giao-an-4-ngay-phong-van-frontend.md](./ly-thuyet/01-giao-an-4-ngay-phong-van-frontend.md) | Mục lục giáo án lý thuyết theo chủ đề |
+| 01 | [ly-thuyet/01-javascript-tong-quan.md](./ly-thuyet/01-javascript-tong-quan.md) | Kiến thức tổng quan JavaScript |
+| 02 | [ly-thuyet/02-reactjs-tong-quan.md](./ly-thuyet/02-reactjs-tong-quan.md) | Kiến thức tổng quan ReactJS |
+| 03 | [ly-thuyet/03-state-management-context-redux.md](./ly-thuyet/03-state-management-context-redux.md) | Context, Redux và Global State |
+| 04 | [ly-thuyet/04-phu-luc-cau-hoi.md](./ly-thuyet/04-phu-luc-cau-hoi.md) | Phụ lục câu hỏi: Security, UI/UX, JS Senior, System Design, Testing, Behavioral |
+
 ---
 
 ## 🎯 Hướng Dẫn Sử Dụng
