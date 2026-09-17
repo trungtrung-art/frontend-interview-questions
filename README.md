@@ -7,6 +7,8 @@
 
 Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend với đầy đủ đáp án và giải thích chi tiết, được thiết kế cho các vị trí từ Junior đến Senior/Lead.
 
+> **Bắt đầu từ đây:** [PLAYBOOK.md](./PLAYBOOK.md) — lộ trình ôn theo quỹ thời gian còn lại, bản đồ chủ đề trỏ thẳng tới 133 câu trong giáo án, khung trả lời cho 6 dạng câu hỏi, 18 bẫy hay trượt, và checklist ngày phỏng vấn.
+
 ### Đặc điểm:
 - ✅ Câu hỏi trắc nghiệm với 4 lựa chọn
 - ✅ Đáp án chi tiết với giải thích
@@ -28,6 +30,7 @@ Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend v�
 | 06 | [06-typescript-questions.md](./06-typescript-questions.md) | Types, generics, React + TS | 35 |
 | 07 | [07-html-css-advanced.md](./07-html-css-advanced.md) | Accessibility, Flexbox, Grid, Modern CSS | 35 |
 | 08 | [08-testing-best-practices.md](./08-testing-best-practices.md) | Testing strategies, React Testing Library | 35 |
+| 09 | [09-algorithms.md](./09-algorithms.md) | Bảng tra cứu 49 thuật toán theo 10 nhóm | — |
 
 **Tổng cộng: ~255 câu hỏi**
 

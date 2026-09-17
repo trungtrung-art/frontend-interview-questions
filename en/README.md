@@ -28,6 +28,7 @@ This documentation collection contains **200+ frontend interview questions** wit
 | 06 | [06-typescript-questions.md](./06-typescript-questions.md) | Types, generics, React + TS | 35 |
 | 07 | [07-html-css-advanced.md](./07-html-css-advanced.md) | Accessibility, Flexbox, Grid, Modern CSS | 35 |
 | 08 | [08-testing-best-practices.md](./08-testing-best-practices.md) | Testing strategies, React Testing Library | 35 |
+| 09 | [09-algorithms.md](./09-algorithms.md) | Reference for 49 algorithms across 10 categories | — |
 
 **Total: ~255 questions**
 
