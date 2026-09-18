@@ -28,7 +28,7 @@ Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend v�
 | 02 | [02-reactjs-questions.md](./02-reactjs-questions.md) | React hooks, patterns, performance | 35 |
 | 03 | [03-performance-optimization.md](./03-performance-optimization.md) | Web Vitals, optimization techniques | 30 |
 | 04 | [04-problem-solving-system-design.md](./04-problem-solving-system-design.md) | System design, architecture patterns | 35 |
-| 05 | [05-behavioral-experience.md](./05-behavioral-experience.md) | Soft skills, STAR method, leadership | 20 |
+| 05 | [05-behavioral-experience.md](./05-behavioral-experience.md) | Soft skills, STAR method, leadership, thang chấm | 20 |
 | 06 | [06-typescript-questions.md](./06-typescript-questions.md) | Types, generics, React + TS | 35 |
 | 07 | [07-html-css-advanced.md](./07-html-css-advanced.md) | Accessibility, Flexbox, Grid, Modern CSS | 35 |
 | 08 | [08-testing-best-practices.md](./08-testing-best-practices.md) | Testing strategies, React Testing Library | 35 |

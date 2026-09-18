@@ -332,6 +332,8 @@ Viết sẵn sáu câu chuyện này ra giấy trước buổi phỏng vấn. M�
 
 Nếu một ô nào chưa có chuyện thật, đừng bịa. Nói thẳng là chưa gặp, rồi kể tình huống gần nhất và nói anh sẽ xử lý thế nào.
 
+Viết xong thì tự chấm bằng [thang chấm ở 05-behavioral-experience.md](./05-behavioral-experience.md#thang-chấm-câu-trả-lời) — thang 5 mức, bốn thứ bắt buộc phải có, và hai câu đào sâu cho từng câu trong số 20 câu behavioral. Dưới mức 3 là chưa đủ cho vị trí Senior.
+
 ---
 
 ## 8. Checklist 24 Giờ Và Ngày Phỏng Vấn
