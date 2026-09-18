@@ -124,8 +124,25 @@ for (const [file, topic, key] of QUIZ_FILES) {
 }
 
 /* --- nhúng vào template --- */
-const jsString = s => JSON.stringify(s).replace(/<\//g, '<\\/');
-const jsRaw = s => s.replace(/<\/script/gi, '<\\/script');
+
+/*
+ * Bên trong một phần tử <script>, bộ phân tích HTML coi `<!--` là tín hiệu vào
+ * trạng thái "script data escaped", rồi `<script` đưa tiếp vào "script data
+ * double escaped" — ở đó `</script>` KHÔNG còn đóng thẻ. Nội dung nhúng của
+ * trang này có đủ cả ba chuỗi (code ví dụ dạy về defer, async và XSS), nên
+ * phải làm chúng vô hại trước khi ghi ra file, nếu không trình duyệt sẽ đổ
+ * phần còn lại của trang ra màn hình dưới dạng văn bản.
+ * tools/check-script-safety.mjs canh chuyện này.
+ */
+
+// Dữ liệu JSON: '<' chỉ có thể nằm trong chuỗi (ký tự cấu trúc của JSON là
+// {}[],: và số), nên thay sạch bằng \u003C là an toàn và giữ nguyên giá trị.
+const jsonSafe = s => s.replace(/</g, '\\u003C');
+const jsString = s => jsonSafe(JSON.stringify(s));
+
+// Mã thư viện là JavaScript thật, còn phép so sánh a < b nên không thay sạch
+// được. Chỉ vô hiệu hoá đúng ba chuỗi trên; \x3C là '<' trong cả chuỗi lẫn regex.
+const jsCode = s => s.replace(/<(?=script|\/script|!--)/gi, '\\x3C');
 
 let html = read('tools', 'app.template.html');
 
@@ -135,12 +152,12 @@ const BANNER = /\n?<!-- CHI-CO-TRONG-TEMPLATE:BAT-DAU[\s\S]*?CHI-CO-TRONG-TEMPLA
 if (!BANNER.test(html)) throw new Error('Template thiếu banner cảnh báo — xem tools/app.template.html');
 html = html.replace(BANNER, '\n');
 const slots = {
-  __LIB_MARKED__: jsRaw(read('tools', 'vendor', 'marked.umd.min.js')),
-  __LIB_HLJS__: jsRaw(read('tools', 'vendor', 'highlight.min.js')),
+  __LIB_MARKED__: jsCode(read('tools', 'vendor', 'marked.umd.min.js')),
+  __LIB_HLJS__: jsCode(read('tools', 'vendor', 'highlight.min.js')),
   __MD_GIAOAN__: jsString(read('ly-thuyet', '01-giao-an-4-ngay-phong-van-frontend.md')),
   __MD_PLAYBOOK__: jsString(read('PLAYBOOK.md')),
   __MD_ALGO__: jsString(read('09-algorithms.md')),
-  __QUIZ_DATA__: jsRaw(JSON.stringify(quiz)),
+  __QUIZ_DATA__: jsonSafe(JSON.stringify(quiz)),
 };
 for (const [slot, value] of Object.entries(slots)) {
   if (!html.includes(slot)) throw new Error(`Template thiếu chỗ cắm ${slot}`);
@@ -150,6 +167,16 @@ for (const [slot, value] of Object.entries(slots)) {
 // chứa định danh dạng __FOO__ hoàn toàn hợp lệ
 const left = Object.keys(slots).filter(s => html.includes(s));
 if (left.length) throw new Error(`Còn chỗ cắm chưa thay: ${left.join(', ')}`);
+
+// Chặn ngay tại đây: một chuỗi lọt lưới là trình duyệt đóng thẻ <script> sai
+// chỗ và đổ nửa file ra màn hình thành chữ. Thà build hỏng còn hơn xuất file hỏng.
+for (const [i, block] of [...html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)].entries()) {
+  const hit = /<\/script|<script|<!--/i.exec(block[1]);
+  if (hit) {
+    const around = block[1].slice(Math.max(0, hit.index - 50), hit.index + 40).replace(/\n/g, '\\n');
+    throw new Error(`Khối script ${i + 1} còn chuỗi đóng thẻ sớm tại vị trí ${hit.index}: …${around}…`);
+  }
+}
 
 mkdirSync(join(ROOT, 'docs'), { recursive: true });
 writeFileSync(join(ROOT, 'docs', 'index.html'), html);

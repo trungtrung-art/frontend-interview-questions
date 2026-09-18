@@ -230,9 +230,16 @@ Dùng nút xuất ở góc phải trên để lưu ra file JSON, và nút nhập
 ### Kiểm thử
 
 ```bash
-npm install jsdom     # chỉ cần một lần
+node tools/check-script-safety.mjs   # không cần cài gì
+
+npm install jsdom                    # chỉ cần một lần
 node tools/e2e.mjs
 ```
+
+`check-script-safety.mjs` soi các chuỗi `<script`, `</script` và `<!--` còn sót trong khối
+`<script>`. Nội dung nhúng có đủ cả ba (code ví dụ dạy về `defer`, `async`, XSS), mà chỉ cần
+một chuỗi lọt là trình duyệt đóng thẻ sai chỗ và đổ nửa file ra màn hình thành chữ.
+`build.mjs` cũng tự chạy phép kiểm này và từ chối ghi file nếu có chuỗi lọt.
 
 Mở trang bằng DOM thật, bấm qua từng chế độ, làm thử một câu trắc nghiệm và viết một ghi chú,
 rồi đối chiếu kết quả trên DOM lẫn trong `localStorage`. Nên chạy sau mỗi lần `node build.mjs`.
@@ -244,7 +251,8 @@ rồi đối chiếu kết quả trên DOM lẫn trong `localStorage`. Nên ch�
 | `build.mjs` | Script sinh trang |
 | `tools/app.template.html` | Khung trang: HTML, CSS, JS |
 | `tools/vendor/` | marked và highlight.js nhúng sẵn |
-| `tools/e2e.mjs` | Kiểm thử trang đã build |
+| `tools/e2e.mjs` | Kiểm thử trang đã build bằng DOM thật |
+| `tools/check-script-safety.mjs` | Soi chuỗi làm đóng thẻ `<script>` sớm |
 | `docs/index.html` | Kết quả, được commit để GitHub Pages phục vụ |
 
 Mã nguồn viết bằng cú pháp ES6+ (arrow function, template literal, destructuring, spread,
