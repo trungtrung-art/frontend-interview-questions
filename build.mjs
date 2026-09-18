@@ -34,7 +34,7 @@ const QUIZ_FILES = [
 // không có lựa chọn A-D nên không dựng thành trắc nghiệm được.
 
 /** Liệt kê heading, bỏ qua mọi thứ nằm trong khối code. */
-function headings(lines) {
+const headings = lines => {
   const out = [];
   let fence = false;
   lines.forEach((l, i) => {
@@ -44,13 +44,13 @@ function headings(lines) {
     if (m) out.push({ i, lv: m[1].length, t: m[2].trim() });
   });
   return out;
-}
+};
 
 /**
  * Bố cục file trắc nghiệm: toàn bộ câu hỏi ở đầu, gom theo "# PHẦN n: ...",
  * rồi tới "# ĐÁP ÁN CHI TIẾT" chứa mọi đáp án dạng "### Câu n: Đáp án X".
  */
-function parseQuiz(md, topic, key) {
+const parseQuiz = (md, topic, key) => {
   const lines = md.split('\n');
   const H = headings(lines);
   const sp = H.find(h => h.lv === 1 && /ĐÁP\s*ÁN/i.test(h.t));
@@ -93,7 +93,7 @@ function parseQuiz(md, topic, key) {
       const opts = marks.map((m, j) => {
         const to = j + 1 < marks.length ? marks[j + 1].i : body.length;
         const rest = body.slice(m.i + 1, to).join('\n').replace(/\n*-{3,}\s*$/, '').trim();
-        return { k: m.k, t: (m.head + (rest ? '\n' + rest : '')).trim() };
+        return { k: m.k, t: `${m.head}${rest ? `\n${rest}` : ''}`.trim() };
       });
 
       const g = groups.filter(x => x.i < h.i).pop();
@@ -109,7 +109,7 @@ function parseQuiz(md, topic, key) {
         expl: a ? a.expl : '',
       };
     });
-}
+};
 
 /* --- gom dữ liệu trắc nghiệm --- */
 const quiz = [];
@@ -118,7 +118,8 @@ for (const [file, topic, key] of QUIZ_FILES) {
   for (const q of parseQuiz(read(file), topic, key)) {
     const usable = q.ans && q.opts.length === 4 && q.prompt && q.expl
       && q.opts.every(o => o.t) && q.opts.some(o => o.k === q.ans);
-    (usable ? quiz : skipped).push(usable ? q : { file, id: q.id, why: !q.ans ? 'thiếu đáp án' : 'lựa chọn không đủ' });
+    if (usable) quiz.push(q);
+    else skipped.push({ file, id: q.id, why: q.ans ? 'lựa chọn không đủ' : 'thiếu đáp án' });
   }
 }
 
@@ -156,7 +157,7 @@ console.log(`docs/index.html  ${(html.length / 1024 / 1024).toFixed(2)} MB`);
 console.log(`  giáo án        ${giaoAnCount} câu`);
 console.log(`  trắc nghiệm    ${quiz.length} câu  (${Object.entries(byTopic).map(([t, n]) => `${t} ${n}`).join(', ')})`);
 if (skipped.length) {
-  const byFile = skipped.reduce((m, s) => ((m[s.file] = m[s.file] || []).push(s.id), m), {});
+  const byFile = skipped.reduce((m, { file, id }) => ({ ...m, [file]: [...(m[file] ?? []), id] }), {});
   console.log(`  bỏ qua         ${skipped.length} câu:`);
   for (const [f, ids] of Object.entries(byFile)) console.log(`    ${f}  ${ids.join(', ')}`);
 }

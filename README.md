@@ -225,6 +225,16 @@ Script đọc `ly-thuyet/`, `PLAYBOOK.md`, `09-algorithms.md` và các file tr�
 Ghi chú, tiến độ và kết quả trắc nghiệm nằm trong `localStorage` của trình duyệt — không đẩy lên đâu cả.
 Dùng nút xuất ở góc phải trên để lưu ra file JSON, và nút nhập để khôi phục trên máy khác.
 
+### Kiểm thử
+
+```bash
+npm install jsdom     # chỉ cần một lần
+node tools/e2e.mjs
+```
+
+Mở trang bằng DOM thật, bấm qua từng chế độ, làm thử một câu trắc nghiệm và viết một ghi chú,
+rồi đối chiếu kết quả trên DOM lẫn trong `localStorage`. Nên chạy sau mỗi lần `node build.mjs`.
+
 ### Cấu trúc
 
 | Đường dẫn | Vai trò |
@@ -232,7 +242,12 @@ Dùng nút xuất ở góc phải trên để lưu ra file JSON, và nút nhập
 | `build.mjs` | Script sinh trang |
 | `tools/app.template.html` | Khung trang: HTML, CSS, JS |
 | `tools/vendor/` | marked và highlight.js nhúng sẵn |
+| `tools/e2e.mjs` | Kiểm thử trang đã build |
 | `docs/index.html` | Kết quả, được commit để GitHub Pages phục vụ |
+
+Mã nguồn viết bằng cú pháp ES6+ (arrow function, template literal, destructuring, spread,
+optional chaining). Trang **không** dùng `<script type="module">` vì module ES bị chặn CORS
+khi mở bằng `file://` — dùng module thì bấm đúp file sẽ ra trang trắng.
 
 ---
 

@@ -429,63 +429,105 @@ h3.blk{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var
 const MD = { giaoan: __MD_GIAOAN__, playbook: __MD_PLAYBOOK__, algo: __MD_ALGO__ };
 const QUIZ = __QUIZ_DATA__;
 const QUIZ_BY_ID = new Map(QUIZ.map(q => [q.id, q]));
-const QUIZ_TOPICS = [...new Set(QUIZ.map(q => q.topic))];
+const QUIZ_TOPICS = [...new Set(QUIZ.map(({ topic }) => topic))];
 
 /* ===================== phân tách giáo án ===================== */
-function parseGiaoAn(md){
-  const out = []; let sec = null, q = null;
-  for (const line of md.split('\n')){
+const parseGiaoAn = md => {
+  const out = [];
+  let sec = null, q = null;
+  for (const line of md.split('\n')) {
     const s = /^# (.+)$/.exec(line);
     const h = /^## (Câu [^:]+):\s*(.*)$/.exec(line);
-    if (s){ sec = {title:s[1], intro:[], questions:[]}; out.push(sec); q = null; continue; }
-    if (h && sec){
-      if (h[1].trim() === 'Câu X'){ q = null; continue; }
-      q = {id:h[1].trim(), title:h[2].trim(), section:sec.title, body:[]};
-      sec.questions.push(q); continue;
-    }
-    if (q) q.body.push(line); else if (sec) sec.intro.push(line);
+    if (s) {
+      sec = { title: s[1], intro: [], questions: [] };
+      out.push(sec);
+      q = null;
+    } else if (h && sec) {
+      if (h[1].trim() === 'Câu X') { q = null; continue; }
+      q = { id: h[1].trim(), title: h[2].trim(), section: sec.title, body: [] };
+      sec.questions.push(q);
+    } else if (q) q.body.push(line);
+    else if (sec) sec.intro.push(line);
   }
   return out;
-}
+};
+
 const ALL_SECS = parseGiaoAn(MD.giaoan);
-const SECTIONS = ALL_SECS.filter(s => s.questions.length);
-const DOCSECS = ALL_SECS.filter(s => !s.questions.length).map((s, i) => ({
-  key: 'doc' + i,
-  label: i === 0 ? 'Mở đầu' : s.title.replace(/^Phụ lục:\s*/, 'Phụ lục — '),
-  md: s.intro.join('\n').trim()
-})).filter(d => d.md.length > 40);
-const QUESTIONS = SECTIONS.flatMap(s => s.questions);
+const SECTIONS = ALL_SECS.filter(({ questions }) => questions.length);
+const DOCSECS = ALL_SECS
+  .filter(({ questions }) => !questions.length)
+  .map(({ title, intro }, i) => ({
+    key: `doc${i}`,
+    label: i === 0 ? 'Mở đầu' : title.replace(/^Phụ lục:\s*/, 'Phụ lục — '),
+    md: intro.join('\n').trim(),
+  }))
+  .filter(({ md }) => md.length > 40);
+
+const QUESTIONS = SECTIONS.flatMap(({ questions }) => questions);
 const BY_ID = new Map(QUESTIONS.map(q => [q.id, q]));
-const shortSec = t => t.replace(/^Phần\s*[\d.]+:\s*/,'').replace(/^Phụ lục:\s*/,'Phụ lục ');
+const shortSec = t => t.replace(/^Phần\s*[\d.]+:\s*/, '').replace(/^Phụ lục:\s*/, 'Phụ lục ');
+
+/* ===================== tiện ích ===================== */
+const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = s => `${s}`.replace(/[&<>"']/g, c => ESCAPES[c]);
+
+const el = (tag, cls = '', html = null) => {
+  const node = document.createElement(tag);
+  if (cls) node.className = cls;
+  if (html !== null) node.innerHTML = html;
+  return node;
+};
+
+const pct = (part, whole) => (whole ? Math.round((part / whole) * 100) : 0);
+const width = (part, whole) => `${whole ? (part / whole) * 100 : 0}%`;
 
 /* ===================== markdown ===================== */
-marked.setOptions({gfm:true, breaks:false});
-function render(md){
-  const html = marked.parse(md);
-  const box = document.createElement('div');
-  box.className = 'prose';
-  box.innerHTML = html;
-  box.querySelectorAll('table').forEach(t => {
-    const w = document.createElement('div'); w.className = 'tablewrap';
-    t.parentNode.insertBefore(w, t); w.appendChild(t);
-  });
-  box.querySelectorAll('pre code').forEach(c => {
-    const lang = (c.className.match(/language-([\w-]+)/) || [])[1];
-    if (lang === 'mermaid'){ c.parentElement.className = 'mermaid'; return; }
-    try{
-      if (lang && hljs.getLanguage(lang)) c.innerHTML = hljs.highlight(c.textContent, {language:lang}).value;
-      else c.innerHTML = hljs.highlightAuto(c.textContent).value;
-      c.classList.add('hljs');
-    }catch(e){ /* để nguyên văn bản thuần */ }
-  });
+marked.setOptions({ gfm: true, breaks: false });
+
+const render = md => {
+  const box = el('div', 'prose', marked.parse(md));
+
+  for (const table of box.querySelectorAll('table')) {
+    const wrap = el('div', 'tablewrap');
+    table.parentNode.insertBefore(wrap, table);
+    wrap.appendChild(table);
+  }
+
+  for (const code of box.querySelectorAll('pre code')) {
+    const [, lang] = code.className.match(/language-([\w-]+)/) ?? [];
+    if (lang === 'mermaid') { code.parentElement.className = 'mermaid'; continue; }
+    try {
+      const { value } = lang && hljs.getLanguage(lang)
+        ? hljs.highlight(code.textContent, { language: lang })
+        : hljs.highlightAuto(code.textContent);
+      code.innerHTML = value;
+      code.classList.add('hljs');
+    } catch {
+      /* tô màu hỏng thì để nguyên văn bản thuần */
+    }
+  }
   return box;
-}
+};
 
 /* ===================== lưu trữ ===================== */
 const LS = {
-  get(k, d){ try{ const v = localStorage.getItem('fe.'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
-  set(k, v){ try{ localStorage.setItem('fe.'+k, JSON.stringify(v)); }catch(e){} }
+  get: (key, fallback) => {
+    try {
+      const raw = localStorage.getItem(`fe.${key}`);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch {
+      return fallback;
+    }
+  },
+  set: (key, value) => {
+    try {
+      localStorage.setItem(`fe.${key}`, JSON.stringify(value));
+    } catch {
+      /* chế độ riêng tư hoặc hết dung lượng: bỏ qua */
+    }
+  },
 };
+
 const state = {
   mode: 'today',
   section: null,
@@ -501,679 +543,781 @@ const state = {
   quiz: null,
 };
 
-const queue = new Map();
-function laterWrite(key, fn, ms){
-  const prev = queue.get(key); if (prev) clearTimeout(prev);
-  queue.set(key, setTimeout(() => { queue.delete(key); fn(); }, ms));
-}
-function saveQuiz(){ LS.set('quiz', state.quizRes); }
-function saveProgress(){ LS.set('status', state.status); LS.set('route', state.route); }
-function saveNote(qid){ LS.set('notes', state.notes); }
+const saveNotes = () => LS.set('notes', state.notes);
+const saveQuiz = () => LS.set('quiz', state.quizRes);
+const saveProgress = () => {
+  LS.set('status', state.status);
+  LS.set('route', state.route);
+};
 
 /* ===================== thống kê ===================== */
-const statOf = id => state.status[id] || 'none';
-function tally(list){
-  const t = {known:0, vague:0, none:0};
-  list.forEach(q => t[statOf(q.id)]++);
-  return t;
-}
-const noteCount = () => Object.values(state.notes).filter(t => t && t.trim()).length;
+const statOf = id => state.status[id] ?? 'none';
+
+const tally = list => {
+  const counts = { known: 0, vague: 0, none: 0 };
+  for (const { id } of list) counts[statOf(id)]++;
+  return counts;
+};
+
+const noteCount = () => Object.values(state.notes).filter(t => t?.trim()).length;
+const hasNote = id => Boolean(state.notes[id]?.trim());
+
+/* ===================== trắc nghiệm: dữ liệu ===================== */
+const qzRes = id => state.quizRes[id];
+const qzDone = () => Object.keys(state.quizRes).length;
+const qzRight = () => Object.values(state.quizRes).filter(({ ok }) => ok).length;
+const qzWrongIds = () => QUIZ.filter(({ id }) => qzRes(id) && !qzRes(id).ok).map(({ id }) => id);
+const qzNewIds = () => QUIZ.filter(({ id }) => !qzRes(id)).map(({ id }) => id);
+
+const qzPool = () => {
+  const { quizPick } = state;
+  if (quizPick === 'all') return QUIZ.map(({ id }) => id);
+  if (quizPick === 'wrong') return qzWrongIds();
+  if (quizPick === 'new') return qzNewIds();
+  return QUIZ.filter(({ topic }) => topic === quizPick).map(({ id }) => id);
+};
+
+const shuffled = list => {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+};
+
+const toTop = () => window.scrollTo({ top: 0, behavior: 'instant' });
+
+const startQuiz = (ids, len = 0) => {
+  const picked = shuffled(ids);
+  state.quiz = { ids: len ? picked.slice(0, len) : picked, i: 0, picked: null, right: 0 };
+  draw();
+  toTop();
+};
+
+const pickAnswer = key => {
+  const { quiz } = state;
+  if (quiz.picked) return;
+  const q = QUIZ_BY_ID.get(quiz.ids[quiz.i]);
+  const ok = key === q.ans;
+  quiz.picked = key;
+  if (ok) quiz.right++;
+  state.quizRes[q.id] = { picked: key, ok, at: Date.now() };
+  saveQuiz();
+  draw();
+};
+
+const nextQuestion = () => {
+  state.quiz.i++;
+  state.quiz.picked = null;
+  draw();
+  toTop();
+};
 
 /* ===================== khung ===================== */
 const MODES = [
-  {id:'today',    label:'Hôm nay'},
-  {id:'giaoan',   label:'Giáo án'},
-  {id:'playbook', label:'Playbook'},
-  {id:'quiz',     label:'Trắc nghiệm'},
-  {id:'algo',     label:'Thuật toán'},
-  {id:'notes',    label:'Ghi chú'},
+  { id: 'today', label: 'Hôm nay' },
+  { id: 'giaoan', label: 'Giáo án' },
+  { id: 'playbook', label: 'Playbook' },
+  { id: 'quiz', label: 'Trắc nghiệm' },
+  { id: 'algo', label: 'Thuật toán' },
+  { id: 'notes', label: 'Ghi chú' },
 ];
-function drawModes(){
-  const t = tally(QUESTIONS);
-  const nav = document.getElementById('modes');
-  nav.innerHTML = '';
-  MODES.forEach(m => {
-    const b = document.createElement('button');
-    b.className = 'mode'; b.setAttribute('aria-current', state.mode === m.id);
-    const tick = m.id === 'giaoan' ? (t.known + t.vague) + '/' + QUESTIONS.length
-               : m.id === 'quiz'   ? Object.keys(state.quizRes).length + '/' + QUIZ.length
-               : m.id === 'notes'  ? String(noteCount()) : '';
-    b.innerHTML = '<span>' + m.label + '</span>' + (tick ? '<span class="tick">' + tick + '</span>' : '');
-    b.onclick = () => go({mode:m.id, question:null, section:null});
-    nav.appendChild(b);
-  });
-  const rs = document.getElementById('railsec');
-  rs.hidden = state.mode !== 'giaoan';
-  if (!rs.hidden){
-    const list = document.getElementById('seclist');
-    list.innerHTML = '';
-    const all = document.createElement('button');
-    all.className = 'secbtn'; all.setAttribute('aria-current', state.section === null && !state.docsec);
-    all.innerHTML = '<div class="row"><span class="nm">Tất cả</span><span class="ct">' + QUESTIONS.length + '</span></div>';
-    all.onclick = () => go({section:null, question:null, docsec:null});
-    list.appendChild(all);
-    SECTIONS.forEach(s => {
-      const st = tally(s.questions), n = s.questions.length;
-      const b = document.createElement('button');
-      b.className = 'secbtn'; b.setAttribute('aria-current', state.section === s.title);
-      b.innerHTML =
-        '<div class="row"><span class="nm">' + esc(shortSec(s.title)) + '</span><span class="ct">' + n + '</span></div>' +
-        '<div class="bar"><i class="k" style="width:' + (st.known/n*100) + '%"></i><i class="v" style="width:' + (st.vague/n*100) + '%"></i></div>';
-      b.onclick = () => go({section:s.title, question:null, docsec:null});
-      list.appendChild(b);
-    });
-    DOCSECS.forEach(d => {
-      const b = document.createElement('button');
-      b.className = 'secbtn'; b.setAttribute('aria-current', state.docsec === d.key);
-      b.innerHTML = '<div class="row"><span class="nm">' + esc(d.label) + '</span><span class="ct">·</span></div>';
-      b.onclick = () => go({docsec:d.key, section:null, question:null});
-      list.appendChild(b);
-    });
-  }
-}
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-function go(patch){
+const modeTick = id => {
+  if (id === 'giaoan') {
+    const { known, vague } = tally(QUESTIONS);
+    return `${known + vague}/${QUESTIONS.length}`;
+  }
+  if (id === 'quiz') return `${qzDone()}/${QUIZ.length}`;
+  if (id === 'notes') return `${noteCount()}`;
+  return '';
+};
+
+const drawModes = () => {
+  const nav = document.getElementById('modes');
+  nav.replaceChildren();
+
+  for (const { id, label } of MODES) {
+    const tick = modeTick(id);
+    const btn = el('button', 'mode', `<span>${label}</span>${tick ? `<span class="tick">${tick}</span>` : ''}`);
+    btn.setAttribute('aria-current', state.mode === id);
+    btn.onclick = () => go({ mode: id, question: null, section: null, docsec: null });
+    nav.appendChild(btn);
+  }
+
+  const railsec = document.getElementById('railsec');
+  railsec.hidden = state.mode !== 'giaoan';
+  if (railsec.hidden) return;
+
+  const list = document.getElementById('seclist');
+  list.replaceChildren();
+
+  const all = el('button', 'secbtn', `<div class="row"><span class="nm">Tất cả</span><span class="ct">${QUESTIONS.length}</span></div>`);
+  all.setAttribute('aria-current', state.section === null && !state.docsec);
+  all.onclick = () => go({ section: null, question: null, docsec: null });
+  list.appendChild(all);
+
+  for (const { title, questions } of SECTIONS) {
+    const { known, vague } = tally(questions);
+    const n = questions.length;
+    const btn = el('button', 'secbtn', `
+      <div class="row"><span class="nm">${esc(shortSec(title))}</span><span class="ct">${n}</span></div>
+      <div class="bar"><i class="k" style="width:${width(known, n)}"></i><i class="v" style="width:${width(vague, n)}"></i></div>`);
+    btn.setAttribute('aria-current', state.section === title);
+    btn.onclick = () => go({ section: title, question: null, docsec: null });
+    list.appendChild(btn);
+  }
+
+  for (const { key, label } of DOCSECS) {
+    const btn = el('button', 'secbtn', `<div class="row"><span class="nm">${esc(label)}</span><span class="ct">·</span></div>`);
+    btn.setAttribute('aria-current', state.docsec === key);
+    btn.onclick = () => go({ docsec: key, section: null, question: null });
+    list.appendChild(btn);
+  }
+};
+
+const go = patch => {
   Object.assign(state, patch);
-  if (patch.mode && patch.mode !== 'giaoan'){ state.query = ''; state.docsec = null; }
+  if (patch.mode && patch.mode !== 'giaoan') {
+    state.query = '';
+    state.docsec = null;
+  }
   if (patch.mode && patch.mode !== 'quiz') state.quiz = null;
   closeRail();
   draw();
-  window.scrollTo({top:0, behavior:'instant'});
-}
+  toTop();
+};
 
-/* ===================== màn hình ===================== */
-function draw(){
+const draw = () => {
   drawModes();
   const page = document.getElementById('page');
-  page.innerHTML = '';
+  page.replaceChildren();
+
   if (state.question) return page.appendChild(viewQuestion(BY_ID.get(state.question)));
-  if (state.mode === 'giaoan' && state.docsec){
-    const d = DOCSECS.find(x => x.key === state.docsec);
-    return page.appendChild(viewDoc(d ? d.md : ''));
+  if (state.mode === 'giaoan' && state.docsec) {
+    return page.appendChild(viewDoc(DOCSECS.find(({ key }) => key === state.docsec)?.md ?? ''));
   }
-  if (state.mode === 'today')    return page.appendChild(viewToday());
-  if (state.mode === 'giaoan')   return page.appendChild(viewList());
-  if (state.mode === 'playbook') return page.appendChild(viewDoc(MD.playbook));
-  if (state.mode === 'quiz')     return page.appendChild(viewQuiz());
-  if (state.mode === 'algo')     return page.appendChild(viewDoc(MD.algo));
-  if (state.mode === 'notes')    return page.appendChild(viewNotes());
-}
 
-function el(tag, cls, html){
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (html != null) e.innerHTML = html;
-  return e;
-}
+  const views = {
+    today: viewToday,
+    giaoan: viewList,
+    playbook: () => viewDoc(MD.playbook),
+    quiz: viewQuiz,
+    algo: () => viewDoc(MD.algo),
+    notes: viewNotes,
+  };
+  page.appendChild((views[state.mode] ?? viewToday)());
+};
 
-/* ---- Hôm nay ---- */
+/* ===================== màn hình: Hôm nay ===================== */
 const ROUTES = [
-  {id:'2d', t:'Còn 2 ngày', d:'Cấp tốc — 32 câu nền, bỏ Design System và System Design',
-   plan:[['Ngày 1 sáng','Closure, event loop, bộ nhớ','Câu 6','Câu 7','Câu 8','Câu 9','Câu 14','Câu 15','Câu 16','Câu 17','Câu 18'],
-         ['Ngày 1 chiều','Render, memo, chọn loại state','Câu 21','Câu 22','Câu 23','Câu 24','Câu 25','Câu 26','Câu 27','Câu 28','Câu 31','Câu 32','Câu 33'],
-         ['Ngày 2 sáng','Hiệu năng, lưu trữ, bảo mật','Câu 80','Câu 85','Câu 86','Câu 93','Câu 55','Câu 56','Câu 73','Câu 74','Câu 75','Câu 76','Câu 77'],
-         ['Ngày 2 chiều','Đọc Playbook mục 4, 5 rồi viết 6 câu chuyện dự án ở mục 7']]},
-  {id:'1w', t:'Còn 1 tuần', d:'Tiêu chuẩn — đi hết 9 phần, mỗi ngày một mảng',
-   plan:[['Ngày 1–2','JavaScript và React','#Phần 1: JavaScript','#Phần 2: React'],
-         ['Ngày 3','Browser, network, storage','#Phần 3: Browser'],
-         ['Ngày 4','Hiệu năng','#Phần 6: Performance'],
-         ['Ngày 5','Bảo mật và kiến trúc','#Phần 5: Security','#Phần 4: Architecture'],
-         ['Ngày 6','System Design và thuật toán','#Phần 7: System Design'],
-         ['Ngày 7','Engineering, behavioral và Playbook','#Phần 8: Engineering']]},
-  {id:'3w', t:'Còn 3 tuần', d:'Chuyên sâu — thêm follow-up và trắc nghiệm cho từng câu',
-   plan:[['Tuần 1','Nền tảng, mỗi câu tự đặt thêm một follow-up','#Phần 1: JavaScript','#Phần 2: React','#Phần 3: Browser'],
-         ['Tuần 2','Kiến trúc, design system, bảo mật, hiệu năng','#Phần 4: Architecture','#Phần 4.1: Design System','#Phần 5: Security','#Phần 6: Performance'],
-         ['Tuần 3','System Design, engineering, live coding, mock interview','#Phần 7: System Design','#Phần 8: Engineering']]},
+  {
+    id: '2d',
+    t: 'Còn 2 ngày',
+    d: 'Cấp tốc — 32 câu nền, bỏ Design System và System Design',
+    plan: [
+      ['Ngày 1 sáng', 'Closure, event loop, bộ nhớ', 'Câu 6', 'Câu 7', 'Câu 8', 'Câu 9', 'Câu 14', 'Câu 15', 'Câu 16', 'Câu 17', 'Câu 18'],
+      ['Ngày 1 chiều', 'Render, memo, chọn loại state', 'Câu 21', 'Câu 22', 'Câu 23', 'Câu 24', 'Câu 25', 'Câu 26', 'Câu 27', 'Câu 28', 'Câu 31', 'Câu 32', 'Câu 33'],
+      ['Ngày 2 sáng', 'Hiệu năng, lưu trữ, bảo mật', 'Câu 80', 'Câu 85', 'Câu 86', 'Câu 93', 'Câu 55', 'Câu 56', 'Câu 73', 'Câu 74', 'Câu 75', 'Câu 76', 'Câu 77'],
+      ['Ngày 2 chiều', 'Đọc Playbook mục 4, 5 rồi viết 6 câu chuyện dự án ở mục 7'],
+    ],
+  },
+  {
+    id: '1w',
+    t: 'Còn 1 tuần',
+    d: 'Tiêu chuẩn — đi hết 9 phần, mỗi ngày một mảng',
+    plan: [
+      ['Ngày 1–2', 'JavaScript và React', '#Phần 1: JavaScript', '#Phần 2: React'],
+      ['Ngày 3', 'Browser, network, storage', '#Phần 3: Browser'],
+      ['Ngày 4', 'Hiệu năng', '#Phần 6: Performance'],
+      ['Ngày 5', 'Bảo mật và kiến trúc', '#Phần 5: Security', '#Phần 4: Architecture'],
+      ['Ngày 6', 'System Design và thuật toán', '#Phần 7: System Design'],
+      ['Ngày 7', 'Engineering, behavioral và Playbook', '#Phần 8: Engineering'],
+    ],
+  },
+  {
+    id: '3w',
+    t: 'Còn 3 tuần',
+    d: 'Chuyên sâu — thêm follow-up và trắc nghiệm cho từng câu',
+    plan: [
+      ['Tuần 1', 'Nền tảng, mỗi câu tự đặt thêm một follow-up', '#Phần 1: JavaScript', '#Phần 2: React', '#Phần 3: Browser'],
+      ['Tuần 2', 'Kiến trúc, design system, bảo mật, hiệu năng', '#Phần 4: Architecture', '#Phần 4.1: Design System', '#Phần 5: Security', '#Phần 6: Performance'],
+      ['Tuần 3', 'System Design, engineering, live coding, mock interview', '#Phần 7: System Design', '#Phần 8: Engineering'],
+    ],
+  },
 ];
 
-function viewToday(){
+const heroLine = done =>
+  done === 0 ? 'Bắt đầu từ đâu cũng được, miễn là bắt đầu'
+  : done === QUESTIONS.length ? `Đã rà hết ${QUESTIONS.length} câu`
+  : `Đã rà ${done} trên ${QUESTIONS.length} câu`;
+
+const viewToday = () => {
   const w = el('div');
-  const t = tally(QUESTIONS), done = t.known + t.vague, pct = Math.round(done / QUESTIONS.length * 100);
+  const { known, vague } = tally(QUESTIONS);
+  const done = known + vague;
 
-  const hero = el('div','hero');
-  hero.innerHTML =
-    '<div class="eyebrow">Phỏng vấn Frontend Senior</div>' +
-    '<h2>' + (done === 0 ? 'Bắt đầu từ đâu cũng được, miễn là bắt đầu' :
-              done === QUESTIONS.length ? 'Đã rà hết 133 câu' :
-              'Đã rà ' + done + ' trên ' + QUESTIONS.length + ' câu') + '</h2>' +
-    '<p>Đánh dấu từng câu là <em>biết rõ</em>, <em>mơ hồ</em> hay <em>chưa biết</em> khi đọc. Ghi chú viết ở cuối mỗi câu và gom lại ở mục Ghi chú.</p>';
-  w.appendChild(hero);
+  w.appendChild(el('div', 'hero', `
+    <div class="eyebrow">Phỏng vấn Frontend Senior</div>
+    <h2>${heroLine(done)}</h2>
+    <p>Đánh dấu từng câu là <em>biết rõ</em>, <em>mơ hồ</em> hay <em>chưa biết</em> khi đọc.
+       Ghi chú viết ở cuối mỗi câu và gom lại ở mục Ghi chú.</p>`));
 
-  const cards = el('div','cards');
-  cards.innerHTML =
-    '<div class="card a"><div class="lbl">Tiến độ</div><div class="val">' + pct + '<small>%</small></div><div class="note">' + done + '/' + QUESTIONS.length + ' câu đã rà</div></div>' +
-    '<div class="card k"><div class="lbl">Biết rõ</div><div class="val">' + t.known + '</div><div class="note">không cần đọc lại</div></div>' +
-    '<div class="card v"><div class="lbl">Mơ hồ</div><div class="val">' + t.vague + '</div><div class="note">ưu tiên ôn trước</div></div>' +
-    '<div class="card"><div class="lbl">Ghi chú</div><div class="val">' + noteCount() + '</div><div class="note">câu đã có ghi chú</div></div>';
-  w.appendChild(cards);
+  w.appendChild(el('div', 'cards', `
+    <div class="card a"><div class="lbl">Tiến độ</div><div class="val">${pct(done, QUESTIONS.length)}<small>%</small></div><div class="note">${done}/${QUESTIONS.length} câu đã rà</div></div>
+    <div class="card k"><div class="lbl">Biết rõ</div><div class="val">${known}</div><div class="note">không cần đọc lại</div></div>
+    <div class="card v"><div class="lbl">Mơ hồ</div><div class="val">${vague}</div><div class="note">ưu tiên ôn trước</div></div>
+    <div class="card"><div class="lbl">Ghi chú</div><div class="val">${noteCount()}</div><div class="note">câu đã có ghi chú</div></div>`));
 
-  if (t.vague > 0){
-    w.appendChild(el('h3','blk','Ôn lại những câu còn mơ hồ'));
-    const list = el('div','qlist');
-    QUESTIONS.filter(q => statOf(q.id) === 'vague').slice(0, 8).forEach(q => list.appendChild(qrow(q)));
+  if (vague > 0) {
+    w.appendChild(el('h3', 'blk', 'Ôn lại những câu còn mơ hồ'));
+    const list = el('div', 'qlist');
+    for (const q of QUESTIONS.filter(({ id }) => statOf(id) === 'vague').slice(0, 8)) list.appendChild(qrow(q));
     w.appendChild(list);
   }
 
-  w.appendChild(el('h3','blk','Tiến độ theo phần'));
-  const tbl = el('table','progtable');
-  tbl.innerHTML = '<thead><tr><th>Phần</th><th>Câu</th><th style="width:34%">Đã rà</th><th></th></tr></thead>';
-  const tb = el('tbody');
-  SECTIONS.forEach(s => {
-    const st = tally(s.questions), n = s.questions.length;
-    const tr = el('tr');
-    tr.innerHTML =
-      '<td>' + esc(shortSec(s.title)) + '</td>' +
-      '<td class="num">' + n + '</td>' +
-      '<td><div class="wbar"><i class="k" style="width:' + (st.known/n*100) + '%;background:var(--known)"></i><i style="width:' + (st.vague/n*100) + '%;background:var(--vague)"></i></div></td>' +
-      '<td class="num">' + (st.known + st.vague) + '/' + n + '</td>';
+  w.appendChild(el('h3', 'blk', 'Tiến độ theo phần'));
+  const tbl = el('table', 'progtable', '<thead><tr><th>Phần</th><th>Câu</th><th style="width:34%">Đã rà</th><th></th></tr></thead>');
+  const tbody = el('tbody');
+  for (const { title, questions } of SECTIONS) {
+    const t = tally(questions);
+    const n = questions.length;
+    const tr = el('tr', '', `
+      <td>${esc(shortSec(title))}</td>
+      <td class="num">${n}</td>
+      <td><div class="wbar"><i style="width:${width(t.known, n)};background:var(--known)"></i><i style="width:${width(t.vague, n)};background:var(--vague)"></i></div></td>
+      <td class="num">${t.known + t.vague}/${n}</td>`);
     tr.style.cursor = 'pointer';
-    tr.onclick = () => go({mode:'giaoan', section:s.title, question:null});
-    tb.appendChild(tr);
-  });
-  tbl.appendChild(tb);
-  w.appendChild(el('div','tablewrap')).appendChild(tbl);
+    tr.onclick = () => go({ mode: 'giaoan', section: title, question: null });
+    tbody.appendChild(tr);
+  }
+  tbl.appendChild(tbody);
+  w.appendChild(el('div', 'tablewrap')).appendChild(tbl);
 
-  const bk = el('div','backup');
-  bk.innerHTML = '<div><b>Ghi chú và tiến độ chỉ nằm trong trình duyệt này.</b> ' +
-    'Xoá dữ liệu duyệt web hoặc đổi máy là mất. Thỉnh thoảng bấm nút xuất ở góc phải trên để lưu ra file JSON, ' +
-    'và cất file đó vào repo.</div>';
-  const bkb = el('button', null, 'Xuất ngay');
-  bkb.onclick = exportData;
-  bk.querySelector('div').appendChild(document.createTextNode(' '));
-  bk.querySelector('div').appendChild(bkb);
-  w.appendChild(bk);
+  const backup = el('div', 'backup', `
+    <div><b>Ghi chú và tiến độ chỉ nằm trong trình duyệt này.</b>
+    Xoá dữ liệu duyệt web hoặc đổi máy là mất. Thỉnh thoảng bấm nút xuất ở góc phải trên
+    để lưu ra file JSON, và cất file đó vào repo. </div>`);
+  const backupBtn = el('button', '', 'Xuất ngay');
+  backupBtn.onclick = exportData;
+  backup.firstElementChild.appendChild(backupBtn);
+  w.appendChild(backup);
 
-  if (DOCSECS.length){
-    w.appendChild(el('h3','blk','Tài liệu nền'));
-    const row = el('div','filters');
-    DOCSECS.forEach(d => {
-      const b = el('button','chip', esc(d.label));
-      b.onclick = () => go({mode:'giaoan', docsec:d.key, section:null, question:null});
-      row.appendChild(b);
-    });
+  if (DOCSECS.length) {
+    w.appendChild(el('h3', 'blk', 'Tài liệu nền'));
+    const row = el('div', 'filters');
+    for (const { key, label } of DOCSECS) {
+      const chip = el('button', 'chip', esc(label));
+      chip.onclick = () => go({ mode: 'giaoan', docsec: key, section: null, question: null });
+      row.appendChild(chip);
+    }
     w.appendChild(row);
   }
 
-  w.appendChild(el('h3','blk','Lộ trình theo quỹ thời gian'));
-  const routes = el('div','routes');
-  ROUTES.forEach(r => {
-    const b = el('button','route');
-    b.setAttribute('aria-pressed', state.route === r.id);
-    b.innerHTML = '<div class="t">' + r.t + '</div><div class="d">' + r.d + '</div>';
-    b.onclick = () => { state.route = state.route === r.id ? null : r.id; saveProgress(); draw(); };
-    routes.appendChild(b);
-  });
+  w.appendChild(el('h3', 'blk', 'Lộ trình theo quỹ thời gian'));
+  const routes = el('div', 'routes');
+  for (const { id, t, d } of ROUTES) {
+    const btn = el('button', 'route', `<div class="t">${t}</div><div class="d">${d}</div>`);
+    btn.setAttribute('aria-pressed', state.route === id);
+    btn.onclick = () => {
+      state.route = state.route === id ? null : id;
+      saveProgress();
+      draw();
+    };
+    routes.appendChild(btn);
+  }
   w.appendChild(routes);
 
-  const chosen = ROUTES.find(r => r.id === state.route);
-  if (chosen){
-    const body = el('div','routebody');
-    const tb2 = el('table','progtable');
-    tb2.innerHTML = '<thead><tr><th>Buổi</th><th>Nội dung</th></tr></thead>';
-    const bd = el('tbody');
-    chosen.plan.forEach(row => {
-      const [when, what, ...refs] = row;
-      const tr = el('tr');
-      const cell = el('td');
-      cell.appendChild(document.createTextNode(what));
-      if (refs.length){
-        const p = el('div'); p.style.marginTop = '6px'; p.style.display = 'flex';
-        p.style.flexWrap = 'wrap'; p.style.gap = '6px';
-        refs.forEach(ref => {
-          const a = el('button','chip');
-          if (ref.startsWith('#')){
-            const sec = ref.slice(1);
-            a.textContent = shortSec(sec);
-            a.onclick = () => go({mode:'giaoan', section:sec, question:null});
-          } else {
-            a.textContent = ref;
-            a.onclick = () => go({mode:'giaoan', question:ref});
-          }
-          p.appendChild(a);
-        });
-        cell.appendChild(p);
+  const chosen = ROUTES.find(({ id }) => id === state.route);
+  if (!chosen) return w;
+
+  const planTbl = el('table', 'progtable', '<thead><tr><th>Buổi</th><th>Nội dung</th></tr></thead>');
+  const planBody = el('tbody');
+  for (const [when, what, ...refs] of chosen.plan) {
+    const cell = el('td');
+    cell.append(what);
+    if (refs.length) {
+      const chips = el('div', 'filters');
+      chips.style.margin = '6px 0 0';
+      for (const ref of refs) {
+        const isSection = ref.startsWith('#');
+        const chip = el('button', 'chip', isSection ? esc(shortSec(ref.slice(1))) : esc(ref));
+        chip.onclick = isSection
+          ? () => go({ mode: 'giaoan', section: ref.slice(1), question: null })
+          : () => go({ mode: 'giaoan', question: ref });
+        chips.appendChild(chip);
       }
-      tr.appendChild(el('td','num', esc(when)));
-      tr.appendChild(cell);
-      bd.appendChild(tr);
-    });
-    tb2.appendChild(bd);
-    body.appendChild(el('div','tablewrap')).appendChild(tb2);
-    w.appendChild(body);
+      cell.appendChild(chips);
+    }
+    const tr = el('tr');
+    tr.appendChild(el('td', 'num', esc(when)));
+    tr.appendChild(cell);
+    planBody.appendChild(tr);
   }
+  planTbl.appendChild(planBody);
+  w.appendChild(el('div', 'routebody')).appendChild(el('div', 'tablewrap')).appendChild(planTbl);
   return w;
-}
+};
 
-/* ---- danh sách câu hỏi ---- */
-function qrow(q){
-  const b = el('button','qrow');
-  b.dataset.st = statOf(q.id);
-  const has = state.notes[q.id] && state.notes[q.id].trim();
-  b.innerHTML =
-    '<span class="id">' + esc(q.id.replace(/^Câu\s*/,'')) + '</span>' +
-    '<span class="ttl">' + esc(q.title) + '</span>' +
-    '<span class="tags">' + (has ? '<span class="hasnote">ghi chú</span>' : '') +
-      '<span class="pip" data-st="' + statOf(q.id) + '"></span></span>';
-  b.onclick = () => go({mode:'giaoan', question:q.id});
-  return b;
-}
-function viewList(){
+/* ===================== màn hình: danh sách câu ===================== */
+const qrow = ({ id, title }) => {
+  const btn = el('button', 'qrow', `
+    <span class="id">${esc(id.replace(/^Câu\s*/, ''))}</span>
+    <span class="ttl">${esc(title)}</span>
+    <span class="tags">${hasNote(id) ? '<span class="hasnote">ghi chú</span>' : ''}<span class="pip" data-st="${statOf(id)}"></span></span>`);
+  btn.dataset.st = statOf(id);
+  btn.onclick = () => go({ mode: 'giaoan', question: id });
+  return btn;
+};
+
+const viewList = () => {
   const w = el('div');
-  let pool = state.section ? (SECTIONS.find(s => s.title === state.section) || {questions:[]}).questions : QUESTIONS;
-  if (state.filter !== 'all') pool = pool.filter(q => statOf(q.id) === state.filter);
-  const qq = state.query.trim().toLowerCase();
-  if (qq) pool = pool.filter(q => (q.id + ' ' + q.title + ' ' + q.section).toLowerCase().includes(qq));
+  const query = state.query.trim().toLowerCase();
 
-  const head = el('div','qhead');
-  head.innerHTML = '<h2>' + esc(state.section ? shortSec(state.section) : 'Toàn bộ câu hỏi') + '</h2>' +
-                   '<span class="meta">' + pool.length + ' câu</span>';
-  w.appendChild(head);
+  let pool = state.section
+    ? SECTIONS.find(({ title }) => title === state.section)?.questions ?? []
+    : QUESTIONS;
+  if (state.filter !== 'all') pool = pool.filter(({ id }) => statOf(id) === state.filter);
+  if (query) pool = pool.filter(({ id, title, section }) => `${id} ${title} ${section}`.toLowerCase().includes(query));
 
-  const f = el('div','filters');
-  [['all','Tất cả'],['none','Chưa rà'],['vague','Mơ hồ'],['known','Biết rõ']].forEach(([v, lab]) => {
-    const b = el('button','chip', lab);
-    b.setAttribute('aria-pressed', state.filter === v);
-    b.onclick = () => { state.filter = v; draw(); };
-    f.appendChild(b);
-  });
-  w.appendChild(f);
+  w.appendChild(el('div', 'qhead',
+    `<h2>${esc(state.section ? shortSec(state.section) : 'Toàn bộ câu hỏi')}</h2><span class="meta">${pool.length} câu</span>`));
 
-  if (!pool.length){ w.appendChild(el('div','empty','Không có câu nào khớp. Thử bỏ bớt bộ lọc.')); return w; }
-  const list = el('div','qlist');
-  if (!state.section && !qq && state.filter === 'all'){
-    SECTIONS.forEach(s => {
-      list.appendChild(el('h3','blk', esc(shortSec(s.title))));
-      s.questions.forEach(q => list.appendChild(qrow(q)));
-    });
-  } else pool.forEach(q => list.appendChild(qrow(q)));
-  w.appendChild(list);
-  return w;
-}
+  const filters = el('div', 'filters');
+  for (const [value, label] of [['all', 'Tất cả'], ['none', 'Chưa rà'], ['vague', 'Mơ hồ'], ['known', 'Biết rõ']]) {
+    const chip = el('button', 'chip', label);
+    chip.setAttribute('aria-pressed', state.filter === value);
+    chip.onclick = () => { state.filter = value; draw(); };
+    filters.appendChild(chip);
+  }
+  w.appendChild(filters);
 
-/* ---- một câu ---- */
-function viewQuestion(q){
-  const w = el('div','reading');
-  if (!q){ w.appendChild(el('div','empty','Không tìm thấy câu này.')); return w; }
-  const idx = QUESTIONS.indexOf(q);
-
-  const crumb = el('div','crumb');
-  const back = el('button', null, '← Danh sách');
-  back.onclick = () => go({question:null});
-  crumb.appendChild(back);
-  crumb.appendChild(document.createTextNode('·'));
-  const sc = el('button', null, esc(shortSec(q.section)));
-  sc.onclick = () => go({section:q.section, question:null});
-  crumb.appendChild(sc);
-  w.appendChild(crumb);
-
-  w.appendChild(el('div','qid', esc(q.id)));
-  w.appendChild(el('h2','qtitle', esc(q.title)));
-
-  const rate = el('div','rate');
-  rate.appendChild(el('span','lbl','Tự chấm'));
-  [['known','Biết rõ'],['vague','Mơ hồ'],['unknown','Chưa biết']].forEach(([v, lab]) => {
-    const b = el('button','rbtn', lab);
-    b.dataset.v = v;
-    b.setAttribute('aria-pressed', statOf(q.id) === v);
-    b.onclick = () => {
-      if (state.status[q.id] === v) delete state.status[q.id]; else state.status[q.id] = v;
-      saveProgress(); draw();
-    };
-    rate.appendChild(b);
-  });
-  w.appendChild(rate);
-
-  w.appendChild(render(q.body.join('\n')));
-
-  const nb = el('div','notebox');
-  nb.innerHTML = '<div class="nhead"><span class="t">Ghi chú của anh</span><span class="st" id="nst"></span></div>';
-  const ta = el('textarea');
-  ta.placeholder = 'Viết lại bằng lời của mình, ghi chỗ chưa hiểu, hoặc dán ví dụ từ dự án thật…';
-  ta.value = state.notes[q.id] || '';
-  ta.setAttribute('aria-label', 'Ghi chú cho ' + q.id);
-  const st = nb.querySelector('#nst');
-  let tmr = null;
-  ta.oninput = () => {
-    state.notes[q.id] = ta.value;
-    st.textContent = 'đang lưu…';
-    clearTimeout(tmr);
-    tmr = setTimeout(() => { st.textContent = 'đã lưu'; setTimeout(() => st.textContent = '', 1600); }, 950);
-    saveNote(q.id);
-  };
-  nb.appendChild(ta);
-  w.appendChild(nb);
-
-  const nav = el('div','qnav');
-  const prev = QUESTIONS[idx-1], next = QUESTIONS[idx+1];
-  const pb = el('button','navbtn');
-  pb.innerHTML = '<div class="d">Câu trước</div><div class="n">' + (prev ? esc(prev.title) : '—') + '</div>';
-  pb.disabled = !prev; pb.onclick = () => go({question:prev.id});
-  const nx = el('button','navbtn next');
-  nx.innerHTML = '<div class="d">Câu sau</div><div class="n">' + (next ? esc(next.title) : '—') + '</div>';
-  nx.disabled = !next; nx.onclick = () => go({question:next.id});
-  nav.appendChild(pb); nav.appendChild(nx);
-  w.appendChild(nav);
-  return w;
-}
-
-/* ---- tài liệu dài ---- */
-function viewDoc(md){
-  const w = el('div','reading');
-  w.appendChild(render(md));
-  return w;
-}
-
-/* ---- ghi chú ---- */
-function viewNotes(){
-  const w = el('div');
-  const ids = Object.keys(state.notes).filter(k => state.notes[k] && state.notes[k].trim());
-  const head = el('div','qhead');
-  head.innerHTML = '<h2>Ghi chú của anh</h2><span class="meta">' + ids.length + ' câu</span>';
-  w.appendChild(head);
-  if (!ids.length){
-    w.appendChild(el('div','empty','Chưa có ghi chú nào. Mở một câu bất kỳ và viết vào ô cuối trang.'));
+  if (!pool.length) {
+    w.appendChild(el('div', 'empty', 'Không có câu nào khớp. Thử bỏ bớt bộ lọc.'));
     return w;
   }
-  ids.sort((a, b) => QUESTIONS.findIndex(q => q.id === a) - QUESTIONS.findIndex(q => q.id === b));
-  ids.forEach(id => {
-    const q = BY_ID.get(id);
-    const c = el('button','notecard');
-    c.innerHTML =
-      '<div class="h"><span class="id">' + esc(id) + '</span><span class="t">' + esc(q ? q.title : '') + '</span></div>' +
-      '<div class="b">' + esc(state.notes[id]) + '</div>';
-    c.onclick = () => go({mode:'giaoan', question:id});
-    w.appendChild(c);
-  });
+
+  const list = el('div', 'qlist');
+  const grouped = !state.section && !query && state.filter === 'all';
+  if (grouped) {
+    for (const { title, questions } of SECTIONS) {
+      list.appendChild(el('h3', 'blk', esc(shortSec(title))));
+      for (const q of questions) list.appendChild(qrow(q));
+    }
+  } else {
+    for (const q of pool) list.appendChild(qrow(q));
+  }
+  w.appendChild(list);
   return w;
-}
+};
 
-/* ===================== trắc nghiệm ===================== */
-const qzRes   = id => state.quizRes[id];
-const qzDone  = () => Object.keys(state.quizRes).length;
-const qzRight = () => Object.values(state.quizRes).filter(r => r.ok).length;
-const qzWrongIds = () => QUIZ.filter(q => qzRes(q.id) && !qzRes(q.id).ok).map(q => q.id);
-const qzNewIds   = () => QUIZ.filter(q => !qzRes(q.id)).map(q => q.id);
-function qzPool(){
-  const p = state.quizPick;
-  if (p === 'all')   return QUIZ.map(q => q.id);
-  if (p === 'wrong') return qzWrongIds();
-  if (p === 'new')   return qzNewIds();
-  return QUIZ.filter(q => q.topic === p).map(q => q.id);
-}
-function shuffled(a){
-  const r = a.slice();
-  for (let i = r.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
-  return r;
-}
-function startQuiz(ids, len){
-  const pick = shuffled(ids);
-  state.quiz = {ids: len ? pick.slice(0, len) : pick, i: 0, picked: null, right: 0};
-  draw(); window.scrollTo({top:0, behavior:'instant'});
-}
+/* ===================== màn hình: một câu ===================== */
+const RATINGS = [['known', 'Biết rõ'], ['vague', 'Mơ hồ'], ['unknown', 'Chưa biết']];
 
-function viewQuiz(){
+const viewQuestion = q => {
+  const w = el('div', 'reading');
+  if (!q) {
+    w.appendChild(el('div', 'empty', 'Không tìm thấy câu này.'));
+    return w;
+  }
+  const idx = QUESTIONS.indexOf(q);
+
+  const crumb = el('div', 'crumb');
+  const back = el('button', '', '← Danh sách');
+  back.onclick = () => go({ question: null });
+  const toSection = el('button', '', esc(shortSec(q.section)));
+  toSection.onclick = () => go({ section: q.section, question: null });
+  crumb.append(back, '·', toSection);
+  w.appendChild(crumb);
+
+  w.appendChild(el('div', 'qid', esc(q.id)));
+  w.appendChild(el('h2', 'qtitle', esc(q.title)));
+
+  const rate = el('div', 'rate', '<span class="lbl">Tự chấm</span>');
+  for (const [value, label] of RATINGS) {
+    const btn = el('button', 'rbtn', label);
+    btn.dataset.v = value;
+    btn.setAttribute('aria-pressed', statOf(q.id) === value);
+    btn.onclick = () => {
+      if (state.status[q.id] === value) delete state.status[q.id];
+      else state.status[q.id] = value;
+      saveProgress();
+      draw();
+    };
+    rate.appendChild(btn);
+  }
+  w.appendChild(rate);
+  w.appendChild(render(q.body.join('\n')));
+
+  const box = el('div', 'notebox', '<div class="nhead"><span class="t">Ghi chú của anh</span><span class="st"></span></div>');
+  const status = box.querySelector('.st');
+  const area = el('textarea');
+  area.placeholder = 'Viết lại bằng lời của mình, ghi chỗ chưa hiểu, hoặc dán ví dụ từ dự án thật…';
+  area.value = state.notes[q.id] ?? '';
+  area.setAttribute('aria-label', `Ghi chú cho ${q.id}`);
+  let timer = null;
+  area.oninput = () => {
+    state.notes[q.id] = area.value;
+    saveNotes();
+    status.textContent = 'đang lưu…';
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      status.textContent = 'đã lưu';
+      setTimeout(() => { status.textContent = ''; }, 1600);
+    }, 700);
+  };
+  box.appendChild(area);
+  w.appendChild(box);
+
+  const nav = el('div', 'qnav');
+  for (const [dir, target, cls] of [['Câu trước', QUESTIONS[idx - 1], 'navbtn'], ['Câu sau', QUESTIONS[idx + 1], 'navbtn next']]) {
+    const btn = el('button', cls, `<div class="d">${dir}</div><div class="n">${target ? esc(target.title) : '—'}</div>`);
+    btn.disabled = !target;
+    if (target) btn.onclick = () => go({ question: target.id });
+    nav.appendChild(btn);
+  }
+  w.appendChild(nav);
+  return w;
+};
+
+/* ===================== màn hình: tài liệu và ghi chú ===================== */
+const viewDoc = md => {
+  const w = el('div', 'reading');
+  w.appendChild(render(md));
+  return w;
+};
+
+const viewNotes = () => {
+  const w = el('div');
+  const ids = Object.keys(state.notes)
+    .filter(hasNote)
+    .sort((a, b) => QUESTIONS.findIndex(({ id }) => id === a) - QUESTIONS.findIndex(({ id }) => id === b));
+
+  w.appendChild(el('div', 'qhead', `<h2>Ghi chú của anh</h2><span class="meta">${ids.length} câu</span>`));
+  if (!ids.length) {
+    w.appendChild(el('div', 'empty', 'Chưa có ghi chú nào. Mở một câu bất kỳ và viết vào ô cuối trang.'));
+    return w;
+  }
+
+  for (const id of ids) {
+    const card = el('button', 'notecard', `
+      <div class="h"><span class="id">${esc(id)}</span><span class="t">${esc(BY_ID.get(id)?.title ?? '')}</span></div>
+      <div class="b">${esc(state.notes[id])}</div>`);
+    card.onclick = () => go({ mode: 'giaoan', question: id });
+    w.appendChild(card);
+  }
+  return w;
+};
+
+/* ===================== màn hình: trắc nghiệm ===================== */
+const viewQuiz = () => {
   if (state.quiz) return state.quiz.i >= state.quiz.ids.length ? viewQuizDone() : viewQuizRun();
 
   const w = el('div');
-  const done = qzDone(), right = qzRight();
-  const head = el('div','qhead');
-  head.innerHTML = '<h2>Trắc nghiệm</h2><span class="meta">' + QUIZ.length + ' câu · ' + QUIZ_TOPICS.length + ' chủ đề</span>';
-  w.appendChild(head);
+  const done = qzDone();
+  const right = qzRight();
 
-  const cards = el('div','cards');
-  cards.innerHTML =
-    '<div class="card a"><div class="lbl">Đã làm</div><div class="val">' + done + '<small>/' + QUIZ.length + '</small></div></div>' +
-    '<div class="card k"><div class="lbl">Đúng</div><div class="val">' + right + '</div></div>' +
-    '<div class="card v"><div class="lbl">Sai</div><div class="val">' + (done - right) + '</div><div class="note">nên làm lại</div></div>' +
-    '<div class="card"><div class="lbl">Tỉ lệ đúng</div><div class="val">' + (done ? Math.round(right/done*100) : 0) + '<small>%</small></div></div>';
-  w.appendChild(cards);
+  w.appendChild(el('div', 'qhead', `<h2>Trắc nghiệm</h2><span class="meta">${QUIZ.length} câu · ${QUIZ_TOPICS.length} chủ đề</span>`));
+  w.appendChild(el('div', 'cards', `
+    <div class="card a"><div class="lbl">Đã làm</div><div class="val">${done}<small>/${QUIZ.length}</small></div></div>
+    <div class="card k"><div class="lbl">Đúng</div><div class="val">${right}</div></div>
+    <div class="card v"><div class="lbl">Sai</div><div class="val">${done - right}</div><div class="note">nên làm lại</div></div>
+    <div class="card"><div class="lbl">Tỉ lệ đúng</div><div class="val">${pct(right, done)}<small>%</small></div></div>`));
 
-  w.appendChild(el('h3','blk','Chọn bộ câu'));
-  const setup = el('div','setup');
-  const picks = [{k:'all', t:'Tất cả chủ đề', ids:QUIZ.map(q=>q.id)}];
-  if (qzWrongIds().length) picks.push({k:'wrong', t:'Câu đã làm sai', ids:qzWrongIds()});
-  if (qzNewIds().length)   picks.push({k:'new',   t:'Câu chưa làm',   ids:qzNewIds()});
-  QUIZ_TOPICS.forEach(tp => picks.push({k:tp, t:tp, ids:QUIZ.filter(q=>q.topic===tp).map(q=>q.id)}));
+  w.appendChild(el('h3', 'blk', 'Chọn bộ câu'));
+  const picks = [
+    { key: 'all', label: 'Tất cả chủ đề', ids: QUIZ.map(({ id }) => id) },
+    ...(qzWrongIds().length ? [{ key: 'wrong', label: 'Câu đã làm sai', ids: qzWrongIds() }] : []),
+    ...(qzNewIds().length ? [{ key: 'new', label: 'Câu chưa làm', ids: qzNewIds() }] : []),
+    ...QUIZ_TOPICS.map(topic => ({ key: topic, label: topic, ids: QUIZ.filter(q => q.topic === topic).map(({ id }) => id) })),
+  ];
 
-  picks.forEach(pk => {
-    const d = pk.ids.filter(id => qzRes(id)).length;
-    const r = pk.ids.filter(id => qzRes(id) && qzRes(id).ok).length;
-    const b = el('button','tcard');
-    b.setAttribute('aria-pressed', state.quizPick === pk.k);
-    b.innerHTML = '<div class="t">' + esc(pk.t) + '</div>' +
-      '<div class="s">' + pk.ids.length + ' câu · đã làm ' + d + (d ? ' · đúng ' + Math.round(r/d*100) + '%' : '') + '</div>' +
-      '<div class="tr"><i style="width:' + (r/pk.ids.length*100) + '%;background:var(--known)"></i>' +
-      '<i style="width:' + ((d-r)/pk.ids.length*100) + '%;background:var(--poor)"></i></div>';
-    b.onclick = () => { state.quizPick = pk.k; LS.set('quizPick', pk.k); draw(); };
-    setup.appendChild(b);
-  });
+  const setup = el('div', 'setup');
+  for (const { key, label, ids } of picks) {
+    const tried = ids.filter(id => qzRes(id)).length;
+    const correct = ids.filter(id => qzRes(id)?.ok).length;
+    const card = el('button', 'tcard', `
+      <div class="t">${esc(label)}</div>
+      <div class="s">${ids.length} câu · đã làm ${tried}${tried ? ` · đúng ${pct(correct, tried)}%` : ''}</div>
+      <div class="tr"><i style="width:${width(correct, ids.length)};background:var(--known)"></i><i style="width:${width(tried - correct, ids.length)};background:var(--poor)"></i></div>`);
+    card.setAttribute('aria-pressed', state.quizPick === key);
+    card.onclick = () => {
+      state.quizPick = key;
+      LS.set('quizPick', key);
+      draw();
+    };
+    setup.appendChild(card);
+  }
   w.appendChild(setup);
 
   const pool = qzPool();
-  w.appendChild(el('h3','blk','Số câu mỗi lượt'));
-  const lens = el('div','filters');
-  [[10,'10 câu'],[20,'20 câu'],[0,'Tất cả ' + pool.length + ' câu']].forEach(function(row){
-    const v = row[0], lab = row[1];
-    if (v && v >= pool.length) return;
-    const b = el('button','chip', lab);
-    b.onclick = () => startQuiz(pool, v);
-    lens.appendChild(b);
-  });
-  if (!pool.length) lens.appendChild(el('div','empty','Bộ này đang trống.'));
+  w.appendChild(el('h3', 'blk', 'Số câu mỗi lượt'));
+  const lens = el('div', 'filters');
+  for (const [len, label] of [[10, '10 câu'], [20, '20 câu'], [0, `Tất cả ${pool.length} câu`]]) {
+    if (len && len >= pool.length) continue;
+    const chip = el('button', 'chip', label);
+    chip.onclick = () => startQuiz(pool, len);
+    lens.appendChild(chip);
+  }
+  if (!pool.length) lens.appendChild(el('div', 'empty', 'Bộ này đang trống.'));
   w.appendChild(lens);
   return w;
-}
+};
 
-function viewQuizRun(){
-  const s = state.quiz, q = QUIZ_BY_ID.get(s.ids[s.i]);
-  const w = el('div','qz');
+const viewQuizRun = () => {
+  const { ids, i, picked, right } = state.quiz;
+  const q = QUIZ_BY_ID.get(ids[i]);
+  const w = el('div', 'qz');
 
-  const meta = el('div','qzmeta');
-  meta.innerHTML =
-    '<span class="step">' + (s.i + 1) + ' / ' + s.ids.length + '</span>' +
-    '<span class="track"><i style="width:' + (s.i / s.ids.length * 100) + '%"></i></span>' +
-    '<span class="score">đúng ' + s.right + '</span>';
-  w.appendChild(meta);
-
-  w.appendChild(el('div','qztopic', esc(q.topic) + ' · ' + esc(q.group)));
-  w.appendChild(el('h2','qztitle', esc(q.title)));
+  w.appendChild(el('div', 'qzmeta', `
+    <span class="step">${i + 1} / ${ids.length}</span>
+    <span class="track"><i style="width:${width(i, ids.length)}"></i></span>
+    <span class="score">đúng ${right}</span>`));
+  w.appendChild(el('div', 'qztopic', `${esc(q.topic)} · ${esc(q.group)}`));
+  w.appendChild(el('h2', 'qztitle', esc(q.title)));
   w.appendChild(render(q.prompt));
 
-  const box = el('div','opts');
-  q.opts.forEach(o => {
-    const b = el('button','opt');
-    b.appendChild(el('span','k', o.k + ')'));
-    const body = el('span','t'); body.appendChild(render(o.t)); b.appendChild(body);
-    if (s.picked){
-      b.disabled = true;
-      if (o.k === q.ans){ b.dataset.r = 'right'; b.appendChild(el('span','mark','đúng')); }
-      else if (o.k === s.picked){ b.dataset.r = 'wrong'; b.appendChild(el('span','mark','đã chọn')); }
+  const box = el('div', 'opts');
+  for (const { k, t } of q.opts) {
+    const btn = el('button', 'opt');
+    btn.appendChild(el('span', 'k', `${k})`));
+    const body = el('span', 't');
+    body.appendChild(render(t));
+    btn.appendChild(body);
+
+    if (picked) {
+      btn.disabled = true;
+      if (k === q.ans) {
+        btn.dataset.r = 'right';
+        btn.appendChild(el('span', 'mark', 'đúng'));
+      } else if (k === picked) {
+        btn.dataset.r = 'wrong';
+        btn.appendChild(el('span', 'mark', 'đã chọn'));
+      }
     } else {
-      b.onclick = () => pickAnswer(o.k);
+      btn.onclick = () => pickAnswer(k);
     }
-    box.appendChild(b);
-  });
-  w.appendChild(box);
-
-  if (s.picked){
-    const ok = s.picked === q.ans;
-    const v = el('div','verdict', ok ? 'Đúng' : 'Chưa đúng — đáp án là ' + q.ans);
-    v.dataset.r = ok ? 'right' : 'wrong';
-    w.appendChild(v);
-    const ex = el('div','expl');
-    ex.appendChild(render(q.expl));
-    w.appendChild(ex);
-
-    const act = el('div','qzactions');
-    const nx = el('button','btn', s.i + 1 >= s.ids.length ? 'Xem kết quả' : 'Câu tiếp →');
-    nx.onclick = nextQuestion;
-    act.appendChild(nx);
-    const stop = el('button','btn ghost','Dừng lượt này');
-    stop.onclick = () => { state.quiz = null; draw(); };
-    act.appendChild(stop);
-    w.appendChild(act);
+    box.appendChild(btn);
   }
+  w.appendChild(box);
+  if (!picked) return w;
+
+  const ok = picked === q.ans;
+  const verdict = el('div', 'verdict', ok ? 'Đúng' : `Chưa đúng — đáp án là ${q.ans}`);
+  verdict.dataset.r = ok ? 'right' : 'wrong';
+  w.appendChild(verdict);
+  w.appendChild(el('div', 'expl')).appendChild(render(q.expl));
+
+  const actions = el('div', 'qzactions');
+  const next = el('button', 'btn', i + 1 >= ids.length ? 'Xem kết quả' : 'Câu tiếp →');
+  next.onclick = nextQuestion;
+  const stop = el('button', 'btn ghost', 'Dừng lượt này');
+  stop.onclick = () => { state.quiz = null; draw(); };
+  actions.append(next, stop);
+  w.appendChild(actions);
   return w;
-}
+};
 
-function pickAnswer(k){
-  const s = state.quiz, q = QUIZ_BY_ID.get(s.ids[s.i]);
-  if (s.picked) return;
-  s.picked = k;
-  const ok = k === q.ans;
-  if (ok) s.right++;
-  state.quizRes[q.id] = {picked: k, ok: ok, at: Date.now()};
-  saveQuiz();
-  draw();
-}
-function nextQuestion(){
-  state.quiz.i++; state.quiz.picked = null;
-  draw(); window.scrollTo({top:0, behavior:'instant'});
-}
+const verdictLine = score =>
+  score >= 80 ? 'Mảng này nắm chắc rồi, chuyển sang chủ đề khác được.'
+  : score >= 50 ? 'Ổn, nhưng còn chỗ hổng. Làm lại những câu sai bên dưới.'
+  : 'Nên đọc lại lý thuyết của chủ đề này trước khi làm tiếp.';
 
-function viewQuizDone(){
-  const s = state.quiz, n = s.ids.length, pct = Math.round(s.right / n * 100);
-  const w = el('div','qz');
-  const wrong = s.ids.filter(id => state.quizRes[id] && !state.quizRes[id].ok);
+const viewQuizDone = () => {
+  const { ids, right } = state.quiz;
+  const score = pct(right, ids.length);
+  const wrong = ids.filter(id => state.quizRes[id] && !state.quizRes[id].ok);
+  const w = el('div', 'qz');
 
-  const hero = el('div','hero');
-  hero.innerHTML =
-    '<div class="eyebrow">Kết quả lượt này</div>' +
-    '<h2>' + s.right + ' trên ' + n + ' câu · ' + pct + '%</h2>' +
-    '<p>' + (pct >= 80 ? 'Mảng này nắm chắc rồi, chuyển sang chủ đề khác được.' :
-             pct >= 50 ? 'Ổn, nhưng còn chỗ hổng. Làm lại những câu sai bên dưới.' :
-                         'Nên đọc lại lý thuyết của chủ đề này trước khi làm tiếp.') + '</p>';
-  w.appendChild(hero);
+  w.appendChild(el('div', 'hero', `
+    <div class="eyebrow">Kết quả lượt này</div>
+    <h2>${right} trên ${ids.length} câu · ${score}%</h2>
+    <p>${verdictLine(score)}</p>`));
 
-  if (wrong.length){
-    w.appendChild(el('h3','blk','Những câu làm sai'));
-    const list = el('div','qlist');
-    wrong.forEach(id => {
-      const q = QUIZ_BY_ID.get(id), r = state.quizRes[id];
-      const b = el('button','qrow');
-      b.dataset.st = 'vague';
-      b.innerHTML = '<span class="id">' + esc(q.topic.slice(0,4)) + '</span>' +
-        '<span class="ttl">' + esc(q.title) + '</span>' +
-        '<span class="tags"><span class="hasnote">chọn ' + r.picked + ' · đúng ' + q.ans + '</span></span>';
-      b.onclick = () => startQuiz([id], 0);
-      list.appendChild(b);
-    });
+  if (wrong.length) {
+    w.appendChild(el('h3', 'blk', 'Những câu làm sai'));
+    const list = el('div', 'qlist');
+    for (const id of wrong) {
+      const q = QUIZ_BY_ID.get(id);
+      const btn = el('button', 'qrow', `
+        <span class="id">${esc(q.topic.slice(0, 4))}</span>
+        <span class="ttl">${esc(q.title)}</span>
+        <span class="tags"><span class="hasnote">chọn ${state.quizRes[id].picked} · đúng ${q.ans}</span></span>`);
+      btn.dataset.st = 'vague';
+      btn.onclick = () => startQuiz([id]);
+      list.appendChild(btn);
+    }
     w.appendChild(list);
   }
 
-  const act = el('div','qzactions');
-  if (wrong.length){
-    const again = el('button','btn','Làm lại ' + wrong.length + ' câu sai');
-    again.onclick = () => startQuiz(wrong, 0);
-    act.appendChild(again);
+  const actions = el('div', 'qzactions');
+  if (wrong.length) {
+    const again = el('button', 'btn', `Làm lại ${wrong.length} câu sai`);
+    again.onclick = () => startQuiz(wrong);
+    actions.appendChild(again);
   }
-  const back = el('button','btn ghost','Chọn bộ khác');
+  const back = el('button', 'btn ghost', 'Chọn bộ khác');
   back.onclick = () => { state.quiz = null; draw(); };
-  act.appendChild(back);
-  w.appendChild(act);
+  actions.appendChild(back);
+  w.appendChild(actions);
   return w;
-}
+};
 
 /* ===================== sao lưu ===================== */
-function toast(msg){
-  document.querySelectorAll('.toast').forEach(t => t.remove());
-  const d = el('div','toast', esc(msg));
-  document.body.appendChild(d);
-  setTimeout(() => d.remove(), 3200);
-}
-function exportData(){
+const BACKUP_FORMAT = 'on-luyen-frontend';
+
+const toast = msg => {
+  for (const old of document.querySelectorAll('.toast')) old.remove();
+  const node = el('div', 'toast', esc(msg));
+  document.body.appendChild(node);
+  setTimeout(() => node.remove(), 3200);
+};
+
+const exportData = () => {
   const payload = {
-    format: 'on-luyen-frontend', version: 1,
+    format: BACKUP_FORMAT,
+    version: 1,
     exportedAt: new Date().toISOString(),
-    status: state.status, notes: state.notes, quiz: state.quizRes, route: state.route
+    status: state.status,
+    notes: state.notes,
+    quiz: state.quizRes,
+    route: state.route,
   };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = el('a'); a.href = url;
-  a.download = 'on-luyen-frontend-' + new Date().toISOString().slice(0, 10) + '.json';
-  document.body.appendChild(a); a.click(); a.remove();
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+  const link = el('a');
+  link.href = url;
+  link.download = `${BACKUP_FORMAT}-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  const c = Object.keys(state.notes).filter(k => state.notes[k] && state.notes[k].trim()).length;
-  toast('Đã xuất ' + c + ' ghi chú và ' + Object.keys(state.quizRes).length + ' kết quả trắc nghiệm');
-}
-function importData(file){
-  const r = new FileReader();
-  r.onload = () => {
-    let d;
-    try{ d = JSON.parse(r.result); }
-    catch(e){ return toast('File không đọc được — cần đúng file JSON đã xuất từ trang này'); }
-    if (!d || d.format !== 'on-luyen-frontend') return toast('File không đúng định dạng của trang này');
-    let added = 0;
-    if (d.notes)  for (const k in d.notes)  { if (d.notes[k]  !== state.notes[k])  { state.notes[k]  = d.notes[k];  added++; } }
-    if (d.status) for (const k in d.status) { state.status[k] = d.status[k]; }
-    if (d.quiz)   for (const k in d.quiz)   { state.quizRes[k] = d.quiz[k]; }
-    if (d.route) state.route = d.route;
-    LS.set('notes', state.notes); saveProgress(); saveQuiz();
+  toast(`Đã xuất ${noteCount()} ghi chú và ${qzDone()} kết quả trắc nghiệm`);
+};
+
+const importData = file => {
+  const reader = new FileReader();
+  reader.onerror = () => toast('Không đọc được file');
+  reader.onload = () => {
+    let data;
+    try {
+      data = JSON.parse(reader.result);
+    } catch {
+      toast('File không đọc được — cần đúng file JSON đã xuất từ trang này');
+      return;
+    }
+    if (data?.format !== BACKUP_FORMAT) {
+      toast('File không đúng định dạng của trang này');
+      return;
+    }
+
+    const { notes = {}, status = {}, quiz = {}, route } = data;
+    const added = Object.entries(notes).filter(([id, text]) => text !== state.notes[id]).length;
+    Object.assign(state.notes, notes);
+    Object.assign(state.status, status);
+    Object.assign(state.quizRes, quiz);
+    if (route) state.route = route;
+
+    saveNotes();
+    saveProgress();
+    saveQuiz();
     draw();
-    toast('Đã nhập xong — ' + added + ' ghi chú được cập nhật');
+    toast(`Đã nhập xong — ${added} ghi chú được cập nhật`);
   };
-  r.onerror = () => toast('Không đọc được file');
-  r.readAsText(file);
-}
+  reader.readAsText(file);
+};
 
 /* ===================== giao diện chung ===================== */
-function applyTheme(t){
-  if (t === 'system') document.documentElement.removeAttribute('data-theme');
-  else document.documentElement.setAttribute('data-theme', t);
-  LS.set('theme', t);
-}
+const THEMES = ['system', 'dark', 'light'];
+
+const applyTheme = theme => {
+  if (theme === 'system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', theme);
+  LS.set('theme', theme);
+};
 applyTheme(LS.get('theme', 'system'));
+
 document.getElementById('theme').onclick = () => {
-  const cur = LS.get('theme', 'system');
-  applyTheme(cur === 'system' ? 'dark' : cur === 'dark' ? 'light' : 'system');
+  const current = LS.get('theme', 'system');
+  applyTheme(THEMES[(THEMES.indexOf(current) + 1) % THEMES.length]);
 };
 
 document.getElementById('export').onclick = exportData;
 document.getElementById('import').onclick = () => document.getElementById('importfile').click();
-document.getElementById('importfile').onchange = e => {
-  const f = e.target.files && e.target.files[0];
-  if (f) importData(f);
-  e.target.value = '';
+document.getElementById('importfile').onchange = ({ target }) => {
+  const [file] = target.files ?? [];
+  if (file) importData(file);
+  target.value = '';
 };
 
 const rail = document.getElementById('rail');
 let scrim = null;
-function closeRail(){ rail.dataset.open = '0'; if (scrim){ scrim.remove(); scrim = null; } }
+
+const closeRail = () => {
+  rail.dataset.open = '0';
+  scrim?.remove();
+  scrim = null;
+};
+
 document.getElementById('railtoggle').onclick = () => {
   if (rail.dataset.open === '1') return closeRail();
   rail.dataset.open = '1';
-  scrim = el('div','scrim'); scrim.onclick = closeRail; document.body.appendChild(scrim);
+  scrim = el('div', 'scrim');
+  scrim.onclick = closeRail;
+  document.body.appendChild(scrim);
 };
 
-const qbox = document.getElementById('q');
-let qtmr = null;
-qbox.oninput = () => {
-  clearTimeout(qtmr);
-  qtmr = setTimeout(() => {
-    state.query = qbox.value;
-    if (state.query && (state.mode !== 'giaoan' || state.question)){
-      state.mode = 'giaoan'; state.question = null; state.section = null; state.docsec = null; state.filter = 'all';
+const searchBox = document.getElementById('q');
+let searchTimer = null;
+searchBox.oninput = () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    state.query = searchBox.value;
+    if (state.query && (state.mode !== 'giaoan' || state.question)) {
+      Object.assign(state, { mode: 'giaoan', question: null, section: null, docsec: null, filter: 'all' });
     }
     draw();
   }, 140);
 };
+
+const NUMBER_KEYS = { 1: 'A', 2: 'B', 3: 'C', 4: 'D' };
+
 document.addEventListener('keydown', e => {
   const typing = /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
-  if (e.key === '/' && !typing){ e.preventDefault(); qbox.focus(); qbox.select(); return; }
-  if (e.key === 'Escape'){ if (document.activeElement === qbox){ qbox.blur(); } closeRail(); return; }
-  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (state.mode === 'quiz' && state.quiz && state.quiz.i < state.quiz.ids.length){
-    const cq = QUIZ_BY_ID.get(state.quiz.ids[state.quiz.i]);
-    if (!state.quiz.picked){
-      const k = ({'1':'A','2':'B','3':'C','4':'D'})[e.key] || (/^[a-dA-D]$/.test(e.key) ? e.key.toUpperCase() : null);
-      if (k && cq.opts.some(o => o.k === k)){ e.preventDefault(); pickAnswer(k); return; }
-    } else if (e.key === 'Enter' || e.key === 'n'){ e.preventDefault(); nextQuestion(); return; }
+
+  if (e.key === '/' && !typing) {
+    e.preventDefault();
+    searchBox.focus();
+    searchBox.select();
+    return;
   }
-  if (state.question && (e.key === 'j' || e.key === 'k')){
-    const i = QUESTIONS.findIndex(q => q.id === state.question);
-    const n = QUESTIONS[e.key === 'j' ? i+1 : i-1];
-    if (n) go({question:n.id});
+  if (e.key === 'Escape') {
+    if (document.activeElement === searchBox) searchBox.blur();
+    closeRail();
+    return;
+  }
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+
+  const { quiz } = state;
+  if (state.mode === 'quiz' && quiz && quiz.i < quiz.ids.length) {
+    if (!quiz.picked) {
+      const key = NUMBER_KEYS[e.key] ?? (/^[a-d]$/i.test(e.key) ? e.key.toUpperCase() : null);
+      if (key && QUIZ_BY_ID.get(quiz.ids[quiz.i]).opts.some(o => o.k === key)) {
+        e.preventDefault();
+        pickAnswer(key);
+        return;
+      }
+    } else if (e.key === 'Enter' || e.key === 'n') {
+      e.preventDefault();
+      nextQuestion();
+      return;
+    }
+  }
+
+  if (state.question && (e.key === 'j' || e.key === 'k')) {
+    const idx = QUESTIONS.findIndex(({ id }) => id === state.question);
+    const target = QUESTIONS[e.key === 'j' ? idx + 1 : idx - 1];
+    if (target) go({ question: target.id });
   }
 });
 
