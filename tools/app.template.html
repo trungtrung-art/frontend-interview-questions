@@ -292,6 +292,9 @@ h3.blk{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var
 .hljs-deletion{color:var(--poor)}
 .hljs-meta{color:var(--faint)}
 
+#link[data-on="1"]{color:var(--known)}
+#link[data-on="1"]:hover{background:var(--known-soft)}
+
 /* ============ thông báo ============ */
 .toast{
   position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
@@ -417,6 +420,9 @@ h3.blk{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var
         <kbd>/</kbd>
       </div>
       <div class="tools">
+        <button class="iconbtn" id="link" aria-label="Nối với file trong repo" hidden>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6.5 9.5a2.5 2.5 0 003.5 0l2.5-2.5a2.5 2.5 0 00-3.5-3.5L8 4.5"/><path d="M9.5 6.5a2.5 2.5 0 00-3.5 0L3.5 9a2.5 2.5 0 003.5 3.5L8 11.5"/></svg>
+        </button>
         <button class="iconbtn" id="export" aria-label="Xuất ghi chú và tiến độ ra file JSON" title="Xuất ghi chú và tiến độ ra file JSON">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 10.5V2M8 2L5 5M8 2l3 3"/><path d="M2.5 10v3a1 1 0 001 1h9a1 1 0 001-1v-3"/></svg>
         </button>
@@ -552,11 +558,12 @@ const state = {
   quiz: null,
 };
 
-const saveNotes = () => LS.set('notes', state.notes);
-const saveQuiz = () => LS.set('quiz', state.quizRes);
+const saveNotes = () => { LS.set('notes', state.notes); queueLinkedWrite(); };
+const saveQuiz = () => { LS.set('quiz', state.quizRes); queueLinkedWrite(); };
 const saveProgress = () => {
   LS.set('status', state.status);
   LS.set('route', state.route);
+  queueLinkedWrite();
 };
 
 /* ===================== thống kê ===================== */
@@ -804,13 +811,11 @@ const viewToday = () => {
   tbl.appendChild(tbody);
   w.appendChild(el('div', 'tablewrap')).appendChild(tbl);
 
-  const backup = el('div', 'backup', `
-    <div><b>Ghi chú và tiến độ chỉ nằm trong trình duyệt này.</b>
-    Xoá dữ liệu duyệt web hoặc đổi máy là mất. Thỉnh thoảng bấm nút xuất ở góc phải trên
-    để lưu ra file JSON, và cất file đó vào repo. </div>`);
-  const backupBtn = el('button', '', 'Xuất ngay');
-  backupBtn.onclick = exportData;
-  backup.firstElementChild.appendChild(backupBtn);
+  const backup = el('div', 'backup');
+  const line = el('div');
+  line.id = 'linkline';
+  line.append(...linkLineParts());
+  backup.appendChild(line);
   w.appendChild(backup);
 
   if (DOCSECS.length) {
@@ -1183,17 +1188,33 @@ const toast = msg => {
   setTimeout(() => node.remove(), 3200);
 };
 
+const backupPayload = () => ({
+  format: BACKUP_FORMAT,
+  version: 1,
+  exportedAt: new Date().toISOString(),
+  status: state.status,
+  notes: state.notes,
+  quiz: state.quizRes,
+  route: state.route,
+});
+
+const mergeBackup = data => {
+  if (data?.format !== BACKUP_FORMAT) return 0;
+  const { notes = {}, status = {}, quiz = {}, route } = data;
+  const changed = Object.entries(notes).filter(([id, text]) => text !== state.notes[id]).length;
+  Object.assign(state.notes, notes);
+  Object.assign(state.status, status);
+  Object.assign(state.quizRes, quiz);
+  if (route) state.route = route;
+  saveNotes();
+  saveProgress();
+  saveQuiz();
+  return changed;
+};
+
+
 const exportData = () => {
-  const payload = {
-    format: BACKUP_FORMAT,
-    version: 1,
-    exportedAt: new Date().toISOString(),
-    status: state.status,
-    notes: state.notes,
-    quiz: state.quizRes,
-    route: state.route,
-  };
-  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+  const url = URL.createObjectURL(new Blob([JSON.stringify(backupPayload(), null, 2)], { type: 'application/json' }));
   const link = el('a');
   link.href = url;
   link.download = `${BACKUP_FORMAT}-${new Date().toISOString().slice(0, 10)}.json`;
@@ -1219,21 +1240,202 @@ const importData = file => {
       toast('File không đúng định dạng của trang này');
       return;
     }
-
-    const { notes = {}, status = {}, quiz = {}, route } = data;
-    const added = Object.entries(notes).filter(([id, text]) => text !== state.notes[id]).length;
-    Object.assign(state.notes, notes);
-    Object.assign(state.status, status);
-    Object.assign(state.quizRes, quiz);
-    if (route) state.route = route;
-
-    saveNotes();
-    saveProgress();
-    saveQuiz();
+    const added = mergeBackup(data);
     draw();
     toast(`Đã nhập xong — ${added} ghi chú được cập nhật`);
   };
   reader.readAsText(file);
+};
+
+/* ===================== nối thẳng với file trong repo ===================== */
+/*
+ * File System Access API cho phép trang ghi thẳng vào một file người dùng đã
+ * chọn. Chọn một lần, quyền và "tay cầm" file được cất trong IndexedDB nên lần
+ * mở sau vẫn còn — chỉ cần bấm cho phép lại. Firefox và Safari chưa có API này,
+ * ở đó trang tự rơi về nút xuất/nhập thủ công.
+ */
+const FS_OK = typeof window.showSaveFilePicker === 'function';
+const IDB_KEY = 'repoFile';
+
+const idb = {
+  open: () => new Promise((resolve, reject) => {
+    const req = indexedDB.open('fe-onluyen', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('kv');
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  }),
+  run: async (mode, fn) => {
+    const db = await idb.open();
+    return new Promise((resolve, reject) => {
+      const req = fn(db.transaction('kv', mode).objectStore('kv'));
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  },
+  get: key => idb.run('readonly', store => store.get(key)),
+  set: (key, value) => idb.run('readwrite', store => store.put(value, key)),
+  del: key => idb.run('readwrite', store => store.delete(key)),
+};
+
+const link = { handle: null, name: '', ready: false };
+
+let linkTimer = null;
+let linkWriting = false;
+
+const writeLinked = async () => {
+  if (!link.ready || linkWriting) return;
+  linkWriting = true;
+  try {
+    const stream = await link.handle.createWritable();
+    await stream.write(JSON.stringify(backupPayload(), null, 2));
+    await stream.close();
+  } catch {
+    link.ready = false;
+    drawLinkState();
+    toast(`Mất quyền ghi vào ${link.name} — bấm nối lại`);
+  } finally {
+    linkWriting = false;
+  }
+};
+
+const queueLinkedWrite = () => {
+  if (!link.ready) return;
+  clearTimeout(linkTimer);
+  linkTimer = setTimeout(writeLinked, 1200);
+};
+
+const drawLinkState = () => {
+  const btn = document.getElementById('link');
+  if (!btn) return;
+  btn.hidden = !FS_OK;
+  btn.dataset.on = link.ready ? '1' : '0';
+  btn.title = link.ready
+    ? `Đang ghi thẳng vào ${link.name}`
+    : link.handle
+      ? `Bấm để cấp quyền ghi lại vào ${link.name}`
+      : 'Nối với một file trong repo để ghi chú tự lưu vào đó';
+  const box = document.getElementById('linkline');
+  if (box) box.replaceChildren(...linkLineParts());
+};
+
+const pickRepoFile = async () => {
+  try {
+    link.handle = await window.showSaveFilePicker({
+      suggestedName: 'ghi-chu.json',
+      types: [{ description: 'Ghi chú ôn luyện', accept: { 'application/json': ['.json'] } }],
+    });
+    link.name = link.handle.name;
+    link.ready = true;
+    await idb.set(IDB_KEY, link.handle);
+
+    // file đã có sẵn nội dung (ví dụ vừa pull từ git) thì nạp vào trước
+    const file = await link.handle.getFile();
+    if (file.size) {
+      try {
+        const merged = mergeBackup(JSON.parse(await file.text()));
+        if (merged) toast(`Đã nạp ${merged} ghi chú từ ${link.name}`);
+      } catch {
+        /* file rỗng hoặc không đúng định dạng: cứ ghi đè bằng dữ liệu hiện tại */
+      }
+    }
+    await writeLinked();
+    draw();
+    toast(`Ghi chú giờ tự lưu vào ${link.name}`);
+  } catch {
+    /* người dùng bấm huỷ hộp thoại */
+  }
+};
+
+const relink = async () => {
+  try {
+    const granted = await link.handle.requestPermission({ mode: 'readwrite' });
+    if (granted !== 'granted') return toast('Chưa được cấp quyền ghi vào file');
+    link.ready = true;
+    const file = await link.handle.getFile();
+    if (file.size) {
+      try {
+        const merged = mergeBackup(JSON.parse(await file.text()));
+        if (merged) toast(`Đã nạp ${merged} ghi chú từ ${link.name}`);
+      } catch {
+        /* bỏ qua nội dung hỏng */
+      }
+    }
+    draw();
+    drawLinkState();
+  } catch {
+    toast('Không nối lại được, thử chọn lại file');
+  }
+};
+
+const onLinkButton = () => (link.handle && !link.ready ? relink() : pickRepoFile());
+
+const unlinkFile = async () => {
+  link.handle = null;
+  link.name = '';
+  link.ready = false;
+  try { await idb.del(IDB_KEY); } catch { /* không sao */ }
+  draw();
+  toast('Đã ngắt nối, ghi chú quay về lưu trong trình duyệt');
+};
+
+const linkLineParts = () => {
+  const parts = [];
+  const text = document.createElement('span');
+  if (!FS_OK) {
+    text.innerHTML = '<b>Ghi chú chỉ nằm trong trình duyệt này.</b> Trình duyệt của anh chưa hỗ trợ ghi thẳng vào file, '
+      + 'nên thỉnh thoảng bấm nút xuất ở góc phải trên rồi cất file JSON vào repo. ';
+    parts.push(text);
+    const btn = el('button', '', 'Xuất ngay');
+    btn.onclick = exportData;
+    parts.push(btn);
+    return parts;
+  }
+  if (link.ready) {
+    text.innerHTML = `<b>Đang tự ghi vào ${esc(link.name)}.</b> Mỗi lần anh sửa ghi chú là file được cập nhật. `
+      + 'Nhớ <code>git add notes/ &amp;&amp; git commit</code> để giữ lại. ';
+    parts.push(text);
+    const btn = el('button', '', 'Ngắt nối');
+    btn.onclick = unlinkFile;
+    parts.push(btn);
+    return parts;
+  }
+  if (link.handle) {
+    text.innerHTML = `<b>Đã nối với ${esc(link.name)} nhưng chưa được cấp quyền ghi.</b> `
+      + 'Trình duyệt hỏi lại quyền sau mỗi lần mở trang. ';
+    parts.push(text);
+    const btn = el('button', '', 'Cấp quyền lại');
+    btn.onclick = relink;
+    parts.push(btn);
+    return parts;
+  }
+  text.innerHTML = '<b>Ghi chú đang chỉ nằm trong trình duyệt này.</b> Nối với một file trong repo '
+    + 'thì mỗi lần gõ là tự ghi vào đó, chỉ còn việc commit. ';
+  parts.push(text);
+  const btn = el('button', '', 'Nối với file trong repo');
+  btn.onclick = pickRepoFile;
+  parts.push(btn);
+  return parts;
+};
+
+const restoreLink = async () => {
+  if (!FS_OK) return drawLinkState();
+  try {
+    const handle = await idb.get(IDB_KEY);
+    if (!handle) return drawLinkState();
+    link.handle = handle;
+    link.name = handle.name;
+    link.ready = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted';
+    if (link.ready) {
+      const file = await handle.getFile();
+      if (file.size) {
+        try { mergeBackup(JSON.parse(await file.text())); } catch { /* bỏ qua */ }
+      }
+    }
+    draw();
+    drawLinkState();
+  } catch {
+    drawLinkState();
+  }
 };
 
 /* ===================== giao diện chung ===================== */
@@ -1251,6 +1453,7 @@ document.getElementById('theme').onclick = () => {
   applyTheme(THEMES[(THEMES.indexOf(current) + 1) % THEMES.length]);
 };
 
+document.getElementById('link').onclick = onLinkButton;
 document.getElementById('export').onclick = exportData;
 document.getElementById('import').onclick = () => document.getElementById('importfile').click();
 document.getElementById('importfile').onchange = ({ target }) => {
@@ -1331,6 +1534,8 @@ document.addEventListener('keydown', e => {
 });
 
 draw();
+drawLinkState();
+restoreLink();
 </script>
 </body>
 </html>

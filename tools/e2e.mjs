@@ -37,6 +37,9 @@ check('Hôm nay: 4 thẻ số liệu', $$('.card').length === 4);
 check('Hôm nay: bảng 9 phần', $$('.progtable tbody tr').length === 9);
 check('Hôm nay: 3 lộ trình', $$('.route').length === 3);
 check('Hôm nay: nhắc sao lưu', Boolean($('.backup')));
+// jsdom không có File System Access API, nên trang phải rơi về nhánh xuất tay
+check('không hỗ trợ ghi file -> hiện nút xuất', $('.backup')?.textContent.includes('Xuất ngay'));
+check('không hỗ trợ ghi file -> ẩn nút nối', $('#link')?.hidden === true);
 check('Hôm nay: 2 chip tài liệu nền', $$('.filters .chip').length === 2);
 
 byText('.route', 'Còn 1 tuần')?.click();

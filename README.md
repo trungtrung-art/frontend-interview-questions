@@ -225,7 +225,19 @@ Script đọc `ly-thuyet/`, `PLAYBOOK.md`, `09-algorithms.md` và các file tr�
 ### Dữ liệu cá nhân
 
 Ghi chú, tiến độ và kết quả trắc nghiệm nằm trong `localStorage` của trình duyệt — không đẩy lên đâu cả.
-Dùng nút xuất ở góc phải trên để lưu ra file JSON, và nút nhập để khôi phục trên máy khác.
+Để giữ lại lâu dài, nối trang với một file trong repo:
+
+1. Mở `docs/index.html`, bấm nút hình mắt xích ở góc phải trên
+2. Chọn `notes/ghi-chu.json`
+3. Từ đó mỗi lần gõ ghi chú là file tự được cập nhật
+
+```bash
+node tools/notes-to-md.mjs            # sinh notes/GHI-CHU.md đọc được trên GitHub
+git add notes/ && git commit -m "cập nhật ghi chú"
+```
+
+Cần Brave, Chrome hoặc Edge. Firefox và Safari chưa hỗ trợ ghi thẳng vào file — ở đó trang tự
+chuyển sang nút xuất/nhập JSON thủ công. Xem thêm [notes/README.md](./notes/README.md).
 
 ### Kiểm thử
 
@@ -253,6 +265,8 @@ rồi đối chiếu kết quả trên DOM lẫn trong `localStorage`. Nên ch�
 | `tools/vendor/` | marked và highlight.js nhúng sẵn |
 | `tools/e2e.mjs` | Kiểm thử trang đã build bằng DOM thật |
 | `tools/check-script-safety.mjs` | Soi chuỗi làm đóng thẻ `<script>` sớm |
+| `tools/notes-to-md.mjs` | Sinh `notes/GHI-CHU.md` từ ghi chú |
+| `notes/` | Ghi chú và tiến độ cá nhân |
 | `docs/index.html` | Kết quả, được commit để GitHub Pages phục vụ |
 
 Mã nguồn viết bằng cú pháp ES6+ (arrow function, template literal, destructuring, spread,
