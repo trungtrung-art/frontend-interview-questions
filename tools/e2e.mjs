@@ -30,6 +30,8 @@ const click = s => { $(s)?.click(); };
 const byText = (sel, txt) => $$(sel).find(e => e.textContent.trim().startsWith(txt));
 
 check('không có lỗi runtime', errors.length === 0, errors.join(' | '));
+check('không còn chỗ cắm chưa thay', !/__(MD_|QUIZ_DATA|LIB_)[A-Z_]*__/.test(html));
+check('không lẫn banner của template', !html.includes('CHI-CO-TRONG-TEMPLATE'));
 check('6 chế độ ở rail', $$('.mode').length === 6);
 check('Hôm nay: 4 thẻ số liệu', $$('.card').length === 4);
 check('Hôm nay: bảng 9 phần', $$('.progtable tbody tr').length === 9);

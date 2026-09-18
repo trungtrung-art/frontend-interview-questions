@@ -209,6 +209,8 @@ Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend v�
 ### Dùng
 
 - **Trên máy:** bấm đúp `docs/index.html`. Không cần server, không cần mạng.
+  Đừng mở `tools/app.template.html` — đó là file mẫu, chỗ chứa dữ liệu còn để trống nên
+  trang sẽ hiện khung mà không có câu hỏi nào.
 - **Trên điện thoại:** bật GitHub Pages cho repo (Settings → Pages → Source: `main`, Folder: `/docs`), rồi mở link Pages.
 
 ### Sinh lại sau khi sửa nội dung

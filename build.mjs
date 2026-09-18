@@ -128,6 +128,12 @@ const jsString = s => JSON.stringify(s).replace(/<\//g, '<\\/');
 const jsRaw = s => s.replace(/<\/script/gi, '<\\/script');
 
 let html = read('tools', 'app.template.html');
+
+// Template mang sẵn một banner cảnh báo cho người lỡ mở thẳng nó bằng
+// trình duyệt. Trang thật thì không cần, nên cắt bỏ ở đây.
+const BANNER = /\n?<!-- CHI-CO-TRONG-TEMPLATE:BAT-DAU[\s\S]*?CHI-CO-TRONG-TEMPLATE:KET-THUC -->\n?/;
+if (!BANNER.test(html)) throw new Error('Template thiếu banner cảnh báo — xem tools/app.template.html');
+html = html.replace(BANNER, '\n');
 const slots = {
   __LIB_MARKED__: jsRaw(read('tools', 'vendor', 'marked.umd.min.js')),
   __LIB_HLJS__: jsRaw(read('tools', 'vendor', 'highlight.min.js')),
