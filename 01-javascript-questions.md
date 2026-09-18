@@ -22,10 +22,10 @@ for (var i = 0; i < 3; i++) {
 }
 ```
 
-- A) `0, 1, 2`
-- B) `3, 3, 3`
-- C) `undefined, undefined, undefined`
-- D) `0, 0, 0`
+- A) `0, 0, 0`
+- B) `0, 1, 2`
+- C) `3, 3, 3`
+- D) `undefined, undefined, undefined`
 
 ---
 
@@ -39,10 +39,10 @@ var a = 1;
 let b = 2;
 ```
 
-- A) `undefined`, `undefined`
-- B) `1`, `2`
-- C) `undefined`, `ReferenceError`
-- D) `ReferenceError`, `ReferenceError`
+- A) `ReferenceError`, `ReferenceError`
+- B) `undefined`, `undefined`
+- C) `1`, `2`
+- D) `undefined`, `ReferenceError`
 
 ---
 
@@ -56,10 +56,10 @@ console.log(null == undefined);
 console.log(null === undefined);
 ```
 
-- A) `true, true, true, true`
-- B) `true, false, true, false`
-- C) `false, false, true, true`
-- D) `true, false, false, false`
+- A) `true, false, false, false`
+- B) `true, true, true, true`
+- C) `true, false, true, false`
+- D) `false, false, true, true`
 
 ---
 
@@ -72,10 +72,10 @@ const result = arr.filter(x => x > 2).map(x => x * 2);
 console.log(result);
 ```
 
-- A) `[6, 8, 10]`
-- B) `[2, 4, 6, 8, 10]`
-- C) `[3, 4, 5]`
-- D) `[6, 8, 10, undefined, undefined]`
+- A) `[2, 4, 6, 8, 10]`
+- B) `[3, 4, 5]`
+- C) `[6, 8, 10, undefined, undefined]`
+- D) `[6, 8, 10]`
 
 ---
 
@@ -90,8 +90,8 @@ console.log(typeof []);
 ```
 
 - A) `null, undefined, NaN, array`
-- B) `object, undefined, number, object`
-- C) `null, undefined, number, array`
+- B) `null, undefined, number, array`
+- C) `object, undefined, number, object`
 - D) `object, undefined, NaN, object`
 
 ---
@@ -114,10 +114,10 @@ obj.greet();
 obj.greetArrow();
 ```
 
-- A) `John`, `John`
-- B) `John`, `undefined`
-- C) `undefined`, `John`
-- D) `undefined`, `undefined`
+- A) `undefined`, `undefined`
+- B) `undefined`, `John`
+- C) `John`, `undefined`
+- D) `John`, `John`
 
 ---
 
@@ -133,10 +133,10 @@ console.log(arr1);
 console.log(arr2);
 ```
 
-- A) `[1,2,3,4]`, `[1,2,3,4]`
-- B) `[1,2,3]`, `[1,2,3,4]`
-- C) `[1,2,3,4]`, `[1,2,3]`
-- D) Error
+- A) `[1,2,3,4]`, `[1,2,3]`
+- B) Error
+- C) `[1,2,3,4]`, `[1,2,3,4]`
+- D) `[1,2,3]`, `[1,2,3,4]`
 
 ---
 
@@ -154,9 +154,9 @@ console.log(obj1.b.c);
 ```
 
 - A) `1`, `2`
-- B) `10`, `20`
-- C) `1`, `20`
-- D) `10`, `2`
+- B) `10`, `2`
+- C) `10`, `20`
+- D) `1`, `20`
 
 ---
 
@@ -164,9 +164,9 @@ console.log(obj1.b.c);
 **Giá trị nào sau đây là falsy trong JavaScript?**
 
 - A) `0, '', null, undefined, NaN, false`
-- B) `0, '', null, undefined, NaN, false, []`
-- C) `0, '', null, undefined, NaN, false, {}`
-- D) `0, '', null, undefined, false`
+- B) `0, '', null, undefined, NaN, false, {}`
+- C) `0, '', null, undefined, false`
+- D) `0, '', null, undefined, NaN, false, []`
 
 ---
 
@@ -179,10 +179,10 @@ console.log(str.slice(-5));
 console.log(str.substring(-5));
 ```
 
-- A) `World`, `World`
-- B) `World`, `Hello World`
-- C) `Hello`, `Hello`
-- D) Error
+- A) `World`, `Hello World`
+- B) `Hello`, `Hello`
+- C) Error
+- D) `World`, `World`
 
 ---
 
@@ -227,10 +227,10 @@ async1();
 console.log('script end');
 ```
 
-- A) `script start, async1 start, async2, async1 end, script end`
+- A) `script start, async1 start, script end, async2, async1 end`
 - B) `script start, async1 start, async2, script end, async1 end`
-- C) `script start, script end, async1 start, async2, async1 end`
-- D) `script start, async1 start, script end, async2, async1 end`
+- C) `script start, async1 start, async2, async1 end, script end`
+- D) `script start, script end, async1 start, async2, async1 end`
 
 ---
 
@@ -252,9 +252,9 @@ console.log(dog.hasOwnProperty('speak'));
 console.log(dog.hasOwnProperty('name'));
 ```
 
-- A) `Dog makes a sound`, `true`, `true`
-- B) `Dog makes a sound`, `false`, `true`
-- C) `Dog makes a sound`, `true`, `false`
+- A) `Dog makes a sound`, `true`, `false`
+- B) `Dog makes a sound`, `true`, `true`
+- C) `Dog makes a sound`, `false`, `true`
 - D) `undefined`, `false`, `true`
 
 ---
@@ -262,9 +262,9 @@ console.log(dog.hasOwnProperty('name'));
 ## Câu 14: Debounce vs Throttle
 **Sự khác biệt chính giữa Debounce và Throttle?**
 
-- A) Debounce chạy function ngay lập tức, Throttle delay function
-- B) Debounce chờ đến khi không còn event nào, Throttle giới hạn số lần chạy trong khoảng thời gian
-- C) Không có sự khác biệt
+- A) Debounce chờ đến khi không còn event nào, Throttle giới hạn số lần chạy trong khoảng thời gian
+- B) Không có sự khác biệt
+- C) Debounce chạy function ngay lập tức, Throttle delay function
 - D) Throttle chờ đến khi không còn event, Debounce giới hạn số lần chạy
 
 ---
@@ -273,19 +273,19 @@ console.log(dog.hasOwnProperty('name'));
 **Sự khác biệt giữa Object.freeze() và Object.seal()?**
 
 - A) Không có sự khác biệt
-- B) `freeze` ngăn thêm/xóa/sửa properties, `seal` chỉ ngăn thêm/xóa
-- C) `seal` ngăn thêm/xóa/sửa properties, `freeze` chỉ ngăn thêm/xóa
-- D) Cả hai đều chỉ ngăn xóa properties
+- B) Cả hai đều chỉ ngăn xóa properties
+- C) `freeze` ngăn thêm/xóa/sửa properties, `seal` chỉ ngăn thêm/xóa
+- D) `seal` ngăn thêm/xóa/sửa properties, `freeze` chỉ ngăn thêm/xóa
 
 ---
 
 ## Câu 16: WeakMap vs Map
 **Điều nào sau đây đúng về WeakMap?**
 
-- A) Keys có thể là primitive values
+- A) WeakMap có property `.size`
 - B) Có thể iterate qua WeakMap
 - C) Keys phải là objects và được garbage collected khi không còn reference
-- D) WeakMap có property `.size`
+- D) Keys có thể là primitive values
 
 ---
 
@@ -306,8 +306,8 @@ console.log(gen.next().value);
 console.log(gen.next().value);
 ```
 
-- A) `1, 2, 3, undefined`
-- B) `1, 2, 3, 3`
+- A) `1, 2, 3, 3`
+- B) `1, 2, 3, undefined`
 - C) `1, 2, undefined, undefined`
 - D) `1, 2, 3, Error`
 
@@ -330,8 +330,8 @@ console.log(obj.c);
 
 - A) `1`, `undefined`
 - B) `1`, `Property not found`
-- C) `undefined`, `Property not found`
-- D) Error
+- C) Error
+- D) `undefined`, `Property not found`
 
 ---
 
@@ -351,19 +351,19 @@ console.log(multiply.bind(obj, 3)(4));
 ```
 
 - A) `24, 24, 24`
-- B) `24, [24], 24`
+- B) `24, 24, 12`
 - C) `NaN, NaN, NaN`
-- D) `24, 24, 12`
+- D) `24, [24], 24`
 
 ---
 
 ## Câu 20: Symbol
 **Điều nào sau đây SAI về Symbol?**
 
-- A) Symbol luôn unique
+- A) Symbol được liệt kê trong Object.keys()
 - B) Symbol có thể được sử dụng làm object key
-- C) Symbol.for('key') tạo ra symbol global có thể reuse
-- D) Symbol được liệt kê trong Object.keys()
+- C) Symbol luôn unique
+- D) Symbol.for('key') tạo ra symbol global có thể reuse
 
 ---
 
@@ -382,10 +382,10 @@ console.log(multiply.bind(obj, 3)(4));
 ## Câu 22: Event Delegation
 **Ưu điểm chính của Event Delegation?**
 
-- A) Giảm memory usage và handle dynamic elements
-- B) Tăng tốc độ xử lý event
-- C) Bắt buộc phải sử dụng với React
-- D) Chỉ hoạt động với click events
+- A) Tăng tốc độ xử lý event
+- B) Chỉ hoạt động với click events
+- C) Giảm memory usage và handle dynamic elements
+- D) Bắt buộc phải sử dụng với React
 
 ---
 
@@ -412,8 +412,8 @@ console.log(Module.getCount());
 console.log(Module.privateVar);
 ```
 
-- A) `1, 2, 2, 0`
-- B) `1, 2, 2, undefined`
+- A) `1, 2, 2, undefined`
+- B) `1, 2, 2, 0`
 - C) `1, 1, 1, undefined`
 - D) Error
 
@@ -449,23 +449,23 @@ function curry(fn) {
 - B)
 ```javascript
 function curry(fn) {
-  return function(...args) {
-    return fn(...args);
-  }
+  return (...args) => args.reduce((acc, arg) => acc + arg, 0);
 }
 ```
 
 - C)
 ```javascript
 function curry(fn) {
-  return fn.bind(this);
+  return function(...args) {
+    return fn(...args);
+  }
 }
 ```
 
 - D)
 ```javascript
 function curry(fn) {
-  return (...args) => args.reduce((acc, arg) => acc + arg, 0);
+  return fn.bind(this);
 }
 ```
 
@@ -475,9 +475,9 @@ function curry(fn) {
 **Điều nào SAI về Web Workers?**
 
 - A) Web Workers chạy trong background thread
-- B) Web Workers có thể trực tiếp access DOM
+- B) Web Workers có thể import scripts
 - C) Communication với main thread qua postMessage
-- D) Web Workers có thể import scripts
+- D) Web Workers có thể trực tiếp access DOM
 
 ---
 
@@ -495,9 +495,9 @@ function curry(fn) {
 **Thứ tự đúng của các phase trong Execution Context?**
 
 - A) Execution Phase → Creation Phase
-- B) Creation Phase → Execution Phase
-- C) Hoisting Phase → Creation Phase → Execution Phase
-- D) Memory Phase → Execution Phase → Cleanup Phase
+- B) Memory Phase → Execution Phase → Cleanup Phase
+- C) Creation Phase → Execution Phase
+- D) Hoisting Phase → Creation Phase → Execution Phase
 
 ---
 
@@ -538,10 +538,10 @@ function factorial(n, acc = 1) {
 ## Câu 30: Performance
 **Cách nào tốt nhất để đo performance của một function?**
 
-- A) `console.time()` và `console.timeEnd()`
-- B) `Date.now()` trước và sau function
-- C) `performance.now()` trước và sau function
-- D) `setTimeout()` với delay 0
+- A) `Date.now()` trước và sau function
+- B) `setTimeout()` với delay 0
+- C) `console.time()` và `console.timeEnd()`
+- D) `performance.now()` trước và sau function
 
 ---
 
@@ -551,7 +551,7 @@ function factorial(n, acc = 1) {
 
 ## Junior Level
 
-### Câu 1: Đáp án B - `3, 3, 3`
+### Câu 1: Đáp án C - `3, 3, 3`
 
 **Giải thích:**
 - `var` có function scope, không có block scope
@@ -577,7 +577,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 2: Đáp án C - `undefined`, `ReferenceError`
+### Câu 2: Đáp án D - `undefined`, `ReferenceError`
 
 **Giải thích:**
 - `var` được hoisted và initialized với `undefined`
@@ -588,7 +588,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 3: Đáp án B - `true, false, true, false`
+### Câu 3: Đáp án C - `true, false, true, false`
 
 **Giải thích:**
 - `==` (loose equality) thực hiện type coercion
@@ -600,7 +600,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 4: Đáp án A - `[6, 8, 10]`
+### Câu 4: Đáp án D - `[6, 8, 10]`
 
 **Giải thích:**
 - `filter(x => x > 2)` trả về `[3, 4, 5]`
@@ -610,7 +610,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 5: Đáp án B - `object, undefined, number, object`
+### Câu 5: Đáp án C - `object, undefined, number, object`
 
 **Giải thích:**
 - `typeof null` là `object` (bug lịch sử của JS)
@@ -622,7 +622,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 6: Đáp án B - `John`, `undefined`
+### Câu 6: Đáp án C - `John`, `undefined`
 
 **Giải thích:**
 - Regular function: `this` được bind dựa trên cách function được gọi
@@ -633,7 +633,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 7: Đáp án B - `[1,2,3]`, `[1,2,3,4]`
+### Câu 7: Đáp án D - `[1,2,3]`, `[1,2,3,4]`
 
 **Giải thích:**
 - Spread operator tạo shallow copy
@@ -644,7 +644,7 @@ for (var i = 0; i < 3; i++) {
 
 ---
 
-### Câu 8: Đáp án C - `1`, `20`
+### Câu 8: Đáp án D - `1`, `20`
 
 **Giải thích:**
 - Spread operator chỉ tạo **shallow copy**
@@ -672,7 +672,7 @@ const obj2 = structuredClone(obj1);
 
 ---
 
-### Câu 10: Đáp án B - `World`, `Hello World`
+### Câu 10: Đáp án A - `World`, `Hello World`
 
 **Giải thích:**
 - `slice(-5)` lấy 5 ký tự cuối cùng → `World`
@@ -706,7 +706,7 @@ const obj2 = structuredClone(obj1);
 
 ---
 
-### Câu 13: Đáp án B - `Dog makes a sound`, `false`, `true`
+### Câu 13: Đáp án C - `Dog makes a sound`, `false`, `true`
 
 **Giải thích:**
 - `speak` được định nghĩa trên prototype, không phải own property
@@ -717,7 +717,7 @@ const obj2 = structuredClone(obj1);
 
 ---
 
-### Câu 14: Đáp án B
+### Câu 14: Đáp án A
 
 **Giải thích:**
 - **Debounce:** Chờ đến khi user ngừng action một khoảng thời gian mới execute (search input)
@@ -735,7 +735,7 @@ const throttledScroll = throttle(handleScroll, 100);
 
 ---
 
-### Câu 15: Đáp án B
+### Câu 15: Đáp án C
 
 **Giải thích:**
 - `Object.freeze()`: Không thể add, delete, hoặc modify properties
@@ -767,7 +767,7 @@ sealed.b = 3; // Không có effect
 
 ---
 
-### Câu 17: Đáp án A - `1, 2, 3, undefined`
+### Câu 17: Đáp án B - `1, 2, 3, undefined`
 
 **Giải thích:**
 - `yield` pause function và return value với `done: false`
@@ -802,7 +802,7 @@ Tất cả đều tính: `2 * 3 * 4 = 24`
 
 ---
 
-### Câu 20: Đáp án D - Symbol được liệt kê trong Object.keys()
+### Câu 20: Đáp án A - Symbol được liệt kê trong Object.keys()
 
 **Giải thích:**
 - Symbol KHÔNG được liệt kê trong:
@@ -840,7 +840,7 @@ const cache = new WeakMap();
 
 ---
 
-### Câu 22: Đáp án A
+### Câu 22: Đáp án C
 
 **Giải thích:**
 Event Delegation benefits:
@@ -861,7 +861,7 @@ document.querySelector('.container').addEventListener('click', (e) => {
 
 ---
 
-### Câu 23: Đáp án B - `1, 2, 2, undefined`
+### Câu 23: Đáp án A - `1, 2, 2, undefined`
 
 **Giải thích:**
 - Module Pattern sử dụng IIFE + closure để create private variables
@@ -883,7 +883,7 @@ document.querySelector('.container').addEventListener('click', (e) => {
 
 ---
 
-### Câu 25: Đáp án B - Web Workers có thể trực tiếp access DOM
+### Câu 25: Đáp án D - Web Workers có thể trực tiếp access DOM
 
 **Giải thích:**
 - Web Workers chạy trong separate thread
@@ -908,7 +908,7 @@ Service Workers capabilities:
 
 ---
 
-### Câu 27: Đáp án B - Creation Phase → Execution Phase
+### Câu 27: Đáp án C - Creation Phase → Execution Phase
 
 **Giải thích:**
 1. **Creation Phase:**
@@ -963,7 +963,7 @@ Cross-Origin-Embedder-Policy: require-corp
 
 ---
 
-### Câu 30: Đáp án C - `performance.now()`
+### Câu 30: Đáp án D - `performance.now()`
 
 **Giải thích:**
 - `performance.now()` có độ chính xác cao nhất (microseconds)

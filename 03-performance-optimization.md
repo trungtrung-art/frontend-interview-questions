@@ -19,8 +19,8 @@
 **Core Web Vitals bao gồm những metrics nào?**
 
 - A) FCP, TTI, TBT
-- B) LCP, FID, CLS
-- C) TTFB, FMP, SI
+- B) TTFB, FMP, SI
+- C) LCP, FID, CLS
 - D) DCL, Load, FCP
 
 ---
@@ -28,19 +28,19 @@
 ## Câu 2: LCP (Largest Contentful Paint)
 **LCP tốt được coi là bao nhiêu?**
 
-- A) < 1.0 giây
+- A) < 5.0 giây
 - B) < 2.5 giây
-- C) < 4.0 giây
-- D) < 5.0 giây
+- C) < 1.0 giây
+- D) < 4.0 giây
 
 ---
 
 ## Câu 3: CLS (Cumulative Layout Shift)
 **Nguyên nhân chính gây ra CLS cao?**
 
-- A) JavaScript execution time dài
-- B) Images không có dimensions, late-loading content, dynamic injected content
-- C) Server response time chậm
+- A) Server response time chậm
+- B) JavaScript execution time dài
+- C) Images không có dimensions, late-loading content, dynamic injected content
 - D) Large JavaScript bundles
 
 ---
@@ -48,9 +48,9 @@
 ## Câu 4: FID vs INP
 **Sự khác biệt giữa FID (First Input Delay) và INP (Interaction to Next Paint)?**
 
-- A) Không có sự khác biệt
+- A) INP chỉ đo click events
 - B) FID đo first interaction, INP đo overall interaction responsiveness
-- C) INP chỉ đo click events
+- C) Không có sự khác biệt
 - D) FID accurate hơn INP
 
 ---
@@ -58,10 +58,10 @@
 ## Câu 5: TTFB
 **TTFB (Time to First Byte) đo gì?**
 
-- A) Thời gian download tất cả resources
+- A) Thời gian parse HTML
 - B) Thời gian từ request đến byte đầu tiên của response
 - C) Thời gian render page
-- D) Thời gian parse HTML
+- D) Thời gian download tất cả resources
 
 ---
 
@@ -71,9 +71,9 @@
 **Cách nào tốt nhất để tránh block main thread với heavy computation?**
 
 - A) Sử dụng setTimeout với delay 0
-- B) Sử dụng Web Workers
-- C) Sử dụng async/await
-- D) Sử dụng Promise.all
+- B) Sử dụng Promise.all
+- C) Sử dụng Web Workers
+- D) Sử dụng async/await
 
 ---
 
@@ -106,10 +106,10 @@ element.addEventListener('click', createHandler());
 ## Câu 8: Event Delegation Performance
 **Tại sao Event Delegation tốt hơn cho performance?**
 
-- A) Giảm số lượng event listeners, tiết kiệm memory
-- B) Tăng tốc độ event bubbling
+- A) Tăng FCP
+- B) Giảm số lượng event listeners, tiết kiệm memory
 - C) Giảm JavaScript bundle size
-- D) Tăng FCP
+- D) Tăng tốc độ event bubbling
 
 ---
 
@@ -117,19 +117,19 @@ element.addEventListener('click', createHandler());
 **Khi nào nên sử dụng requestAnimationFrame?**
 
 - A) Cho tất cả async operations
-- B) Cho animations và DOM updates cần sync với browser repaint
-- C) Thay thế setTimeout
-- D) Cho API calls
+- B) Thay thế setTimeout
+- C) Cho API calls
+- D) Cho animations và DOM updates cần sync với browser repaint
 
 ---
 
 ## Câu 10: Script Loading
 **Sự khác biệt giữa `async` và `defer` trong script loading?**
 
-- A) Không có sự khác biệt
+- A) Cả hai đều block HTML parsing
 - B) `async` execute ngay khi download xong, `defer` chờ HTML parsing xong
 - C) `defer` execute ngay khi download xong, `async` chờ HTML parsing xong
-- D) Cả hai đều block HTML parsing
+- D) Không có sự khác biệt
 
 ---
 
@@ -148,9 +148,9 @@ element.addEventListener('click', createHandler());
 ## Câu 12: React Profiler
 **React Profiler đo những gì?**
 
-- A) Network requests
-- B) Render time và commit phases
-- C) Memory usage
+- A) Memory usage
+- B) Network requests
+- C) Render time và commit phases
 - D) Bundle size
 
 ---
@@ -158,9 +158,9 @@ element.addEventListener('click', createHandler());
 ## Câu 13: Virtualization
 **Khi nào nên sử dụng virtualization (react-window, react-virtuoso)?**
 
-- A) Cho tất cả lists
+- A) Chỉ cho infinite scroll
 - B) Khi render large lists (100+ items) với complex components
-- C) Chỉ cho infinite scroll
+- C) Cho tất cả lists
 - D) Khi sử dụng pagination
 
 ---
@@ -168,10 +168,10 @@ element.addEventListener('click', createHandler());
 ## Câu 14: Code Splitting Impact
 **Code splitting giúp improve metric nào nhất?**
 
-- A) CLS
-- B) TTI (Time to Interactive) và FCP
-- C) TTFB
-- D) FID
+- A) TTFB
+- B) CLS
+- C) FID
+- D) TTI (Time to Interactive) và FCP
 
 ---
 
@@ -190,10 +190,10 @@ element.addEventListener('click', createHandler());
 ## Câu 16: Resource Hints
 **Sự khác biệt giữa preload, prefetch, và preconnect?**
 
-- A) Không có sự khác biệt
-- B) preload: high priority current page, prefetch: low priority future navigation, preconnect: establish connection early
-- C) Tất cả đều load resources ngay lập tức
-- D) Chỉ khác về browser support
+- A) preload: high priority current page, prefetch: low priority future navigation, preconnect: establish connection early
+- B) Không có sự khác biệt
+- C) Chỉ khác về browser support
+- D) Tất cả đều load resources ngay lập tức
 
 ---
 
@@ -201,8 +201,8 @@ element.addEventListener('click', createHandler());
 **Cách nào KHÔNG phải best practice cho image optimization?**
 
 - A) Sử dụng modern formats (WebP, AVIF)
-- B) Lazy loading với `loading="lazy"`
-- C) Load tất cả images ở highest quality
+- B) Load tất cả images ở highest quality
+- C) Lazy loading với `loading="lazy"`
 - D) Responsive images với srcset
 
 ---
@@ -242,10 +242,10 @@ element.addEventListener('click', createHandler());
 ## Câu 21: Critical Rendering Path
 **Thứ tự đúng của Critical Rendering Path?**
 
-- A) DOM → CSSOM → Render Tree → Layout → Paint → Composite
-- B) DOM → Layout → Paint → CSSOM → Composite
-- C) CSSOM → DOM → Paint → Layout → Composite
-- D) DOM → Paint → Layout → CSSOM → Composite
+- A) DOM → Layout → Paint → CSSOM → Composite
+- B) DOM → Paint → Layout → CSSOM → Composite
+- C) DOM → CSSOM → Render Tree → Layout → Paint → Composite
+- D) CSSOM → DOM → Paint → Layout → Composite
 
 ---
 
@@ -262,10 +262,10 @@ element.addEventListener('click', createHandler());
 ## Câu 23: CSS Containment
 **CSS `contain` property giúp gì cho performance?**
 
-- A) Isolate element's rendering, limit scope của layout/paint/style calculations
-- B) Hide overflow content
-- C) Create new stacking context
-- D) Không ảnh hưởng performance
+- A) Không ảnh hưởng performance
+- B) Isolate element's rendering, limit scope của layout/paint/style calculations
+- C) Hide overflow content
+- D) Create new stacking context
 
 ---
 
@@ -273,8 +273,8 @@ element.addEventListener('click', createHandler());
 **Khi nào KHÔNG nên sử dụng `will-change`?**
 
 - A) Khi element sẽ animate
-- B) Apply cho tất cả elements "just in case"
-- C) Khi cần create new compositor layer
+- B) Khi cần create new compositor layer
+- C) Apply cho tất cả elements "just in case"
 - D) Trước heavy visual changes
 
 ---
@@ -283,9 +283,9 @@ element.addEventListener('click', createHandler());
 **Properties nào có thể animate mà không trigger layout hoặc paint?**
 
 - A) `width`, `height`, `margin`
-- B) `transform`, `opacity`
-- C) `top`, `left`, `right`, `bottom`
-- D) `padding`, `border`
+- B) `padding`, `border`
+- C) `transform`, `opacity`
+- D) `top`, `left`, `right`, `bottom`
 
 ---
 
@@ -293,9 +293,9 @@ element.addEventListener('click', createHandler());
 **Long Task được định nghĩa là task chạy hơn bao nhiêu ms?**
 
 - A) 10ms
-- B) 50ms
+- B) 200ms
 - C) 100ms
-- D) 200ms
+- D) 50ms
 
 ---
 
@@ -312,9 +312,9 @@ element.addEventListener('click', createHandler());
 ## Câu 28: Service Worker Caching
 **Service Worker caching strategy nào phù hợp cho static assets?**
 
-- A) Network First
-- B) Cache First
-- C) Stale While Revalidate
+- A) Stale While Revalidate
+- B) Network First
+- C) Cache First
 - D) Network Only
 
 ---
@@ -345,7 +345,7 @@ element.addEventListener('click', createHandler());
 
 ## Phần 1: Web Vitals & Metrics
 
-### Câu 1: Đáp án B - LCP, FID, CLS
+### Câu 1: Đáp án C - LCP, FID, CLS
 
 **Giải thích:**
 Core Web Vitals (Google's key metrics):
@@ -377,7 +377,7 @@ LCP thresholds:
 
 ---
 
-### Câu 3: Đáp án B
+### Câu 3: Đáp án C
 
 **Giải thích:**
 Common causes of CLS:
@@ -440,7 +440,7 @@ TTFB measures time from:
 
 ## Phần 2: JavaScript Performance
 
-### Câu 6: Đáp án B - Web Workers
+### Câu 6: Đáp án C - Web Workers
 
 **Giải thích:**
 - Web Workers run in separate thread
@@ -499,7 +499,7 @@ function createHandler() {
 
 ---
 
-### Câu 8: Đáp án A
+### Câu 8: Đáp án B
 
 **Giải thích:**
 Event Delegation benefits:
@@ -523,7 +523,7 @@ container.addEventListener('click', (e) => {
 
 ---
 
-### Câu 9: Đáp án B
+### Câu 9: Đáp án D
 
 **Giải thích:**
 `requestAnimationFrame`:
@@ -617,7 +617,7 @@ const style = useMemo(() => ({ color: 'red' }), []);
 
 ---
 
-### Câu 12: Đáp án B
+### Câu 12: Đáp án C
 
 **Giải thích:**
 React Profiler measures:
@@ -680,7 +680,7 @@ function VirtualList({ items }) {
 
 ---
 
-### Câu 14: Đáp án B - TTI và FCP
+### Câu 14: Đáp án D - TTI và FCP
 
 **Giải thích:**
 Code splitting improves:
@@ -735,7 +735,7 @@ const user = useSelector(state => state.user.name);
 
 ## Phần 4: Network & Loading
 
-### Câu 16: Đáp án B
+### Câu 16: Đáp án A
 
 **Giải thích:**
 
@@ -758,7 +758,7 @@ const user = useSelector(state => state.user.name);
 
 ---
 
-### Câu 17: Đáp án C - Load tất cả images ở highest quality
+### Câu 17: Đáp án B - Load tất cả images ở highest quality
 
 **Giải thích:**
 Image optimization best practices:
@@ -866,7 +866,7 @@ const Dashboard = lazy(() => import('./Dashboard'));
 
 ## Phần 5: Rendering & Browser
 
-### Câu 21: Đáp án A
+### Câu 21: Đáp án C
 
 **Giải thích:**
 Critical Rendering Path:
@@ -915,7 +915,7 @@ element.style.transform = `translate(${width}px, ${height}px)`;
 
 ---
 
-### Câu 23: Đáp án A
+### Câu 23: Đáp án B
 
 **Giải thích:**
 CSS Containment isolates subtree:
@@ -941,7 +941,7 @@ CSS Containment isolates subtree:
 
 ---
 
-### Câu 24: Đáp án B - Apply cho tất cả elements "just in case"
+### Câu 24: Đáp án C - Apply cho tất cả elements "just in case"
 
 **Giải thích:**
 `will-change` creates new compositor layer:
@@ -969,7 +969,7 @@ element.style.willChange = 'auto';
 
 ---
 
-### Câu 25: Đáp án B - `transform`, `opacity`
+### Câu 25: Đáp án C - `transform`, `opacity`
 
 **Giải thích:**
 Compositor-only properties:
@@ -997,7 +997,7 @@ Compositor-only properties:
 
 ---
 
-### Câu 26: Đáp án B - 50ms
+### Câu 26: Đáp án D - 50ms
 
 **Giải thích:**
 - Long Task: > 50ms on main thread
@@ -1058,7 +1058,7 @@ images.forEach(img => observer.observe(img));
 
 ---
 
-### Câu 28: Đáp án B - Cache First
+### Câu 28: Đáp án C - Cache First
 
 **Giải thích:**
 

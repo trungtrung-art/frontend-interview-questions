@@ -18,8 +18,8 @@
 ## Câu 1: Testing Pyramid
 **Testing pyramid có cấu trúc như thế nào?**
 
-- A) E2E tests > Integration tests > Unit tests
-- B) Unit tests > Integration tests > E2E tests
+- A) Unit tests > Integration tests > E2E tests
+- B) E2E tests > Integration tests > Unit tests
 - C) Integration tests > Unit tests > E2E tests
 - D) Tất cả test types bằng nhau
 
@@ -29,18 +29,18 @@
 **Sự khác biệt giữa unit test và integration test?**
 
 - A) Unit test chậm hơn integration test
-- B) Unit test test isolated units, integration test test multiple units working together
+- B) Integration test dễ viết hơn
 - C) Không có sự khác biệt
-- D) Integration test dễ viết hơn
+- D) Unit test test isolated units, integration test test multiple units working together
 
 ---
 
 ## Câu 3: Test Coverage
 **Test coverage 100% có nghĩa là?**
 
-- A) Ứng dụng không có bugs
+- A) Ứng dụng production-ready
 - B) Tất cả lines/branches được execute trong tests, không đảm bảo no bugs
-- C) Ứng dụng production-ready
+- C) Ứng dụng không có bugs
 - D) Không cần thêm tests
 
 ---
@@ -50,8 +50,8 @@
 
 - A) Luôn luôn
 - B) External services, APIs, modules that are slow/unpredictable/have side effects
-- C) Không bao giờ
-- D) Chỉ trong E2E tests
+- C) Chỉ trong E2E tests
+- D) Không bao giờ
 
 ---
 
@@ -59,8 +59,8 @@
 **AAA pattern trong testing là gì?**
 
 - A) Arrange, Act, Assert
-- B) Analyze, Apply, Approve
-- C) Add, Alter, Affirm
+- B) Add, Alter, Affirm
+- C) Analyze, Apply, Approve
 - D) Async, Await, Assert
 
 ---
@@ -79,8 +79,8 @@
 **Khi nào nên sử dụng snapshot testing?**
 
 - A) Cho tất cả components
-- B) Cho detecting unintended UI changes, không thay thế explicit assertions
-- C) Thay thế hoàn toàn unit tests
+- B) Thay thế hoàn toàn unit tests
+- C) Cho detecting unintended UI changes, không thay thế explicit assertions
 - D) Chỉ cho large components
 
 ---
@@ -88,19 +88,19 @@
 ## Câu 8: Test Isolation
 **Tại sao tests cần isolated?**
 
-- A) Để chạy song song và không ảnh hưởng lẫn nhau
-- B) Để tiết kiệm bộ nhớ
-- C) Để viết code ngắn hơn
-- D) Không cần thiết
+- A) Để tiết kiệm bộ nhớ
+- B) Để viết code ngắn hơn
+- C) Không cần thiết
+- D) Để chạy song song và không ảnh hưởng lẫn nhau
 
 ---
 
 ## Câu 9: Flaky Tests
 **Flaky test là gì và cách handle?**
 
-- A) Test luôn pass, ignore được
-- B) Test không ổn định (pass/fail randomly), cần fix root cause như timing, async issues
-- C) Test chạy chậm
+- A) Test chạy chậm
+- B) Test luôn pass, ignore được
+- C) Test không ổn định (pass/fail randomly), cần fix root cause như timing, async issues
 - D) Test cho edge cases
 
 ---
@@ -108,9 +108,9 @@
 ## Câu 10: TDD
 **Test-Driven Development workflow?**
 
-- A) Write code → Write test → Refactor
-- B) Write test (fail) → Write code (pass) → Refactor
-- C) Write test → Deploy → Debug
+- A) Write test (fail) → Write code (pass) → Refactor
+- B) Write test → Deploy → Debug
+- C) Write code → Write test → Refactor
 - D) Write code → Debug → Write test
 
 ---
@@ -120,19 +120,19 @@
 ## Câu 11: Testing Library Philosophy
 **React Testing Library philosophy là gì?**
 
-- A) Test implementation details
+- A) Test internal state
 - B) Test như cách users interact với UI, không test implementation
-- C) Test internal state
-- D) Test lifecycle methods
+- C) Test lifecycle methods
+- D) Test implementation details
 
 ---
 
 ## Câu 12: Query Priorities
 **Query priority order đúng trong React Testing Library?**
 
-- A) getByTestId > getByRole > getByText
-- B) getByRole > getByLabelText > getByText > getByTestId
-- C) getByText > getByRole > getByTestId
+- A) getByRole > getByLabelText > getByText > getByTestId
+- B) getByText > getByRole > getByTestId
+- C) getByTestId > getByRole > getByText
 - D) Tất cả queries bằng nhau
 
 ---
@@ -154,9 +154,9 @@ function UserProfile({ userId }) {
 }
 ```
 
-- A) `getByText('Loading...')` rồi `getByText(user.name)`
-- B) Sử dụng `findByText` hoặc `waitFor`
-- C) `setTimeout` trong test
+- A) `setTimeout` trong test
+- B) `getByText('Loading...')` rồi `getByText(user.name)`
+- C) Sử dụng `findByText` hoặc `waitFor`
 - D) Skip async tests
 
 ---
@@ -196,30 +196,30 @@ function UserName() {
 }
 ```
 
-- A) Mock useContext
-- B) Wrap component với Provider trong test
-- C) Test không thể
-- D) Sử dụng shallow rendering
+- A) Test không thể
+- B) Sử dụng shallow rendering
+- C) Mock useContext
+- D) Wrap component với Provider trong test
 
 ---
 
 ## Câu 17: Testing Forms
 **Best practice test form validation?**
 
-- A) Test implementation của validation logic
-- B) Test user flow: input → submit → verify error messages hoặc success
-- C) Chỉ test submit button
-- D) Skip form tests
+- A) Chỉ test submit button
+- B) Skip form tests
+- C) Test implementation của validation logic
+- D) Test user flow: input → submit → verify error messages hoặc success
 
 ---
 
 ## Câu 18: Component Rendering
 **Sự khác biệt giữa `render` và `rerender`?**
 
-- A) Không có sự khác biệt
+- A) `rerender` cho async components
 - B) `render` mounts mới, `rerender` update props của component đã mounted
-- C) `rerender` cho async components
-- D) `render` chỉ cho class components
+- C) `render` chỉ cho class components
+- D) Không có sự khác biệt
 
 ---
 
@@ -227,9 +227,9 @@ function UserName() {
 **Cách test Error Boundary?**
 
 - A) Không thể test
-- B) Render child component mà throws error, verify fallback UI
+- B) Chỉ test trong browser
 - C) Mock Error Boundary
-- D) Chỉ test trong browser
+- D) Render child component mà throws error, verify fallback UI
 
 ---
 
@@ -237,9 +237,9 @@ function UserName() {
 **MSW được sử dụng để?**
 
 - A) Render components
-- B) Mock API responses at network level
+- B) Debug performance
 - C) Create new components
-- D) Debug performance
+- D) Mock API responses at network level
 
 ---
 
@@ -258,29 +258,29 @@ function UserName() {
 ## Câu 22: Cypress vs Playwright
 **Điểm khác biệt chính giữa Cypress và Playwright?**
 
-- A) Không có sự khác biệt
-- B) Playwright multi-browser native, Cypress có rich debugging, cả hai đều tốt
-- C) Cypress nhanh hơn
-- D) Playwright chỉ cho Chromium
+- A) Playwright multi-browser native, Cypress có rich debugging, cả hai đều tốt
+- B) Không có sự khác biệt
+- C) Playwright chỉ cho Chromium
+- D) Cypress nhanh hơn
 
 ---
 
 ## Câu 23: Test Selectors
 **Best practice cho E2E selectors?**
 
-- A) CSS selectors phức tạp
-- B) data-testid attributes cho test-specific selectors
-- C) XPath
-- D) Random selectors
+- A) XPath
+- B) Random selectors
+- C) data-testid attributes cho test-specific selectors
+- D) CSS selectors phức tạp
 
 ---
 
 ## Câu 24: Page Object Model
 **Page Object Model (POM) là gì?**
 
-- A) CSS methodology
+- A) Testing framework
 - B) Design pattern encapsulate page elements và actions, improve test maintainability
-- C) Testing framework
+- C) CSS methodology
 - D) Browser API
 
 ---
@@ -288,8 +288,8 @@ function UserName() {
 ## Câu 25: Visual Regression Testing
 **Visual regression testing dùng để?**
 
-- A) Test performance
-- B) Detect unintended visual changes bằng screenshot comparison
+- A) Detect unintended visual changes bằng screenshot comparison
+- B) Test performance
 - C) Test accessibility
 - D) Test SEO
 
@@ -300,9 +300,9 @@ function UserName() {
 ## Câu 26: Factory Functions
 **Factory functions trong testing dùng để?**
 
-- A) Create database connections
-- B) Generate test data với default/custom values
-- C) Run tests faster
+- A) Run tests faster
+- B) Create database connections
+- C) Generate test data với default/custom values
 - D) Mock APIs
 
 ---
@@ -324,10 +324,10 @@ test('fetches data', async () => {
 });
 ```
 
-- A) Pattern A đúng
-- B) Pattern B đúng - phải await async operations
-- C) Cả hai đều đúng
-- D) Cả hai đều sai
+- A) Pattern B đúng - phải await async operations
+- B) Cả hai đều đúng
+- C) Cả hai đều sai
+- D) Pattern A đúng
 
 ---
 
@@ -341,30 +341,30 @@ function divide(a, b) {
 }
 ```
 
-- A) `expect(divide(1, 0)).toThrow()`
-- B) `expect(() => divide(1, 0)).toThrow('Cannot divide by zero')`
-- C) `expect(divide(1, 0)).toBe(Error)`
-- D) Cannot test throws
+- A) Cannot test throws
+- B) `expect(divide(1, 0)).toThrow()`
+- C) `expect(() => divide(1, 0)).toThrow('Cannot divide by zero')`
+- D) `expect(divide(1, 0)).toBe(Error)`
 
 ---
 
 ## Câu 29: Parameterized Tests
 **Cách viết parameterized tests trong Jest?**
 
-- A) Copy paste tests
-- B) Sử dụng `test.each` hoặc `it.each`
-- C) Không có cách
-- D) Chỉ trong Mocha
+- A) Không có cách
+- B) Chỉ trong Mocha
+- C) Copy paste tests
+- D) Sử dụng `test.each` hoặc `it.each`
 
 ---
 
 ## Câu 30: Before/After Hooks
 **Sự khác biệt giữa `beforeAll` và `beforeEach`?**
 
-- A) Không có sự khác biệt
-- B) `beforeAll` chạy một lần trước tất cả tests, `beforeEach` chạy trước mỗi test
+- A) `beforeAll` chạy một lần trước tất cả tests, `beforeEach` chạy trước mỗi test
+- B) `beforeAll` cho async only
 - C) `beforeEach` chạy một lần
-- D) `beforeAll` cho async only
+- D) Không có sự khác biệt
 
 ---
 
@@ -373,9 +373,9 @@ function divide(a, b) {
 ## Câu 31: Code Review
 **Code review nên focus vào gì?**
 
-- A) Chỉ coding style
-- B) Logic, security, performance, maintainability, testing
-- C) Chỉ tìm bugs
+- A) Chỉ tìm bugs
+- B) Chỉ coding style
+- C) Logic, security, performance, maintainability, testing
 - D) Chỉ formatting
 
 ---
@@ -383,9 +383,9 @@ function divide(a, b) {
 ## Câu 32: Git Branching
 **Git Flow branching strategy phù hợp khi nào?**
 
-- A) Mọi project
-- B) Projects với scheduled releases, multiple versions in production
-- C) Small projects
+- A) Small projects
+- B) Mọi project
+- C) Projects với scheduled releases, multiple versions in production
 - D) Single developer
 
 ---
@@ -393,29 +393,29 @@ function divide(a, b) {
 ## Câu 33: Semantic Versioning
 **Version 2.3.1 có nghĩa gì?**
 
-- A) Random numbers
-- B) MAJOR.MINOR.PATCH - breaking changes, new features, bug fixes
-- C) Year.Month.Day
-- D) Team.Sprint.Task
+- A) Team.Sprint.Task
+- B) Year.Month.Day
+- C) Random numbers
+- D) MAJOR.MINOR.PATCH - breaking changes, new features, bug fixes
 
 ---
 
 ## Câu 34: Documentation
 **Code documentation nên include?**
 
-- A) Comment mọi line
-- B) Public API docs, complex logic explanation, examples, không comment obvious code
+- A) Public API docs, complex logic explanation, examples, không comment obvious code
+- B) Chỉ README
 - C) Không cần documentation
-- D) Chỉ README
+- D) Comment mọi line
 
 ---
 
 ## Câu 35: Technical Debt
 **Cách manage technical debt?**
 
-- A) Ignore hoàn toàn
-- B) Track, prioritize, allocate time để address incrementally
-- C) Rewrite từ đầu
+- A) Track, prioritize, allocate time để address incrementally
+- B) Rewrite từ đầu
+- C) Ignore hoàn toàn
 - D) Đợi đến khi có problems
 
 ---
@@ -426,7 +426,7 @@ function divide(a, b) {
 
 ## Phần 1: Testing Fundamentals
 
-### Câu 1: Đáp án B
+### Câu 1: Đáp án A
 
 **Giải thích:**
 Testing Pyramid (từ nhiều đến ít):
@@ -449,7 +449,7 @@ Testing Pyramid (từ nhiều đến ít):
 
 ---
 
-### Câu 2: Đáp án B
+### Câu 2: Đáp án D
 
 **Giải thích:**
 ```javascript
@@ -621,7 +621,7 @@ class FakeUserRepository {
 
 ---
 
-### Câu 7: Đáp án B
+### Câu 7: Đáp án C
 
 **Giải thích:**
 ```javascript
@@ -655,7 +655,7 @@ test('formats date', () => {
 
 ---
 
-### Câu 8: Đáp án A
+### Câu 8: Đáp án D
 
 **Giải thích:**
 ```javascript
@@ -698,7 +698,7 @@ describe('Counter', () => {
 
 ---
 
-### Câu 9: Đáp án B
+### Câu 9: Đáp án C
 
 **Giải thích:**
 ```javascript
@@ -740,7 +740,7 @@ test('generates ID', () => {
 
 ---
 
-### Câu 10: Đáp án B
+### Câu 10: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -814,7 +814,7 @@ test('button shows loading state when clicked', async () => {
 
 ---
 
-### Câu 12: Đáp án B
+### Câu 12: Đáp án A
 
 **Giải thích:**
 ```jsx
@@ -864,7 +864,7 @@ test('login form', () => {
 
 ---
 
-### Câu 13: Đáp án B
+### Câu 13: Đáp án C
 
 **Giải thích:**
 ```jsx
@@ -1023,7 +1023,7 @@ test('useCounter with initial value change', () => {
 
 ---
 
-### Câu 16: Đáp án B
+### Câu 16: Đáp án D
 
 **Giải thích:**
 ```jsx
@@ -1069,7 +1069,7 @@ test('with custom render', () => {
 
 ---
 
-### Câu 17: Đáp án B
+### Câu 17: Đáp án D
 
 **Giải thích:**
 ```jsx
@@ -1202,7 +1202,7 @@ test('remount creates new instance', () => {
 
 ---
 
-### Câu 19: Đáp án B
+### Câu 19: Đáp án D
 
 **Giải thích:**
 ```jsx
@@ -1257,7 +1257,7 @@ test('ErrorBoundary renders children when no error', () => {
 
 ---
 
-### Câu 20: Đáp án B
+### Câu 20: Đáp án D
 
 **Giải thích:**
 ```javascript
@@ -1352,7 +1352,7 @@ describe('Authentication', () => {
 
 ---
 
-### Câu 22: Đáp án B
+### Câu 22: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -1389,7 +1389,7 @@ await expect(page).toHaveURL(/dashboard/);
 
 ---
 
-### Câu 23: Đáp án B
+### Câu 23: Đáp án C
 
 **Giải thích:**
 ```html
@@ -1475,7 +1475,7 @@ describe('Login', () => {
 
 ---
 
-### Câu 25: Đáp án B
+### Câu 25: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -1514,7 +1514,7 @@ await expect(page).toHaveScreenshot('homepage.png', {
 
 ## Phần 4: Testing Patterns
 
-### Câu 26: Đáp án B
+### Câu 26: Đáp án C
 
 **Giải thích:**
 ```javascript
@@ -1570,7 +1570,7 @@ function createRandomUser() {
 
 ---
 
-### Câu 27: Đáp án B
+### Câu 27: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -1611,7 +1611,7 @@ test('parallel async', async () => {
 
 ---
 
-### Câu 28: Đáp án B
+### Câu 28: Đáp án C
 
 **Giải thích:**
 ```javascript
@@ -1653,7 +1653,7 @@ test('wrong way', () => {
 
 ---
 
-### Câu 29: Đáp án B
+### Câu 29: Đáp án D
 
 **Giải thích:**
 ```javascript
@@ -1700,7 +1700,7 @@ describe.each([
 
 ---
 
-### Câu 30: Đáp án B
+### Câu 30: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -1757,7 +1757,7 @@ afterAll(async () => {
 
 ## Phần 5: Best Practices & Code Quality
 
-### Câu 31: Đáp án B
+### Câu 31: Đáp án C
 
 **Giải thích:**
 Code review checklist:
@@ -1796,7 +1796,7 @@ Code review checklist:
 
 ---
 
-### Câu 32: Đáp án B
+### Câu 32: Đáp án C
 
 **Giải thích:**
 ```
@@ -1825,7 +1825,7 @@ Alternative: GitHub Flow (simpler)
 
 ---
 
-### Câu 33: Đáp án B
+### Câu 33: Đáp án D
 
 **Giải thích:**
 ```
@@ -1855,7 +1855,7 @@ Rules:
 
 ---
 
-### Câu 34: Đáp án B
+### Câu 34: Đáp án A
 
 **Giải thích:**
 ```javascript
@@ -1906,7 +1906,7 @@ setTimeout(() => {
 
 ---
 
-### Câu 35: Đáp án B
+### Câu 35: Đáp án A
 
 **Giải thích:**
 ```markdown

@@ -30,10 +30,10 @@ interface UserInterface {
 }
 ```
 
-- A) Không có sự khác biệt
-- B) Interface có thể extend và merge declarations, type có thể dùng union/intersection
-- C) Type chỉ dùng cho primitives
-- D) Interface chỉ dùng cho objects
+- A) Interface chỉ dùng cho objects
+- B) Type chỉ dùng cho primitives
+- C) Không có sự khác biệt
+- D) Interface có thể extend và merge declarations, type có thể dùng union/intersection
 
 ---
 
@@ -48,8 +48,8 @@ valueAny.foo.bar; // ?
 valueUnknown.foo.bar; // ?
 ```
 
-- A) Không có sự khác biệt
-- B) `any` bypass type checking, `unknown` yêu cầu type narrowing trước khi sử dụng
+- A) `any` bypass type checking, `unknown` yêu cầu type narrowing trước khi sử dụng
+- B) Không có sự khác biệt
 - C) `unknown` chỉ dùng cho functions
 - D) `any` là type-safe hơn `unknown`
 
@@ -58,10 +58,10 @@ valueUnknown.foo.bar; // ?
 ## Câu 3: never type
 **Khi nào sử dụng `never` type?**
 
-- A) Khi function không return gì
-- B) Khi function throw error hoặc có infinite loop - never reaches end
-- C) Thay thế cho `void`
-- D) Cho optional parameters
+- A) Khi function throw error hoặc có infinite loop - never reaches end
+- B) Khi function không return gì
+- C) Cho optional parameters
+- D) Thay thế cho `void`
 
 ---
 
@@ -90,10 +90,10 @@ type X = typeof x; // ?
 type Y = typeof y; // ?
 ```
 
-- A) `X = string`, `Y = string`
-- B) `X = string`, `Y = 'hello'`
-- C) `X = 'hello'`, `Y = 'hello'`
-- D) Error
+- A) `X = string`, `Y = 'hello'`
+- B) `X = string`, `Y = string`
+- C) Error
+- D) `X = 'hello'`, `Y = 'hello'`
 
 ---
 
@@ -111,9 +111,9 @@ interface B {
 ```
 
 - A) Không có sự khác biệt
-- B) A cho phép không có property, B yêu cầu property phải tồn tại (có thể là undefined)
+- B) Cả hai đều bắt buộc có property
 - C) B cho phép không có property
-- D) Cả hai đều bắt buộc có property
+- D) A cho phép không có property, B yêu cầu property phải tồn tại (có thể là undefined)
 
 ---
 
@@ -168,9 +168,9 @@ console.log(Direction.Left);
 console.log(Direction.Right);
 ```
 
-- A) `0, 1, 10, 11`
-- B) `'Up', 'Down', 'Left', 'Right'`
-- C) `0, 1, 2, 3`
+- A) `'Up', 'Down', 'Left', 'Right'`
+- B) `0, 1, 2, 3`
+- C) `0, 1, 10, 11`
 - D) `1, 2, 10, 11`
 
 ---
@@ -212,10 +212,10 @@ function getValue(): string | null {
 const value = getValue()!;
 ```
 
-- A) Convert null thành empty string
-- B) Asserts value is not null/undefined, remove from type
-- C) Throws error nếu null
-- D) Check runtime null
+- A) Throws error nếu null
+- B) Convert null thành empty string
+- C) Check runtime null
+- D) Asserts value is not null/undefined, remove from type
 
 ---
 
@@ -257,10 +257,10 @@ type Circle = { kind: 'circle'; radius: number };
 type Square = { kind: 'square'; side: number };
 ```
 
-- A) Pattern A đúng
-- B) Pattern B đúng - có discriminant property
-- C) Cả hai đều đúng
-- D) Cả hai đều sai
+- A) Pattern B đúng - có discriminant property
+- B) Pattern A đúng
+- C) Cả hai đều sai
+- D) Cả hai đều đúng
 
 ---
 
@@ -317,10 +317,10 @@ type Fn = (x: number) => string;
 type Result = ReturnType<Fn>;
 ```
 
-- A) `number`
+- A) `never`
 - B) `string`
-- C) `never`
-- D) `Fn`
+- C) `Fn`
+- D) `number`
 
 ---
 
@@ -340,10 +340,10 @@ type Readonly<T> = {
 type Result = Readonly<Original>;
 ```
 
-- A) Same as Original
-- B) `{ readonly name: string; readonly age: number }`
+- A) `{ readonly name: string; readonly age: number }`
+- B) Error
 - C) `{ name: readonly string; age: readonly number }`
-- D) Error
+- D) Same as Original
 
 ---
 
@@ -355,10 +355,10 @@ type Events = 'click' | 'focus' | 'blur';
 type EventName = `on${Capitalize<Events>}`;
 ```
 
-- A) `'onClick' | 'onFocus' | 'onBlur'`
+- A) Error
 - B) `'onclick' | 'onfocus' | 'onblur'`
-- C) `string`
-- D) Error
+- C) `'onClick' | 'onFocus' | 'onBlur'`
+- D) `string`
 
 ---
 
@@ -401,8 +401,8 @@ interface Person {
 type Keys = keyof Person;
 ```
 
-- A) `string`
-- B) `'name' | 'age' | 'address'`
+- A) `'name' | 'age' | 'address'`
+- B) `string`
 - C) `['name', 'age', 'address']`
 - D) `{ name: string; age: number; address: string }`
 
@@ -423,8 +423,8 @@ type User = typeof user;
 
 - A) Cả hai đều return 'object'
 - B) Runtime: `'object'`, Type context: `{ name: string; age: number }`
-- C) Cả hai đều return type structure
-- D) Error trong type context
+- C) Error trong type context
+- D) Cả hai đều return type structure
 
 ---
 
@@ -450,10 +450,10 @@ function getFirst<T>(arr: T[]): T | undefined {
 }
 ```
 
-- A) A là best practice
-- B) B là best practice
-- C) C là best practice (handle empty array)
-- D) Tất cả đều equivalent
+- A) C là best practice (handle empty array)
+- B) Tất cả đều equivalent
+- C) A là best practice
+- D) B là best practice
 
 ---
 
@@ -496,10 +496,10 @@ function merge<T, U>(obj1: T, obj2: U): T & U {
 const result = merge({ name: 'John' }, { age: 30 });
 ```
 
-- A) `{ name: string } | { age: number }`
-- B) `{ name: string; age: number }`
-- C) `object`
-- D) `any`
+- A) `{ name: string; age: number }`
+- B) `any`
+- C) `{ name: string } | { age: number }`
+- D) `object`
 
 ---
 
@@ -520,9 +520,9 @@ function process<T = number>(value: T): T {
 const result = process('hello'); // result type?
 ```
 
-- A) A correct, B result là `number`
+- A) A error, B correct
 - B) A correct, B result là `string` (inferred)
-- C) A error, B correct
+- C) A correct, B result là `number`
 - D) Both error
 
 ---
@@ -543,10 +543,10 @@ const numberBox = new Box(42);
 const data = numberBox.getValue();
 ```
 
-- A) `unknown`
+- A) `42`
 - B) `any`
-- C) `number`
-- D) `42`
+- C) `unknown`
+- D) `number`
 
 ---
 
@@ -565,10 +565,10 @@ type PartialUser = Partial<User>;
 type RequiredUser = Required<User>;
 ```
 
-- A) Giống nhau
-- B) `PartialUser`: tất cả optional, `RequiredUser`: tất cả required
-- C) `PartialUser`: tất cả required, `RequiredUser`: tất cả optional
-- D) Error
+- A) Error
+- B) Giống nhau
+- C) `PartialUser`: tất cả optional, `RequiredUser`: tất cả required
+- D) `PartialUser`: tất cả required, `RequiredUser`: tất cả optional
 
 ---
 
@@ -587,10 +587,10 @@ type PublicUser = Omit<User, 'password'>;
 type Credentials = Pick<User, 'email' | 'password'>;
 ```
 
-- A) `PublicUser` có password, `Credentials` không có
+- A) Error
 - B) `PublicUser` không có password, `Credentials` có email và password
-- C) Error
-- D) Cả hai đều có tất cả properties
+- C) Cả hai đều có tất cả properties
+- D) `PublicUser` có password, `Credentials` không có
 
 ---
 
@@ -602,9 +602,9 @@ type Status = 'pending' | 'approved' | 'rejected';
 type StatusMap = Record<Status, number>;
 ```
 
-- A) `{ [key: string]: number }`
+- A) `Status[]`
 - B) `{ pending: number; approved: number; rejected: number }`
-- C) `Status[]`
+- C) `{ [key: string]: number }`
 - D) `number[]`
 
 ---
@@ -619,10 +619,10 @@ type Extracted = Extract<T, 'a' | 'b' | 'e'>;
 type Excluded = Exclude<T, 'a' | 'b'>;
 ```
 
-- A) `Extracted = 'a' | 'b'`, `Excluded = 'c' | 'd'`
-- B) `Extracted = 'a' | 'b' | 'e'`, `Excluded = 'a' | 'b'`
-- C) `Extracted = 'e'`, `Excluded = 'a' | 'b' | 'c' | 'd'`
-- D) Error
+- A) Error
+- B) `Extracted = 'e'`, `Excluded = 'a' | 'b' | 'c' | 'd'`
+- C) `Extracted = 'a' | 'b'`, `Excluded = 'c' | 'd'`
+- D) `Extracted = 'a' | 'b' | 'e'`, `Excluded = 'a' | 'b'`
 
 ---
 
@@ -635,9 +635,9 @@ type Result = NonNullable<Nullable>;
 ```
 
 - A) `string | null | undefined`
-- B) `string`
+- B) `never`
 - C) `null | undefined`
-- D) `never`
+- D) `string`
 
 ---
 
@@ -688,10 +688,10 @@ const Input: React.FC = () => {
 };
 ```
 
-- A) `Event`
+- A) `React.FormEvent`
 - B) `React.ChangeEvent<HTMLInputElement>`
-- C) `React.FormEvent`
-- D) `any`
+- C) `any`
+- D) `Event`
 
 ---
 
@@ -709,9 +709,9 @@ const ref2 = useRef<HTMLDivElement>(null!);
 const ref3 = useRef<HTMLDivElement | null>(null);
 ```
 
-- A) Không có sự khác biệt
-- B) A: readonly ref, B: mutable (asserts not null), C: mutable ref
-- C) Tất cả đều mutable
+- A) Tất cả đều mutable
+- B) Không có sự khác biệt
+- C) A: readonly ref, B: mutable (asserts not null), C: mutable ref
 - D) Tất cả đều readonly
 
 ---
@@ -729,10 +729,10 @@ function List<T>({ items, render }: { items: T[]; render: (item: T) => React.Rea
 <List items={[1, 2, 3]} render={(item) => <span>{item}</span>} />
 ```
 
-- A) Correct
+- A) Need to use class components
 - B) Incorrect - cannot use generics with React components
-- C) Need to use class components
-- D) Need explicit type parameter
+- C) Need explicit type parameter
+- D) Correct
 
 ---
 
@@ -751,10 +751,10 @@ const [isOpen, toggleOpen] = useToggle(false);
 toggleOpen(); // Should work
 ```
 
-- A) `[boolean, () => void]`
-- B) `(boolean | (() => void))[]`
-- C) `{ value: boolean; toggle: () => void }`
-- D) A hoặc B (B là default inference)
+- A) A hoặc B (B là default inference)
+- B) `[boolean, () => void]`
+- C) `(boolean | (() => void))[]`
+- D) `{ value: boolean; toggle: () => void }`
 
 ---
 
@@ -764,7 +764,7 @@ toggleOpen(); // Should work
 
 ## Phần 1: Basic Types
 
-### Câu 1: Đáp án B
+### Câu 1: Đáp án D
 
 **Giải thích:**
 
@@ -797,7 +797,7 @@ type ID = string | number;
 
 ---
 
-### Câu 2: Đáp án B
+### Câu 2: Đáp án A
 
 **Giải thích:**
 
@@ -827,7 +827,7 @@ if (typeof valueUnknown === 'string') {
 
 ---
 
-### Câu 3: Đáp án B
+### Câu 3: Đáp án A
 
 **Giải thích:**
 
@@ -887,7 +887,7 @@ const value = (expr as unknown) as TargetType;
 
 ---
 
-### Câu 5: Đáp án B
+### Câu 5: Đáp án A
 
 **Giải thích:**
 
@@ -911,7 +911,7 @@ const config = {
 
 ---
 
-### Câu 6: Đáp án B
+### Câu 6: Đáp án D
 
 **Giải thích:**
 
@@ -969,7 +969,7 @@ console.log(config.apiKey);
 
 ---
 
-### Câu 8: Đáp án A - `0, 1, 10, 11`
+### Câu 8: Đáp án C - `0, 1, 10, 11`
 
 **Giải thích:**
 
@@ -1025,7 +1025,7 @@ const [first, second] = tuple;
 
 ---
 
-### Câu 10: Đáp án B
+### Câu 10: Đáp án D
 
 **Giải thích:**
 
@@ -1087,7 +1087,7 @@ const inter: Intersection = {
 
 ---
 
-### Câu 12: Đáp án B
+### Câu 12: Đáp án A
 
 **Giải thích:**
 
@@ -1220,7 +1220,7 @@ type Value = PromiseValue<Promise<number>>; // number
 
 ---
 
-### Câu 16: Đáp án B
+### Câu 16: Đáp án A
 
 **Giải thích:**
 
@@ -1258,7 +1258,7 @@ type UserGetters = Getters<Original>;
 
 ---
 
-### Câu 17: Đáp án A
+### Câu 17: Đáp án C
 
 **Giải thích:**
 
@@ -1323,7 +1323,7 @@ type DictionaryAlt = {
 
 ---
 
-### Câu 19: Đáp án B
+### Câu 19: Đáp án A
 
 **Giải thích:**
 
@@ -1391,7 +1391,7 @@ type CreateUserReturn = ReturnType<typeof createUser>;
 
 ## Phần 3: Generics
 
-### Câu 21: Đáp án C
+### Câu 21: Đáp án A
 
 **Giải thích:**
 
@@ -1460,7 +1460,7 @@ function processEntities<T extends HasId>(entities: T[]): number[] {
 
 ---
 
-### Câu 23: Đáp án B
+### Câu 23: Đáp án A
 
 **Giải thích:**
 
@@ -1526,7 +1526,7 @@ const numArr = createArray<number>(); // number[]
 
 ---
 
-### Câu 25: Đáp án C - `number`
+### Câu 25: Đáp án D - `number`
 
 **Giải thích:**
 
@@ -1573,7 +1573,7 @@ const user = userRepo.findById(1); // User | undefined
 
 ## Phần 4: Type Manipulation
 
-### Câu 26: Đáp án B
+### Câu 26: Đáp án C
 
 **Giải thích:**
 
@@ -1693,7 +1693,7 @@ const perms: Permissions = {
 
 ---
 
-### Câu 29: Đáp án A
+### Câu 29: Đáp án C
 
 **Giải thích:**
 
@@ -1725,7 +1725,7 @@ type Mammal = Extract<Animal, { type: 'dog' | 'cat' }>;
 
 ---
 
-### Câu 30: Đáp án B - `string`
+### Câu 30: Đáp án D - `string`
 
 **Giải thích:**
 
@@ -1861,7 +1861,7 @@ const Input: React.FC = () => {
 
 ---
 
-### Câu 33: Đáp án B
+### Câu 33: Đáp án C
 
 **Giải thích:**
 
@@ -1906,7 +1906,7 @@ function Component2() {
 
 ---
 
-### Câu 34: Đáp án A - Correct
+### Câu 34: Đáp án D - Correct
 
 **Giải thích:**
 
@@ -1973,7 +1973,7 @@ function Select<T>({
 
 ---
 
-### Câu 35: Đáp án A (but D explains inference)
+### Câu 35: Đáp án B (but D explains inference)
 
 **Giải thích:**
 

@@ -17,10 +17,10 @@
 ## Câu 1: Debugging Performance
 **Ứng dụng React của bạn render chậm. Bước đầu tiên bạn làm gì để debug?**
 
-- A) Thêm React.memo vào tất cả components
-- B) Sử dụng React DevTools Profiler để identify bottlenecks
-- C) Upgrade React version
-- D) Chuyển sang class components
+- A) Chuyển sang class components
+- B) Thêm React.memo vào tất cả components
+- C) Sử dụng React DevTools Profiler để identify bottlenecks
+- D) Upgrade React version
 
 ---
 
@@ -29,28 +29,28 @@
 
 - A) Restart server
 - B) Sử dụng Chrome DevTools Memory tab, take heap snapshots
-- C) Tăng server RAM
-- D) Clear browser cache
+- C) Clear browser cache
+- D) Tăng server RAM
 
 ---
 
 ## Câu 3: Race Condition
 **User gặp bug: search results hiển thị kết quả của search query cũ. Nguyên nhân và cách fix?**
 
-- A) Server response chậm, cần upgrade server
-- B) Race condition - responses trả về không theo thứ tự, cần cancel previous requests hoặc ignore stale responses
-- C) Browser caching issue
-- D) React re-render issue
+- A) React re-render issue
+- B) Browser caching issue
+- C) Server response chậm, cần upgrade server
+- D) Race condition - responses trả về không theo thứ tự, cần cancel previous requests hoặc ignore stale responses
 
 ---
 
 ## Câu 4: State Synchronization
 **Bạn có multiple browser tabs mở cùng một app. User update data ở tab 1 nhưng tab 2 không cập nhật. Solution?**
 
-- A) Yêu cầu user refresh manually
-- B) Sử dụng BroadcastChannel API, localStorage events, hoặc WebSocket
-- C) Disable multiple tabs
-- D) Auto refresh mỗi 5 giây
+- A) Auto refresh mỗi 5 giây
+- B) Disable multiple tabs
+- C) Sử dụng BroadcastChannel API, localStorage events, hoặc WebSocket
+- D) Yêu cầu user refresh manually
 
 ---
 
@@ -58,9 +58,9 @@
 **Cách tiếp cận tốt nhất cho error handling trong large React app?**
 
 - A) try-catch trong mỗi component
-- B) Error Boundaries cho UI errors + global error handler cho async errors + proper logging
+- B) Let errors crash và rely on user refresh
 - C) Chỉ sử dụng Error Boundaries
-- D) Let errors crash và rely on user refresh
+- D) Error Boundaries cho UI errors + global error handler cho async errors + proper logging
 
 ---
 
@@ -68,49 +68,49 @@
 **Form với 50+ fields render chậm khi user type. Giải pháp?**
 
 - A) Sử dụng uncontrolled components
-- B) Implement field-level subscription (react-hook-form), debounce validation
-- C) Reduce số lượng fields
-- D) Disable real-time validation
+- B) Disable real-time validation
+- C) Implement field-level subscription (react-hook-form), debounce validation
+- D) Reduce số lượng fields
 
 ---
 
 ## Câu 7: Infinite Scroll Issues
 **Infinite scroll list của bạn gây lag sau khi load nhiều items. Vấn đề và solution?**
 
-- A) Server pagination issue
-- B) DOM có quá nhiều elements, cần virtualization (react-window)
-- C) API rate limiting
-- D) CSS animation issue
+- A) DOM có quá nhiều elements, cần virtualization (react-window)
+- B) CSS animation issue
+- C) Server pagination issue
+- D) API rate limiting
 
 ---
 
 ## Câu 8: Authentication Flow
 **JWT token expired trong khi user đang sử dụng app. Best approach?**
 
-- A) Force logout immediately
-- B) Implement silent refresh với refresh token, queue failed requests, retry sau khi refresh
-- C) Extend token expiry lên 1 năm
-- D) Store token vĩnh viễn trong localStorage
+- A) Store token vĩnh viễn trong localStorage
+- B) Extend token expiry lên 1 năm
+- C) Force logout immediately
+- D) Implement silent refresh với refresh token, queue failed requests, retry sau khi refresh
 
 ---
 
 ## Câu 9: API Error Handling
 **API trả về 500 error intermittently. Strategy để handle?**
 
-- A) Show error message và stop
+- A) Retry vô hạn
 - B) Implement retry với exponential backoff, circuit breaker pattern, fallback UI
-- C) Retry vô hạn
-- D) Ignore errors
+- C) Ignore errors
+- D) Show error message và stop
 
 ---
 
 ## Câu 10: Bundle Size Crisis
 **Bundle size quá lớn (5MB), app load chậm. Immediate actions?**
 
-- A) Chuyển sang HTTP/3
-- B) Analyze bundle, code split, lazy load routes, remove unused dependencies, dynamic imports
-- C) Upgrade hosting plan
-- D) Enable caching
+- A) Upgrade hosting plan
+- B) Enable caching
+- C) Analyze bundle, code split, lazy load routes, remove unused dependencies, dynamic imports
+- D) Chuyển sang HTTP/3
 
 ---
 
@@ -119,50 +119,50 @@
 ## Câu 11: Design Notification System
 **Design real-time notification system cho web app. Considerations?**
 
-- A) Polling every second
-- B) WebSocket/SSE for real-time, notification queue, read/unread state, persistence, push notifications
-- C) Email notifications only
-- D) Browser alerts
+- A) Browser alerts
+- B) Polling every second
+- C) WebSocket/SSE for real-time, notification queue, read/unread state, persistence, push notifications
+- D) Email notifications only
 
 ---
 
 ## Câu 12: Design Image Upload
 **Design image upload component with preview, progress, validation. Key considerations?**
 
-- A) Simple file input
-- B) Client-side validation, compression, chunked upload for large files, progress tracking, retry mechanism, preview generation
-- C) Server-side only processing
-- D) Base64 encoding
+- A) Server-side only processing
+- B) Base64 encoding
+- C) Simple file input
+- D) Client-side validation, compression, chunked upload for large files, progress tracking, retry mechanism, preview generation
 
 ---
 
 ## Câu 13: Design Search Autocomplete
 **Design search autocomplete like Google. Technical considerations?**
 
-- A) Search on every keystroke
-- B) Debounce input, cache results, keyboard navigation, highlight matches, handle no results, recent searches
-- C) Only search on Enter
-- D) Pre-load all results
+- A) Debounce input, cache results, keyboard navigation, highlight matches, handle no results, recent searches
+- B) Only search on Enter
+- C) Pre-load all results
+- D) Search on every keystroke
 
 ---
 
 ## Câu 14: Design Data Table
 **Design reusable data table component với sorting, filtering, pagination. Architecture?**
 
-- A) Monolithic component
-- B) Composable design (Table, Header, Body, Row, Cell), server-side operations for large data, virtualization option, controlled/uncontrolled modes
-- C) Use native HTML table only
-- D) CSS Grid layout
+- A) Use native HTML table only
+- B) CSS Grid layout
+- C) Monolithic component
+- D) Composable design (Table, Header, Body, Row, Cell), server-side operations for large data, virtualization option, controlled/uncontrolled modes
 
 ---
 
 ## Câu 15: Design Form Builder
 **Design dynamic form builder (user có thể tạo forms). Architecture decisions?**
 
-- A) Hard-code tất cả field types
-- B) Schema-driven approach, field type registry, validation rules engine, conditional logic, drag-drop interface
-- C) Use Google Forms embed
-- D) Only support text fields
+- A) Schema-driven approach, field type registry, validation rules engine, conditional logic, drag-drop interface
+- B) Use Google Forms embed
+- C) Only support text fields
+- D) Hard-code tất cả field types
 
 ---
 
@@ -221,10 +221,10 @@
 ## Câu 21: Micro-frontends
 **Khi nào nên sử dụng micro-frontends architecture?**
 
-- A) Mọi project
-- B) Large teams, independent deployment needs, different tech stacks, clear domain boundaries
-- C) Small projects
-- D) Startups với 2 developers
+- A) Large teams, independent deployment needs, different tech stacks, clear domain boundaries
+- B) Mọi project
+- C) Startups với 2 developers
+- D) Small projects
 
 ---
 
@@ -281,10 +281,10 @@
 ## Câu 27: SSR vs CSR vs SSG
 **Khi nào chọn SSR, CSR, SSG?**
 
-- A) SSR cho tất cả
-- B) SSR: SEO + dynamic content, CSR: interactive apps + authenticated content, SSG: static content + blogs
-- C) CSR cho tất cả
-- D) Depends on framework only
+- A) Depends on framework only
+- B) SSR cho tất cả
+- C) SSR: SEO + dynamic content, CSR: interactive apps + authenticated content, SSG: static content + blogs
+- D) CSR cho tất cả
 
 ---
 
@@ -323,20 +323,20 @@
 ## Câu 31: Legacy Code Migration
 **Bạn join team với large legacy jQuery codebase. Migration strategy?**
 
-- A) Rewrite từ đầu
-- B) Strangler fig pattern: wrap legacy, incrementally migrate, coexist during transition, prioritize high-value areas
-- C) Keep jQuery forever
-- D) Hire new team
+- A) Strangler fig pattern: wrap legacy, incrementally migrate, coexist during transition, prioritize high-value areas
+- B) Hire new team
+- C) Rewrite từ đầu
+- D) Keep jQuery forever
 
 ---
 
 ## Câu 32: Performance Crisis
 **Production app suddenly slow, users complaining. Immediate actions?**
 
-- A) Deploy rollback và investigate
-- B) Check monitoring, identify root cause (recent deploy? traffic spike? third-party?), communicate status, fix or rollback
-- C) Ignore until morning
-- D) Blame backend
+- A) Check monitoring, identify root cause (recent deploy? traffic spike? third-party?), communicate status, fix or rollback
+- B) Blame backend
+- C) Deploy rollback và investigate
+- D) Ignore until morning
 
 ---
 
@@ -363,10 +363,10 @@
 ## Câu 35: Cross-team Dependency
 **Feature requires backend API chưa ready. Approach?**
 
-- A) Wait for backend
-- B) Define contract together, mock API, develop in parallel, integration testing khi ready
-- C) Skip feature
-- D) Build temporary backend
+- A) Define contract together, mock API, develop in parallel, integration testing khi ready
+- B) Wait for backend
+- C) Build temporary backend
+- D) Skip feature
 
 ---
 
@@ -376,7 +376,7 @@
 
 ## Phần 1: Problem Solving
 
-### Câu 1: Đáp án B
+### Câu 1: Đáp án C
 
 **Giải thích:**
 Debugging workflow:
@@ -429,7 +429,7 @@ useEffect(() => {
 
 ---
 
-### Câu 3: Đáp án B
+### Câu 3: Đáp án D
 
 **Giải thích:**
 Race condition scenario:
@@ -482,7 +482,7 @@ function useSearch(query) {
 
 ---
 
-### Câu 4: Đáp án B
+### Câu 4: Đáp án C
 
 **Giải thích:**
 Cross-tab synchronization options:
@@ -517,7 +517,7 @@ socket.on('dataUpdate', (data) => {
 
 ---
 
-### Câu 5: Đáp án B
+### Câu 5: Đáp án D
 
 **Giải thích:**
 Comprehensive error handling:
@@ -567,7 +567,7 @@ const api = {
 
 ---
 
-### Câu 6: Đáp án B
+### Câu 6: Đáp án C
 
 **Giải thích:**
 Form performance optimization:
@@ -613,7 +613,7 @@ const { register } = useForm({
 
 ---
 
-### Câu 7: Đáp án B
+### Câu 7: Đáp án A
 
 **Giải thích:**
 Virtualization solution:
@@ -656,7 +656,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 ---
 
-### Câu 8: Đáp án B
+### Câu 8: Đáp án D
 
 **Giải thích:**
 Token refresh strategy:
@@ -780,7 +780,7 @@ class CircuitBreaker {
 
 ---
 
-### Câu 10: Đáp án B
+### Câu 10: Đáp án C
 
 **Giải thích:**
 Bundle optimization steps:
@@ -818,7 +818,7 @@ const handleExport = async () => {
 
 ## Phần 2: Frontend System Design
 
-### Câu 11: Đáp án B
+### Câu 11: Đáp án C
 
 **Giải thích:**
 Notification system design:
@@ -886,7 +886,7 @@ class NotificationService {
 
 ---
 
-### Câu 12: Đáp án B
+### Câu 12: Đáp án D
 
 **Giải thích:**
 Image upload design:
@@ -961,7 +961,7 @@ class ImageUploader {
 
 ---
 
-### Câu 13: Đáp án B
+### Câu 13: Đáp án A
 
 **Giải thích:**
 Search autocomplete design:
@@ -1055,7 +1055,7 @@ class SearchAutocomplete {
 
 ---
 
-### Câu 14: Đáp án B
+### Câu 14: Đáp án D
 
 **Giải thích:**
 Data table architecture:
@@ -1141,7 +1141,7 @@ function DataTable<T>({
 
 ---
 
-### Câu 15: Đáp án B
+### Câu 15: Đáp án A
 
 **Giải thích:**
 Form builder architecture:
@@ -1232,7 +1232,7 @@ function buildResolver(rules?: ValidationRule[]) {
 
 ## Phần 3: Architecture Patterns
 
-### Câu 21: Đáp án B
+### Câu 21: Đáp án A
 
 **Giải thích:**
 Micro-frontends use cases:
@@ -1293,7 +1293,7 @@ State management decision matrix:
 
 ---
 
-### Câu 27: Đáp án B
+### Câu 27: Đáp án C
 
 **Giải thích:**
 Rendering strategy selection:
@@ -1340,7 +1340,7 @@ function Dashboard() {
 
 ## Phần 4: Scenario-based
 
-### Câu 31: Đáp án B
+### Câu 31: Đáp án A
 
 **Giải thích:**
 Legacy migration strategy (Strangler Fig Pattern):
@@ -1392,7 +1392,7 @@ window.dispatchEvent(new CustomEvent('react:ready', { detail: { version: '1.0' }
 
 ---
 
-### Câu 32: Đáp án B
+### Câu 32: Đáp án A
 
 **Giải thích:**
 Production incident response:
@@ -1435,7 +1435,7 @@ Production incident response:
 
 ---
 
-### Câu 35: Đáp án B
+### Câu 35: Đáp án A
 
 **Giải thích:**
 API contract-first development:

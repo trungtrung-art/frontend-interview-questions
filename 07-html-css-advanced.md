@@ -40,9 +40,9 @@
 ## Câu 2: ARIA Roles
 **Khi nào nên sử dụng ARIA attributes?**
 
-- A) Luôn luôn
-- B) Chỉ khi semantic HTML không thể express được
-- C) Thay thế tất cả semantic HTML
+- A) Thay thế tất cả semantic HTML
+- B) Luôn luôn
+- C) Chỉ khi semantic HTML không thể express được
 - D) Không bao giờ cần thiết
 
 ---
@@ -60,10 +60,10 @@
 <span id="name-hint">Enter your full name</span>
 ```
 
-- A) Form A
-- B) Form B - có label và description cho screen readers
+- A) Form B - có label và description cho screen readers
+- B) Cả hai đều không accessible
 - C) Giống nhau
-- D) Cả hai đều không accessible
+- D) Form A
 
 ---
 
@@ -82,30 +82,30 @@
 <h3>Subsection</h3>
 ```
 
-- A) Structure A đúng
-- B) Structure B đúng - headings phải sequential
+- A) Heading order không quan trọng
+- B) Structure A đúng
 - C) Có thể skip heading levels
-- D) Heading order không quan trọng
+- D) Structure B đúng - headings phải sequential
 
 ---
 
 ## Câu 5: Image Accessibility
 **Alt text nào phù hợp cho decorative image?**
 
-- A) `alt="decorative image"`
+- A) `alt="image"`
 - B) `alt=""`
-- C) Bỏ alt attribute
-- D) `alt="image"`
+- C) `alt="decorative image"`
+- D) Bỏ alt attribute
 
 ---
 
 ## Câu 6: Focus Management
 **Thuộc tính nào giúp custom element focusable?**
 
-- A) `focusable="true"`
-- B) `tabindex="0"`
-- C) `focus="true"`
-- D) `accessible="true"`
+- A) `focus="true"`
+- B) `accessible="true"`
+- C) `tabindex="0"`
+- D) `focusable="true"`
 
 ---
 
@@ -113,39 +113,39 @@
 **WCAG AA minimum contrast ratio cho normal text là?**
 
 - A) 3:1
-- B) 4.5:1
-- C) 7:1
-- D) 2:1
+- B) 7:1
+- C) 2:1
+- D) 4.5:1
 
 ---
 
 ## Câu 8: Skip Links
 **Skip link dùng để làm gì?**
 
-- A) Skip loading images
-- B) Cho phép keyboard users skip navigation đến main content
-- C) Skip CSS animations
-- D) Skip advertisements
+- A) Skip CSS animations
+- B) Skip advertisements
+- C) Cho phép keyboard users skip navigation đến main content
+- D) Skip loading images
 
 ---
 
 ## Câu 9: Live Regions
 **ARIA attribute nào để announce dynamic content changes?**
 
-- A) `aria-dynamic="true"`
-- B) `aria-live="polite"` hoặc `aria-live="assertive"`
-- C) `aria-announce="true"`
-- D) `aria-update="auto"`
+- A) `aria-update="auto"`
+- B) `aria-dynamic="true"`
+- C) `aria-live="polite"` hoặc `aria-live="assertive"`
+- D) `aria-announce="true"`
 
 ---
 
 ## Câu 10: Button vs Link
 **Khi nào dùng `<button>` vs `<a>`?**
 
-- A) Không có sự khác biệt
-- B) Button cho actions, Link cho navigation
-- C) Link cho actions, Button cho navigation
-- D) Chỉ dùng button
+- A) Button cho actions, Link cho navigation
+- B) Link cho actions, Button cho navigation
+- C) Chỉ dùng button
+- D) Không có sự khác biệt
 
 ---
 
@@ -177,9 +177,9 @@
 ## Câu 12: flex Property
 **`flex: 1 0 auto` có nghĩa là gì?**
 
-- A) `flex-grow: 1`, `flex-shrink: 0`, `flex-basis: auto`
-- B) `flex-grow: 0`, `flex-shrink: 1`, `flex-basis: auto`
-- C) `flex-grow: auto`, `flex-shrink: 1`, `flex-basis: 0`
+- A) `flex-grow: auto`, `flex-shrink: 1`, `flex-basis: 0`
+- B) `flex-grow: 1`, `flex-shrink: 0`, `flex-basis: auto`
+- C) `flex-grow: 0`, `flex-shrink: 1`, `flex-basis: auto`
 - D) Error
 
 ---
@@ -233,8 +233,8 @@
 ## Câu 15: Flexbox vs Grid
 **Khi nào nên dùng Grid thay vì Flexbox?**
 
-- A) Luôn dùng Grid
-- B) Grid cho 2D layout, Flexbox cho 1D layout
+- A) Grid cho 2D layout, Flexbox cho 1D layout
+- B) Luôn dùng Grid
 - C) Grid cho navigation, Flexbox cho page layout
 - D) Không có sự khác biệt
 
@@ -243,10 +243,10 @@
 ## Câu 16: gap Property
 **`gap` property hoạt động với gì?**
 
-- A) Chỉ Grid
-- B) Chỉ Flexbox
-- C) Cả Grid và Flexbox
-- D) Chỉ inline elements
+- A) Cả Grid và Flexbox
+- B) Chỉ inline elements
+- C) Chỉ Grid
+- D) Chỉ Flexbox
 
 ---
 
@@ -261,10 +261,10 @@ grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 ```
 
-- A) Không có sự khác biệt
-- B) `auto-fill` giữ empty tracks, `auto-fit` collapse empty tracks
-- C) `auto-fit` giữ empty tracks, `auto-fill` collapse empty tracks
-- D) `auto-fill` chỉ hoạt động với fixed sizes
+- A) `auto-fill` giữ empty tracks, `auto-fit` collapse empty tracks
+- B) `auto-fill` chỉ hoạt động với fixed sizes
+- C) Không có sự khác biệt
+- D) `auto-fit` giữ empty tracks, `auto-fill` collapse empty tracks
 
 ---
 
@@ -281,20 +281,20 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 ## Câu 19: align-self
 **`align-self` override property nào?**
 
-- A) `justify-content`
-- B) `align-items`
-- C) `align-content`
-- D) `justify-items`
+- A) `align-items`
+- B) `align-content`
+- C) `justify-items`
+- D) `justify-content`
 
 ---
 
 ## Câu 20: Subgrid
 **CSS Subgrid cho phép làm gì?**
 
-- A) Nested grid với independent tracks
-- B) Child grid inherit track sizes từ parent grid
+- A) Animate grid items
+- B) Nested grid với independent tracks
 - C) Create circular grids
-- D) Animate grid items
+- D) Child grid inherit track sizes từ parent grid
 
 ---
 
@@ -320,10 +320,10 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 ## Câu 22: BEM Naming
 **BEM class name đúng?**
 
-- A) `.card__header--large`
+- A) `.cardHeaderLarge`
 - B) `.card-header-large`
 - C) `.card_header_large`
-- D) `.cardHeaderLarge`
+- D) `.card__header--large`
 
 ---
 
@@ -331,17 +331,17 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 **Ưu điểm của CSS-in-JS?**
 
 - A) Scoped styles, dynamic styling, co-location với components
-- B) Smaller bundle size
+- B) Better browser support
 - C) Faster runtime performance
-- D) Better browser support
+- D) Smaller bundle size
 
 ---
 
 ## Câu 24: CSS Modules
 **CSS Modules giải quyết vấn đề gì?**
 
-- A) Performance
-- B) Class name collisions (scoped locally by default)
+- A) Class name collisions (scoped locally by default)
+- B) Performance
 - C) Browser compatibility
 - D) Animation
 
@@ -350,9 +350,9 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 ## Câu 25: Critical CSS
 **Critical CSS là gì?**
 
-- A) CSS cho error messages
-- B) Inline CSS cho above-the-fold content để improve FCP
-- C) CSS cho important elements
+- A) Inline CSS cho above-the-fold content để improve FCP
+- B) CSS cho important elements
+- C) CSS cho error messages
 - D) Minified CSS
 
 ---
@@ -374,10 +374,10 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 ```
 
-- A) `$primary: blue;` và `color: $primary;`
-- B) `--primary: blue;` và `color: var(--primary);`
-- C) `@primary: blue;` và `color: @primary;`
-- D) `primary: blue;` và `color: primary;`
+- A) `--primary: blue;` và `color: var(--primary);`
+- B) `primary: blue;` và `color: primary;`
+- C) `$primary: blue;` và `color: $primary;`
+- D) `@primary: blue;` và `color: @primary;`
 
 ---
 
@@ -386,8 +386,8 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
 - A) Style based on viewport size
 - B) Style based on container size
-- C) Style based on content
-- D) Style based on network
+- C) Style based on network
+- D) Style based on content
 
 ---
 
@@ -398,20 +398,20 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 .card:has(img) { }
 ```
 
-- A) Select all cards
-- B) Select cards that contain an img element (parent selector)
-- C) Select img inside card
-- D) Error - invalid selector
+- A) Select img inside card
+- B) Select all cards
+- C) Error - invalid selector
+- D) Select cards that contain an img element (parent selector)
 
 ---
 
 ## Câu 29: @layer
 **CSS @layer dùng để làm gì?**
 
-- A) Create z-index layers
-- B) Control cascade order của styles
-- C) Create animation layers
-- D) Group media queries
+- A) Group media queries
+- B) Create animation layers
+- C) Control cascade order của styles
+- D) Create z-index layers
 
 ---
 
@@ -422,10 +422,10 @@ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 font-size: clamp(1rem, 2.5vw, 2rem);
 ```
 
-- A) Randomly pick value
-- B) Return minimum, preferred, maximum - fluid value within range
-- C) Calculate average
-- D) Error
+- A) Calculate average
+- B) Error
+- C) Return minimum, preferred, maximum - fluid value within range
+- D) Randomly pick value
 
 ---
 
@@ -434,10 +434,10 @@ font-size: clamp(1rem, 2.5vw, 2rem);
 ## Câu 31: Mobile-first
 **Mobile-first approach nghĩa là?**
 
-- A) Design for mobile only
-- B) Base styles cho mobile, use min-width media queries để enhance
-- C) Use max-width media queries
-- D) Hide content on mobile
+- A) Use max-width media queries
+- B) Design for mobile only
+- C) Hide content on mobile
+- D) Base styles cho mobile, use min-width media queries để enhance
 
 ---
 
@@ -445,9 +445,9 @@ font-size: clamp(1rem, 2.5vw, 2rem);
 **Sự khác biệt giữa `vh` và `dvh`?**
 
 - A) Không có sự khác biệt
-- B) `dvh` accounts for dynamic viewport (mobile browser UI)
-- C) `vh` accounts for dynamic viewport
-- D) `dvh` không được support
+- B) `vh` accounts for dynamic viewport
+- C) `dvh` không được support
+- D) `dvh` accounts for dynamic viewport (mobile browser UI)
 
 ---
 
@@ -463,9 +463,9 @@ font-size: clamp(1rem, 2.5vw, 2rem);
 ```
 
 - A) Browser chooses best image based on viewport và pixel density
-- B) Browser loads all images
-- C) Only `src` image is loaded
-- D) Error
+- B) Only `src` image is loaded
+- C) Error
+- D) Browser loads all images
 
 ---
 
@@ -479,10 +479,10 @@ font-size: clamp(1rem, 2.5vw, 2rem);
 }
 ```
 
-- A) Crop image
-- B) Maintain aspect ratio, height calculated from width
-- C) Stretch to fill
-- D) Error - invalid property
+- A) Maintain aspect ratio, height calculated from width
+- B) Crop image
+- C) Error - invalid property
+- D) Stretch to fill
 
 ---
 
@@ -550,7 +550,7 @@ Semantic HTML benefits:
 
 ---
 
-### Câu 2: Đáp án B
+### Câu 2: Đáp án C
 
 **Giải thích:**
 ARIA rules:
@@ -583,7 +583,7 @@ ARIA rules:
 
 ---
 
-### Câu 3: Đáp án B
+### Câu 3: Đáp án A
 
 **Giải thích:**
 Accessible form requirements:
@@ -625,7 +625,7 @@ Accessible form requirements:
 
 ---
 
-### Câu 4: Đáp án B
+### Câu 4: Đáp án D
 
 **Giải thích:**
 Heading hierarchy rules:
@@ -689,7 +689,7 @@ Alt text guidelines:
 
 ---
 
-### Câu 6: Đáp án B - `tabindex="0"`
+### Câu 6: Đáp án C - `tabindex="0"`
 
 **Giải thích:**
 tabindex values:
@@ -726,7 +726,7 @@ tabindex values:
 
 ---
 
-### Câu 7: Đáp án B - 4.5:1
+### Câu 7: Đáp án D - 4.5:1
 
 **Giải thích:**
 WCAG contrast requirements:
@@ -759,7 +759,7 @@ WCAG contrast requirements:
 
 ---
 
-### Câu 8: Đáp án B
+### Câu 8: Đáp án C
 
 **Giải thích:**
 Skip links allow keyboard users to bypass repetitive content:
@@ -801,7 +801,7 @@ Skip links allow keyboard users to bypass repetitive content:
 
 ---
 
-### Câu 9: Đáp án B
+### Câu 9: Đáp án C
 
 **Giải thích:**
 ARIA live regions announce dynamic changes:
@@ -836,7 +836,7 @@ ARIA live regions announce dynamic changes:
 
 ---
 
-### Câu 10: Đáp án B
+### Câu 10: Đáp án A
 
 **Giải thích:**
 ```html
@@ -899,7 +899,7 @@ ARIA live regions announce dynamic changes:
 
 ---
 
-### Câu 12: Đáp án A
+### Câu 12: Đáp án B
 
 **Giải thích:**
 ```css
@@ -981,7 +981,7 @@ flex: 0 1 auto; /* Default - can shrink, won't grow */
 
 ---
 
-### Câu 15: Đáp án B
+### Câu 15: Đáp án A
 
 **Giải thích:**
 ```css
@@ -1011,7 +1011,7 @@ flex: 0 1 auto; /* Default - can shrink, won't grow */
 
 ---
 
-### Câu 16: Đáp án C
+### Câu 16: Đáp án A
 
 **Giải thích:**
 ```css
@@ -1044,7 +1044,7 @@ flex: 0 1 auto; /* Default - can shrink, won't grow */
 
 ---
 
-### Câu 17: Đáp án B
+### Câu 17: Đáp án A
 
 **Giải thích:**
 ```css
@@ -1090,7 +1090,7 @@ flex: 0 1 auto; /* Default - can shrink, won't grow */
 
 ---
 
-### Câu 19: Đáp án B - `align-items`
+### Câu 19: Đáp án A - `align-items`
 
 **Giải thích:**
 ```css
@@ -1117,7 +1117,7 @@ flex: 0 1 auto; /* Default - can shrink, won't grow */
 
 ---
 
-### Câu 20: Đáp án B
+### Câu 20: Đáp án D
 
 **Giải thích:**
 ```css
@@ -1184,7 +1184,7 @@ div.button { color: red; }      /* (0,1,1) - Wins */
 
 ---
 
-### Câu 22: Đáp án A
+### Câu 22: Đáp án D
 
 **Giải thích:**
 BEM (Block Element Modifier):
@@ -1258,7 +1258,7 @@ const Button = styled.button`
 
 ---
 
-### Câu 24: Đáp án B
+### Câu 24: Đáp án A
 
 **Giải thích:**
 CSS Modules scope class names locally:
@@ -1290,7 +1290,7 @@ function Button({ primary }) {
 
 ---
 
-### Câu 25: Đáp án B
+### Câu 25: Đáp án A
 
 **Giải thích:**
 Critical CSS improves FCP:
@@ -1319,7 +1319,7 @@ Critical CSS improves FCP:
 
 ## Phần 4: Modern CSS Features
 
-### Câu 26: Đáp án B
+### Câu 26: Đáp án A
 
 **Giải thích:**
 ```css
@@ -1386,7 +1386,7 @@ document.documentElement.style.setProperty('--primary-color', 'red');
 
 ---
 
-### Câu 28: Đáp án B
+### Câu 28: Đáp án D
 
 **Giải thích:**
 `:has()` is the "parent selector":
@@ -1421,7 +1421,7 @@ form:has(input:invalid) {
 
 ---
 
-### Câu 29: Đáp án B
+### Câu 29: Đáp án C
 
 **Giải thích:**
 `@layer` controls cascade order:
@@ -1453,7 +1453,7 @@ p { color: green; }  /* Wins over all layers */
 
 ---
 
-### Câu 30: Đáp án B
+### Câu 30: Đáp án C
 
 **Giải thích:**
 ```css
@@ -1487,7 +1487,7 @@ p { color: green; }  /* Wins over all layers */
 
 ## Phần 5: Responsive Design
 
-### Câu 31: Đáp án B
+### Câu 31: Đáp án D
 
 **Giải thích:**
 ```css
@@ -1535,7 +1535,7 @@ p { color: green; }  /* Wins over all layers */
 
 ---
 
-### Câu 32: Đáp án B
+### Câu 32: Đáp án D
 
 **Giải thích:**
 ```css
@@ -1608,7 +1608,7 @@ p { color: green; }  /* Wins over all layers */
 
 ---
 
-### Câu 34: Đáp án B
+### Câu 34: Đáp án A
 
 **Giải thích:**
 ```css

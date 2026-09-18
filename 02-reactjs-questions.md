@@ -17,8 +17,8 @@
 **Virtual DOM trong React là gì?**
 
 - A) Một bản sao của Real DOM được lưu trong database
-- B) Một lightweight JavaScript representation của Real DOM
-- C) Một CSS framework
+- B) Một CSS framework
+- C) Một lightweight JavaScript representation của Real DOM
 - D) Một browser API
 
 ---
@@ -38,20 +38,20 @@ const element = (
 );
 ```
 
-- A) Hiển thị "Hello World 0"
-- B) Hiển thị "0"
-- C) Không hiển thị gì
-- D) Error
+- A) Không hiển thị gì
+- B) Error
+- C) Hiển thị "0"
+- D) Hiển thị "Hello World 0"
 
 ---
 
 ## Câu 3: State vs Props
 **Điều nào sau đây ĐÚNG về State và Props?**
 
-- A) Props có thể thay đổi bởi component nhận nó
-- B) State là immutable
-- C) Props được truyền từ parent, State được quản lý bởi component
-- D) State và Props là giống nhau
+- A) Props được truyền từ parent, State được quản lý bởi component
+- B) Props có thể thay đổi bởi component nhận nó
+- C) State và Props là giống nhau
+- D) State là immutable
 
 ---
 
@@ -74,10 +74,10 @@ function Counter() {
 
 **Sau khi click button, count sẽ là?**
 
-- A) 3
-- B) 1
-- C) 0
-- D) Error
+- A) 0
+- B) 3
+- C) Error
+- D) 1
 
 ---
 
@@ -111,10 +111,10 @@ useEffect(() => {
 ## Câu 6: Keys in Lists
 **Tại sao cần key khi render list trong React?**
 
-- A) Để styling
-- B) Để React identify items đã thay đổi, thêm, hoặc xóa
-- C) Không cần thiết, chỉ là convention
-- D) Để SEO
+- A) Để React identify items đã thay đổi, thêm, hoặc xóa
+- B) Không cần thiết, chỉ là convention
+- C) Để SEO
+- D) Để styling
 
 ---
 
@@ -164,20 +164,20 @@ function App({ items }) {
 // Khi items = []
 ```
 
-- A) Không render gì
+- A) Error
 - B) Render `0`
 - C) Render `<List />`
-- D) Error
+- D) Không render gì
 
 ---
 
 ## Câu 10: Fragment
 **Khi nào nên sử dụng React.Fragment?**
 
-- A) Khi cần wrap multiple elements mà không thêm DOM node
-- B) Khi cần styling
-- C) Khi render list
-- D) Không bao giờ cần thiết
+- A) Khi render list
+- B) Không bao giờ cần thiết
+- C) Khi cần wrap multiple elements mà không thêm DOM node
+- D) Khi cần styling
 
 ---
 
@@ -186,39 +186,39 @@ function App({ items }) {
 ## Câu 11: useCallback
 **Khi nào nên sử dụng useCallback?**
 
-- A) Cho tất cả functions
+- A) Để tăng performance cho mọi function
 - B) Khi pass callback xuống child components được memo
-- C) Để tăng performance cho mọi function
-- D) Khi sử dụng với useState
+- C) Khi sử dụng với useState
+- D) Cho tất cả functions
 
 ---
 
 ## Câu 12: useMemo vs useCallback
 **Sự khác biệt giữa useMemo và useCallback?**
 
-- A) Không có sự khác biệt
-- B) useMemo cache value, useCallback cache function
+- A) useMemo cache value, useCallback cache function
+- B) useMemo cho arrays, useCallback cho objects
 - C) useCallback cache value, useMemo cache function
-- D) useMemo cho arrays, useCallback cho objects
+- D) Không có sự khác biệt
 
 ---
 
 ## Câu 13: useRef
 **Điều nào ĐÚNG về useRef?**
 
-- A) Thay đổi `.current` sẽ trigger re-render
+- A) useRef chỉ dùng cho DOM references
 - B) useRef persist value qua các re-renders mà không trigger re-render
-- C) useRef chỉ dùng cho DOM references
-- D) useRef giống như useState
+- C) useRef giống như useState
+- D) Thay đổi `.current` sẽ trigger re-render
 
 ---
 
 ## Câu 14: Context API
 **Vấn đề chính của Context API?**
 
-- A) Không hoạt động với functional components
+- A) Không thể nested contexts
 - B) Gây re-render tất cả consumers khi context value thay đổi
-- C) Không thể nested contexts
+- C) Không hoạt động với functional components
 - D) Chỉ hoạt động với class components
 
 ---
@@ -226,10 +226,10 @@ function App({ items }) {
 ## Câu 15: React.memo
 **Khi nào React.memo KHÔNG hoạt động?**
 
-- A) Khi props là primitives
+- A) Khi sử dụng với hooks
 - B) Khi props là objects/arrays được tạo mới mỗi render
 - C) Khi component có state
-- D) Khi sử dụng với hooks
+- D) Khi props là primitives
 
 ---
 
@@ -255,20 +255,20 @@ function App() {
 
 **Điều gì xảy ra?**
 
-- A) Hiển thị "1 - 0"
-- B) Hiển thị "1 - 1"
-- C) Infinite loop
-- D) Error hoặc unexpected behavior
+- A) Error hoặc unexpected behavior
+- B) Infinite loop
+- C) Hiển thị "1 - 1"
+- D) Hiển thị "1 - 0"
 
 ---
 
 ## Câu 17: useReducer
 **Khi nào nên sử dụng useReducer thay vì useState?**
 
-- A) Luôn luôn
-- B) Khi state logic phức tạp hoặc state tiếp theo phụ thuộc vào state trước
-- C) Khi có 1 state đơn giản
-- D) Không bao giờ, useState luôn tốt hơn
+- A) Khi state logic phức tạp hoặc state tiếp theo phụ thuộc vào state trước
+- B) Không bao giờ, useState luôn tốt hơn
+- C) Luôn luôn
+- D) Khi có 1 state đơn giản
 
 ---
 
@@ -285,20 +285,20 @@ function App() {
 ## Câu 19: Reconciliation
 **React reconciliation algorithm làm gì?**
 
-- A) Compile JSX thành JavaScript
-- B) So sánh Virtual DOM trees và update Real DOM hiệu quả
-- C) Handle routing
-- D) Manage state
+- A) So sánh Virtual DOM trees và update Real DOM hiệu quả
+- B) Manage state
+- C) Compile JSX thành JavaScript
+- D) Handle routing
 
 ---
 
 ## Câu 20: Lifting State Up
 **"Lifting state up" có nghĩa là?**
 
-- A) Di chuyển state lên global store
+- A) Sử dụng Redux
 - B) Di chuyển state lên ancestor component gần nhất cần share data
-- C) Sử dụng Redux
-- D) Sử dụng Context
+- C) Sử dụng Context
+- D) Di chuyển state lên global store
 
 ---
 
@@ -307,50 +307,50 @@ function App() {
 ## Câu 21: Fiber Architecture
 **React Fiber là gì?**
 
-- A) Một CSS-in-JS library
-- B) Reimplementation của React core algorithm cho incremental rendering
+- A) Một state management library
+- B) Một CSS-in-JS library
 - C) Một testing framework
-- D) Một state management library
+- D) Reimplementation của React core algorithm cho incremental rendering
 
 ---
 
 ## Câu 22: Concurrent Mode
 **Concurrent Mode trong React cho phép?**
 
-- A) Chạy multiple React instances
-- B) Interruptible rendering, prioritize updates
-- C) Server-side rendering only
-- D) Multi-threading trong JavaScript
+- A) Server-side rendering only
+- B) Multi-threading trong JavaScript
+- C) Interruptible rendering, prioritize updates
+- D) Chạy multiple React instances
 
 ---
 
 ## Câu 23: Suspense
 **Suspense component được sử dụng cho?**
 
-- A) Error handling
-- B) Hiển thị fallback UI trong khi chờ something (lazy loading, data fetching)
-- C) Animation
-- D) Routing
+- A) Hiển thị fallback UI trong khi chờ something (lazy loading, data fetching)
+- B) Error handling
+- C) Routing
+- D) Animation
 
 ---
 
 ## Câu 24: Code Splitting
 **Cách implement code splitting trong React?**
 
-- A) `import('./Component')`
-- B) `React.lazy(() => import('./Component'))`
-- C) `require('./Component')`
-- D) `React.split('./Component')`
+- A) `React.lazy(() => import('./Component'))`
+- B) `import('./Component')`
+- C) `React.split('./Component')`
+- D) `require('./Component')`
 
 ---
 
 ## Câu 25: Server Components
 **Điều nào ĐÚNG về React Server Components?**
 
-- A) Chạy trên client
+- A) Là cách viết khác của SSR
 - B) Có thể sử dụng hooks như useState
 - C) Chạy trên server, không bundle JavaScript cho client
-- D) Là cách viết khác của SSR
+- D) Chạy trên client
 
 ---
 
@@ -358,19 +358,19 @@ function App() {
 **Hydration trong React là gì?**
 
 - A) Adding CSS to components
-- B) Attaching event listeners đến server-rendered HTML
-- C) Fetching data
-- D) Caching components
+- B) Caching components
+- C) Attaching event listeners đến server-rendered HTML
+- D) Fetching data
 
 ---
 
 ## Câu 27: Portals
 **Khi nào sử dụng React Portals?**
 
-- A) Để routing
-- B) Render children vào DOM node khác ngoài parent hierarchy
-- C) Để state management
-- D) Để code splitting
+- A) Render children vào DOM node khác ngoài parent hierarchy
+- B) Để state management
+- C) Để code splitting
+- D) Để routing
 
 ---
 
@@ -378,8 +378,8 @@ function App() {
 **Sự khác biệt chính?**
 
 - A) Không có sự khác biệt
-- B) useLayoutEffect chạy synchronously sau DOM mutations, trước browser paint
-- C) useEffect chạy trước useLayoutEffect
+- B) useEffect chạy trước useLayoutEffect
+- C) useLayoutEffect chạy synchronously sau DOM mutations, trước browser paint
 - D) useLayoutEffect không có cleanup function
 
 ---
@@ -388,8 +388,8 @@ function App() {
 **React.StrictMode làm gì?**
 
 - A) Enforce TypeScript
-- B) Double-invoke functions để detect side effects, warn về deprecated APIs
-- C) Enable production optimizations
+- B) Enable production optimizations
+- C) Double-invoke functions để detect side effects, warn về deprecated APIs
 - D) Handle errors
 
 ---
@@ -397,9 +397,9 @@ function App() {
 ## Câu 30: Performance Optimization
 **Cách nào KHÔNG phải là best practice cho performance trong React?**
 
-- A) Sử dụng React.memo cho pure components
-- B) Virtualization cho long lists
-- C) Memoize tất cả functions với useCallback
+- A) Virtualization cho long lists
+- B) Memoize tất cả functions với useCallback
+- C) Sử dụng React.memo cho pure components
 - D) Code splitting với React.lazy
 
 ---
@@ -407,18 +407,18 @@ function App() {
 ## Câu 31: State Colocation
 **"State Colocation" principle là gì?**
 
-- A) Đặt tất cả state ở global store
-- B) Đặt state gần nhất với nơi sử dụng nó
-- C) Chỉ sử dụng local state
-- D) Chỉ sử dụng Context
+- A) Chỉ sử dụng local state
+- B) Đặt tất cả state ở global store
+- C) Chỉ sử dụng Context
+- D) Đặt state gần nhất với nơi sử dụng nó
 
 ---
 
 ## Câu 32: Render Props vs HOC vs Hooks
 **Ưu điểm của Custom Hooks so với HOC và Render Props?**
 
-- A) Tránh wrapper hell, share logic dễ dàng hơn
-- B) Performance tốt hơn
+- A) Performance tốt hơn
+- B) Tránh wrapper hell, share logic dễ dàng hơn
 - C) Chỉ hoạt động với class components
 - D) Không có ưu điểm
 
@@ -435,10 +435,10 @@ function handleClick() {
 }
 ```
 
-- A) 2 re-renders
-- B) 1 re-render (batched)
+- A) 1 re-render (batched)
+- B) Depends on environment
 - C) 0 re-renders
-- D) Depends on environment
+- D) 2 re-renders
 
 ---
 
@@ -447,18 +447,18 @@ function handleClick() {
 
 - A) CSS transitions
 - B) Mark state updates as non-urgent, keep UI responsive
-- C) Route transitions
-- D) Data fetching
+- C) Data fetching
+- D) Route transitions
 
 ---
 
 ## Câu 35: useDeferredValue
 **Khi nào sử dụng useDeferredValue?**
 
-- A) Để delay rendering của expensive computations
-- B) Để cache values
+- A) Để cache values
+- B) Để routing
 - C) Để handle forms
-- D) Để routing
+- D) Để delay rendering của expensive computations
 
 ---
 
@@ -468,7 +468,7 @@ function handleClick() {
 
 ## Junior Level
 
-### Câu 1: Đáp án B - Lightweight JavaScript representation của Real DOM
+### Câu 1: Đáp án C - Lightweight JavaScript representation của Real DOM
 
 **Giải thích:**
 - Virtual DOM là một JavaScript object representation của Real DOM
@@ -480,7 +480,7 @@ function handleClick() {
 
 ---
 
-### Câu 2: Đáp án B - Render `0`
+### Câu 2: Đáp án C - Render `0`
 
 **Giải thích:**
 - `false`, `null`, `undefined` → không render
@@ -502,7 +502,7 @@ function handleClick() {
 
 ---
 
-### Câu 3: Đáp án C
+### Câu 3: Đáp án A
 
 **Giải thích:**
 - **Props:** Passed from parent, read-only trong component
@@ -513,7 +513,7 @@ function handleClick() {
 
 ---
 
-### Câu 4: Đáp án B - count = 1
+### Câu 4: Đáp án D - count = 1
 
 **Giải thích:**
 - React batches state updates
@@ -544,7 +544,7 @@ const handleClick = () => {
 
 ---
 
-### Câu 6: Đáp án B
+### Câu 6: Đáp án A
 
 **Giải thích:**
 - Keys giúp React identify items trong list
@@ -611,7 +611,7 @@ const inputRef = useRef();
 
 ---
 
-### Câu 10: Đáp án A
+### Câu 10: Đáp án C
 
 **Giải thích:**
 - Fragment wrap multiple elements mà không thêm extra DOM node
@@ -669,7 +669,7 @@ function Parent() {
 
 ---
 
-### Câu 12: Đáp án B
+### Câu 12: Đáp án A
 
 **Giải thích:**
 ```jsx
@@ -753,7 +753,7 @@ const MemoizedComponent = React.memo(Component, (prev, next) => {
 
 ---
 
-### Câu 16: Đáp án D - Error hoặc unexpected behavior
+### Câu 16: Đáp án A - Error hoặc unexpected behavior
 
 **Giải thích:**
 - Gọi `increment()` trong render body (không trong event handler)
@@ -772,7 +772,7 @@ function App() {
 
 ---
 
-### Câu 17: Đáp án B
+### Câu 17: Đáp án A
 
 **Giải thích:**
 useReducer tốt hơn khi:
@@ -828,7 +828,7 @@ class ErrorBoundary extends React.Component {
 
 ---
 
-### Câu 19: Đáp án B
+### Câu 19: Đáp án A
 
 **Giải thích:**
 - Reconciliation là process so sánh 2 Virtual DOM trees
@@ -871,7 +871,7 @@ function Parent() {
 
 ## Senior Level
 
-### Câu 21: Đáp án B
+### Câu 21: Đáp án D
 
 **Giải thích:**
 - React Fiber là reimplementation của React's core algorithm (v16+)
@@ -884,7 +884,7 @@ function Parent() {
 
 ---
 
-### Câu 22: Đáp án B
+### Câu 22: Đáp án C
 
 **Giải thích:**
 - Concurrent Mode enables interruptible rendering
@@ -904,7 +904,7 @@ startTransition(() => {
 
 ---
 
-### Câu 23: Đáp án B
+### Câu 23: Đáp án A
 
 **Giải thích:**
 - Suspense cho phép "wait" for something và show fallback
@@ -926,7 +926,7 @@ function App() {
 
 ---
 
-### Câu 24: Đáp án B
+### Câu 24: Đáp án A
 
 **Giải thích:**
 ```jsx
@@ -978,7 +978,7 @@ function ClientComponent() {
 
 ---
 
-### Câu 26: Đáp án B
+### Câu 26: Đáp án C
 
 **Giải thích:**
 - Server renders HTML
@@ -990,7 +990,7 @@ function ClientComponent() {
 
 ---
 
-### Câu 27: Đáp án B
+### Câu 27: Đáp án A
 
 **Giải thích:**
 - Portals render children vào DOM node khác
@@ -1010,7 +1010,7 @@ function Modal({ children }) {
 
 ---
 
-### Câu 28: Đáp án B
+### Câu 28: Đáp án C
 
 **Giải thích:**
 - `useLayoutEffect`: Fires synchronously after DOM mutations, BEFORE browser paint
@@ -1034,7 +1034,7 @@ useEffect(() => {
 
 ---
 
-### Câu 29: Đáp án B
+### Câu 29: Đáp án C
 
 **Giải thích:**
 StrictMode in development:
@@ -1053,7 +1053,7 @@ StrictMode in development:
 
 ---
 
-### Câu 30: Đáp án C - Memoize tất cả functions với useCallback
+### Câu 30: Đáp án B - Memoize tất cả functions với useCallback
 
 **Giải thích:**
 - Over-memoization is an anti-pattern
@@ -1071,7 +1071,7 @@ StrictMode in development:
 
 ---
 
-### Câu 31: Đáp án B
+### Câu 31: Đáp án D
 
 **Giải thích:**
 - State Colocation: Đặt state gần nhất với nơi cần nó
@@ -1101,7 +1101,7 @@ function App() {
 
 ---
 
-### Câu 32: Đáp án A
+### Câu 32: Đáp án B
 
 **Giải thích:**
 - Custom Hooks tránh wrapper hell (HOC, Render Props)
@@ -1132,7 +1132,7 @@ function MyComponent() {
 
 ---
 
-### Câu 33: Đáp án B - 1 re-render (batched)
+### Câu 33: Đáp án A - 1 re-render (batched)
 
 **Giải thích:**
 - React 18 automatic batching: batch ALL updates
@@ -1199,7 +1199,7 @@ function SearchResults() {
 
 ---
 
-### Câu 35: Đáp án A
+### Câu 35: Đáp án D
 
 **Giải thích:**
 - useDeferredValue defers updating part of UI
