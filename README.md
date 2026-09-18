@@ -7,6 +7,8 @@
 
 Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend với đầy đủ đáp án và giải thích chi tiết, được thiết kế cho các vị trí từ Junior đến Senior/Lead.
 
+> **Trang ôn luyện:** mở [docs/index.html](./docs/index.html) — đọc 133 câu lý thuyết, làm 221 câu trắc nghiệm có chấm điểm, tự chấm ba mức và ghi chú riêng từng câu. Một file HTML tự chứa, bấm đúp là chạy, không cần mạng.
+>
 > **Bắt đầu từ đây:** [PLAYBOOK.md](./PLAYBOOK.md) — lộ trình ôn theo quỹ thời gian còn lại, bản đồ chủ đề trỏ thẳng tới 133 câu trong giáo án, khung trả lời cho 6 dạng câu hỏi, 18 bẫy hay trượt, và checklist ngày phỏng vấn.
 
 ### Đặc điểm:
@@ -197,6 +199,40 @@ Bộ tài liệu này tập hợp **200+ câu hỏi phỏng vấn** Frontend v�
 - [Frontend Masters](https://frontendmasters.com/)
 - [Testing JavaScript](https://testingjavascript.com/)
 - [Total TypeScript](https://www.totaltypescript.com/)
+
+---
+
+## 🛠 Trang Ôn Luyện
+
+[docs/index.html](./docs/index.html) là trang web tự chứa được sinh ra từ chính các file markdown trong repo.
+
+### Dùng
+
+- **Trên máy:** bấm đúp `docs/index.html`. Không cần server, không cần mạng.
+- **Trên điện thoại:** bật GitHub Pages cho repo (Settings → Pages → Source: `main`, Folder: `/docs`), rồi mở link Pages.
+
+### Sinh lại sau khi sửa nội dung
+
+```bash
+node build.mjs
+```
+
+Script đọc `ly-thuyet/`, `PLAYBOOK.md`, `09-algorithms.md` và các file trắc nghiệm rồi ghi đè `docs/index.html`.
+**Đừng sửa trực tiếp `docs/index.html`** — chạy build là mất hết. Sửa file markdown, rồi build lại.
+
+### Dữ liệu cá nhân
+
+Ghi chú, tiến độ và kết quả trắc nghiệm nằm trong `localStorage` của trình duyệt — không đẩy lên đâu cả.
+Dùng nút xuất ở góc phải trên để lưu ra file JSON, và nút nhập để khôi phục trên máy khác.
+
+### Cấu trúc
+
+| Đường dẫn | Vai trò |
+|---|---|
+| `build.mjs` | Script sinh trang |
+| `tools/app.template.html` | Khung trang: HTML, CSS, JS |
+| `tools/vendor/` | marked và highlight.js nhúng sẵn |
+| `docs/index.html` | Kết quả, được commit để GitHub Pages phục vụ |
 
 ---
 

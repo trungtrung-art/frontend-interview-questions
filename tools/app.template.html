@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ôn Luyện Frontend Senior</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:wght@600;700&display=swap">
+<script>/*! marked v18.0.13 — MIT — https://github.com/markedjs/marked */
+__LIB_MARKED__</script>
+<script>__LIB_HLJS__</script>
+<style>
+/* ============ nền chung ============ */
+html{color-scheme:light dark}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* ============ tokens ============ */
+:root{
+  --bg:#F2F5F4; --surface:#FBFCFC; --sunk:#E8EDEB; --line:#D3DBD8; --line-soft:#E2E8E6;
+  --text:#13201E; --dim:#5B6C68; --faint:#8798943;
+  --accent:#0B5D57; --accent-ink:#083F3B; --accent-soft:#DCEEEA; --on-accent:#FFFFFF;
+  --known:#2F7D52; --known-soft:#DDEDE2;
+  --vague:#9A6B06; --vague-soft:#F4E9D2;
+  --poor:#A83226; --poor-soft:#F6E0DD;
+  --shadow:0 1px 2px rgba(19,32,30,.05), 0 8px 24px -16px rgba(19,32,30,.28);
+  --radius:6px;
+  --rail:248px;
+}
+:root{ --faint:#879894; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1513; --surface:#141F1D; --sunk:#1B2725; --line:#263633; --line-soft:#1F2C2A;
+    --text:#E3EBE8; --dim:#93A5A1; --faint:#6B7D79;
+    --accent:#5FCDB9; --accent-ink:#8FE0D1; --accent-soft:#12302C; --on-accent:#06201D;
+    --known:#5CBA85; --known-soft:#14301F;
+    --vague:#D6A23F; --vague-soft:#332715;
+    --poor:#E0705F; --poor-soft:#3A1E1A;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1513; --surface:#141F1D; --sunk:#1B2725; --line:#263633; --line-soft:#1F2C2A;
+  --text:#E3EBE8; --dim:#93A5A1; --faint:#6B7D79;
+  --accent:#5FCDB9; --accent-ink:#8FE0D1; --accent-soft:#12302C; --on-accent:#06201D;
+  --known:#5CBA85; --known-soft:#14301F;
+  --vague:#D6A23F; --vague-soft:#332715;
+  --poor:#E0705F; --poor-soft:#3A1E1A;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"IBM Plex Serif",Georgia,serif; font-weight:600; text-wrap:balance; line-height:1.25; margin:0}
+code,kbd,pre,.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent); text-decoration-color:color-mix(in srgb,var(--accent) 35%,transparent); text-underline-offset:2px}
+a:hover{text-decoration-color:var(--accent)}
+button{font:inherit; color:inherit; cursor:pointer; border:0; background:none}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
+
+/* ============ shell ============ */
+.shell{display:grid; grid-template-columns:var(--rail) minmax(0,1fr); min-height:100vh}
+.rail{
+  background:var(--surface); border-right:1px solid var(--line);
+  display:flex; flex-direction:column; position:sticky; top:0; height:100vh; overflow-y:auto;
+}
+.brand{padding:18px 18px 14px; border-bottom:1px solid var(--line-soft)}
+.brand h1{font-size:17px; letter-spacing:-.01em}
+.brand .sub{font-size:11.5px; color:var(--faint); margin-top:3px; letter-spacing:.06em; text-transform:uppercase}
+.modes{display:flex; flex-direction:column; gap:1px; padding:10px 10px 6px}
+.mode{
+  display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--radius);
+  font-size:14px; font-weight:500; color:var(--dim); text-align:left; width:100%;
+  transition:background .12s, color .12s;
+}
+.mode:hover{background:var(--sunk); color:var(--text)}
+.mode[aria-current="true"]{background:var(--accent-soft); color:var(--accent-ink); font-weight:600}
+.mode .tick{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint); margin-left:auto; font-variant-numeric:tabular-nums}
+.mode[aria-current="true"] .tick{color:var(--accent-ink)}
+
+.railsec{padding:8px 10px 20px; border-top:1px solid var(--line-soft); margin-top:8px}
+.railsec > .lbl{font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); padding:6px 10px 8px}
+.secbtn{width:100%; text-align:left; padding:7px 10px; border-radius:var(--radius); display:block; transition:background .12s}
+.secbtn:hover{background:var(--sunk)}
+.secbtn[aria-current="true"]{background:var(--sunk)}
+.secbtn .row{display:flex; align-items:baseline; gap:8px; font-size:13px}
+.secbtn .nm{font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.secbtn .ct{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--faint); font-variant-numeric:tabular-nums}
+.bar{height:3px; background:var(--line-soft); border-radius:2px; margin-top:6px; display:flex; overflow:hidden}
+.bar i{display:block; height:100%}
+.bar .k{background:var(--known)} .bar .v{background:var(--vague)}
+
+/* ============ main ============ */
+.main{min-width:0; display:flex; flex-direction:column}
+.topbar{
+  position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:14px; padding:10px 28px;
+}
+.search{position:relative; flex:1; max-width:440px}
+.search input{
+  width:100%; padding:7px 12px 7px 32px; border:1px solid var(--line); border-radius:var(--radius);
+  background:var(--surface); color:var(--text); font:inherit; font-size:13.5px;
+}
+.search input::placeholder{color:var(--faint)}
+.search svg{position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--faint)}
+.search kbd{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--faint);
+  border:1px solid var(--line); border-radius:3px; padding:1px 4px; background:var(--bg);
+}
+.tools{margin-left:auto; display:flex; align-items:center; gap:8px}
+.iconbtn{padding:6px 9px; border-radius:var(--radius); color:var(--dim); border:1px solid transparent; transition:background .12s,color .12s}
+.iconbtn:hover{background:var(--sunk); color:var(--text)}
+.syncdot{font-size:11px; color:var(--faint); display:flex; align-items:center; gap:6px; padding-right:4px}
+.syncdot b{width:6px; height:6px; border-radius:50%; background:var(--faint); display:block}
+.syncdot[data-on="1"] b{background:var(--known)}
+
+.page{padding:30px 28px 90px; max-width:1180px; width:100%}
+.reading{max-width:74ch}
+
+/* ============ dashboard ============ */
+.hero{margin-bottom:26px}
+.hero .eyebrow{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:8px}
+.hero h2{font-size:29px; letter-spacing:-.02em}
+.hero p{color:var(--dim); margin:8px 0 0; max-width:62ch; font-size:14.5px}
+
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:12px; margin:22px 0}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px}
+.card .lbl{font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint)}
+.card .val{font-family:"IBM Plex Mono",monospace; font-size:26px; font-weight:500; margin-top:6px; font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.card .val small{font-size:14px; color:var(--faint); font-weight:400}
+.card .note{font-size:12px; color:var(--dim); margin-top:4px}
+.card.k .val{color:var(--known)} .card.v .val{color:var(--vague)} .card.a .val{color:var(--accent)}
+
+h3.blk{font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); font-family:"Be Vietnam Pro",sans-serif; font-weight:600; margin:30px 0 12px}
+
+.progtable{width:100%; border-collapse:collapse; font-size:13.5px}
+.progtable th{text-align:left; font-weight:600; font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint); padding:0 10px 8px; border-bottom:1px solid var(--line)}
+.progtable td{padding:9px 10px; border-bottom:1px solid var(--line-soft); vertical-align:middle}
+.progtable tr:hover td{background:var(--surface)}
+.progtable .num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; color:var(--dim); white-space:nowrap}
+.progtable .go{color:var(--accent); font-size:12.5px; font-weight:500}
+.wbar{height:6px; width:100%; min-width:80px; background:var(--line-soft); border-radius:3px; display:flex; overflow:hidden}
+.wbar i{display:block; height:100%}
+
+.routes{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px}
+.route{
+  text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; transition:border-color .12s, background .12s;
+}
+.route:hover{border-color:var(--accent)}
+.route[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+.route .t{font-family:"IBM Plex Serif",serif; font-weight:600; font-size:16px}
+.route .d{font-size:12.5px; color:var(--dim); margin-top:5px}
+.routebody{margin-top:14px}
+
+/* ============ question list ============ */
+.qhead{display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:6px}
+.qhead h2{font-size:23px; letter-spacing:-.015em}
+.qhead .meta{font-size:12.5px; color:var(--faint); font-family:"IBM Plex Mono",monospace}
+.filters{display:flex; gap:6px; margin:16px 0 18px; flex-wrap:wrap}
+.chip{
+  font-size:12.5px; padding:4px 11px; border-radius:100px; border:1px solid var(--line);
+  color:var(--dim); background:var(--surface); transition:all .12s;
+}
+.chip:hover{border-color:var(--accent); color:var(--text)}
+.chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--on-accent); font-weight:500}
+
+.qlist{display:flex; flex-direction:column; gap:1px}
+.qrow{
+  display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:var(--radius);
+  text-align:left; width:100%; border-left:3px solid transparent; transition:background .12s;
+}
+.qrow:hover{background:var(--surface)}
+.qrow[data-st="known"]{border-left-color:var(--known)}
+.qrow[data-st="vague"]{border-left-color:var(--vague)}
+.qrow .id{
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--faint);
+  min-width:62px; font-variant-numeric:tabular-nums;
+}
+.qrow .ttl{flex:1; min-width:0; font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.qrow .tags{display:flex; gap:5px; align-items:center}
+.pip{width:7px; height:7px; border-radius:50%; background:var(--line)}
+.pip[data-st="known"]{background:var(--known)} .pip[data-st="vague"]{background:var(--vague)}
+.hasnote{color:var(--accent); font-size:11px; font-weight:600; font-family:"IBM Plex Mono",monospace}
+.empty{color:var(--faint); font-size:14px; padding:40px 12px; text-align:center}
+
+/* ============ question detail ============ */
+.crumb{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--faint); margin-bottom:14px; flex-wrap:wrap}
+.crumb button{color:var(--accent); font-weight:500}
+.qtitle{font-size:25px; letter-spacing:-.02em; margin-bottom:4px}
+.qid{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--faint); letter-spacing:.04em}
+.rate{display:flex; gap:7px; margin:18px 0 26px; flex-wrap:wrap; align-items:center}
+.rate .lbl{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); margin-right:4px}
+.rbtn{
+  font-size:13px; padding:5px 13px; border-radius:100px; border:1px solid var(--line);
+  background:var(--surface); color:var(--dim); font-weight:500; transition:all .12s;
+}
+.rbtn:hover{border-color:var(--dim); color:var(--text)}
+.rbtn[aria-pressed="true"][data-v="known"]{background:var(--known-soft); border-color:var(--known); color:var(--known)}
+.rbtn[aria-pressed="true"][data-v="vague"]{background:var(--vague-soft); border-color:var(--vague); color:var(--vague)}
+.rbtn[aria-pressed="true"][data-v="unknown"]{background:var(--sunk); border-color:var(--dim); color:var(--text)}
+
+.prose{font-size:15px}
+.prose h1,.prose h2{font-size:21px; margin:32px 0 10px}
+.prose h3{font-size:17px; margin:26px 0 8px}
+.prose h4{font-size:15px; margin:20px 0 6px; font-family:"Be Vietnam Pro",sans-serif; font-weight:600}
+.prose p{margin:0 0 14px}
+.prose ul,.prose ol{margin:0 0 14px; padding-left:22px}
+.prose li{margin-bottom:5px}
+.prose li::marker{color:var(--faint)}
+.prose strong{font-weight:600}
+.prose blockquote{
+  margin:0 0 16px; padding:2px 0 2px 16px; border-left:2px solid var(--accent);
+  color:var(--dim); font-style:normal;
+}
+.prose blockquote p:last-child{margin-bottom:0}
+.prose hr{border:0; border-top:1px solid var(--line); margin:28px 0}
+.prose code{
+  font-size:.875em; background:var(--sunk); padding:1.5px 5px; border-radius:3px;
+  border:1px solid var(--line-soft);
+}
+.prose pre{
+  background:var(--sunk); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px 16px; overflow-x:auto; margin:0 0 16px; font-size:12.8px; line-height:1.6;
+}
+.prose pre code{background:none; border:0; padding:0; font-size:inherit}
+.tablewrap{overflow-x:auto; margin:0 0 18px}
+.prose table{border-collapse:collapse; font-size:13.5px; min-width:100%}
+.prose th{
+  text-align:left; font-weight:600; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--faint); padding:8px 12px; border-bottom:1px solid var(--line); white-space:nowrap;
+}
+.prose td{padding:9px 12px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+.prose tbody tr:hover td{background:var(--surface)}
+.prose img{max-width:100%}
+.prose .mermaid{white-space:pre; font-family:"IBM Plex Mono",monospace; font-size:12px}
+
+/* ============ notes ============ */
+.notebox{
+  margin:34px 0 10px; background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--accent); border-radius:var(--radius); padding:14px 16px;
+}
+.notebox .nhead{display:flex; align-items:center; gap:10px; margin-bottom:9px}
+.notebox .nhead .t{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); font-weight:600}
+.notebox .nhead .st{margin-left:auto; font-size:11.5px; color:var(--faint); font-family:"IBM Plex Mono",monospace}
+.notebox textarea{
+  width:100%; min-height:110px; resize:vertical; border:0; background:none; color:var(--text);
+  font:inherit; font-size:14px; line-height:1.65; padding:0;
+}
+.notebox textarea:focus{outline:none}
+.notebox textarea::placeholder{color:var(--faint)}
+
+.qnav{display:flex; gap:10px; margin-top:34px; padding-top:18px; border-top:1px solid var(--line)}
+.navbtn{
+  flex:1; text-align:left; border:1px solid var(--line); border-radius:var(--radius); padding:10px 14px;
+  background:var(--surface); transition:border-color .12s; min-width:0;
+}
+.navbtn:hover{border-color:var(--accent)}
+.navbtn[disabled]{opacity:.4; cursor:default}
+.navbtn[disabled]:hover{border-color:var(--line)}
+.navbtn .d{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint)}
+.navbtn .n{font-size:13.5px; margin-top:3px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.navbtn.next{text-align:right}
+
+/* ============ notes index ============ */
+.notecard{
+  background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:var(--radius); padding:14px 16px; margin-bottom:10px; width:100%; text-align:left;
+  transition:border-color .12s;
+}
+.notecard:hover{border-color:var(--accent)}
+.notecard .h{display:flex; gap:10px; align-items:baseline; margin-bottom:6px}
+.notecard .h .id{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--faint)}
+.notecard .h .t{font-size:14px; font-weight:500; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.notecard .b{font-size:13.5px; color:var(--dim); white-space:pre-wrap; display:-webkit-box; -webkit-line-clamp:4; -webkit-box-orient:vertical; overflow:hidden}
+
+/* ============ highlight.js (tokens của trang) ============ */
+.hljs-comment,.hljs-quote{color:var(--faint); font-style:italic}
+.hljs-keyword,.hljs-selector-tag,.hljs-literal,.hljs-type{color:var(--accent); font-weight:500}
+.hljs-string,.hljs-regexp,.hljs-addition{color:var(--known)}
+.hljs-number,.hljs-symbol,.hljs-bullet{color:var(--vague)}
+.hljs-title,.hljs-name,.hljs-section,.hljs-attr{color:var(--text); font-weight:600}
+.hljs-built_in,.hljs-class .hljs-title{color:var(--accent-ink)}
+.hljs-variable,.hljs-template-variable,.hljs-attribute{color:var(--text)}
+.hljs-deletion{color:var(--poor)}
+.hljs-meta{color:var(--faint)}
+
+/* ============ thông báo ============ */
+.toast{
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+  background:var(--text); color:var(--bg); padding:10px 18px; border-radius:100px;
+  font-size:13.5px; font-weight:500; z-index:60; box-shadow:var(--shadow); max-width:calc(100vw - 32px);
+}
+.backup{
+  display:flex; gap:12px; align-items:flex-start; background:var(--surface); border:1px solid var(--line);
+  border-left:3px solid var(--vague); border-radius:var(--radius); padding:12px 15px; margin:22px 0 0;
+  font-size:13.5px; color:var(--dim);
+}
+.backup b{color:var(--text); font-weight:600}
+.backup button{color:var(--accent); font-weight:600; text-decoration:underline; text-underline-offset:2px}
+
+/* ============ trắc nghiệm ============ */
+.qz{max-width:80ch}
+.qzmeta{display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap}
+.qzmeta .step{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--faint); font-variant-numeric:tabular-nums}
+.qzmeta .track{flex:1; min-width:120px; height:4px; background:var(--line-soft); border-radius:2px; overflow:hidden}
+.qzmeta .track i{display:block; height:100%; background:var(--accent); transition:width .25s}
+.qzmeta .score{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--dim); font-variant-numeric:tabular-nums}
+.qztopic{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--faint); margin-bottom:6px}
+.qztitle{font-size:21px; letter-spacing:-.015em; margin-bottom:14px}
+.opts{display:flex; flex-direction:column; gap:8px; margin:18px 0 6px}
+.opt{
+  display:flex; gap:12px; align-items:flex-start; width:100%; text-align:left; padding:12px 14px;
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--surface);
+  transition:border-color .12s, background .12s;
+}
+.opt:not([disabled]):hover{border-color:var(--accent); background:var(--accent-soft)}
+.opt[disabled]{cursor:default}
+.opt .k{font-family:"IBM Plex Mono",monospace; font-weight:500; color:var(--faint); flex:0 0 16px; line-height:1.6}
+.opt .t{flex:1; min-width:0}
+.opt .mark{flex:0 0 auto; font-size:11.5px; font-weight:600; font-family:"IBM Plex Mono",monospace; align-self:center}
+.opt[data-r="right"]{border-color:var(--known); background:var(--known-soft)}
+.opt[data-r="right"] .k,.opt[data-r="right"] .mark{color:var(--known)}
+.opt[data-r="wrong"]{border-color:var(--poor); background:var(--poor-soft)}
+.opt[data-r="wrong"] .k,.opt[data-r="wrong"] .mark{color:var(--poor)}
+.opt .prose{font-size:14px}
+.opt .prose > *:last-child{margin-bottom:0}
+.opt .prose p{margin:0 0 8px}
+.opt .prose pre{margin:0; font-size:12.2px}
+.verdict{
+  display:flex; align-items:center; gap:10px; margin:20px 0 4px; padding:11px 14px;
+  border-radius:var(--radius); font-size:14px; font-weight:500;
+}
+.verdict[data-r="right"]{background:var(--known-soft); color:var(--known)}
+.verdict[data-r="wrong"]{background:var(--poor-soft); color:var(--poor)}
+.expl{border-top:1px solid var(--line); margin-top:18px; padding-top:16px}
+.qzactions{display:flex; gap:10px; margin-top:26px; padding-top:18px; border-top:1px solid var(--line); flex-wrap:wrap}
+.btn{
+  padding:9px 18px; border-radius:var(--radius); background:var(--accent); color:var(--on-accent);
+  font-weight:600; font-size:14px; border:1px solid var(--accent);
+}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none; color:var(--dim); border-color:var(--line); font-weight:500}
+.btn.ghost:hover{border-color:var(--accent); color:var(--text); filter:none}
+.setup{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; margin-bottom:8px}
+.tcard{
+  text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:13px 15px; transition:border-color .12s, background .12s;
+}
+.tcard:hover{border-color:var(--accent)}
+.tcard[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-soft)}
+.tcard .t{font-weight:600; font-size:14.5px}
+.tcard .s{font-size:12px; color:var(--dim); margin-top:5px; font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+.tcard .tr{height:4px; background:var(--line-soft); border-radius:2px; margin-top:8px; overflow:hidden; display:flex}
+.tcard .tr i{display:block; height:100%}
+
+/* ============ responsive ============ */
+.railtoggle{display:none}
+@media (max-width:1000px){
+  .shell{grid-template-columns:1fr}
+  .rail{
+    position:fixed; z-index:40; width:var(--rail); transform:translateX(-100%);
+    transition:transform .2s ease; box-shadow:var(--shadow);
+  }
+  .rail[data-open="1"]{transform:none}
+  .railtoggle{display:inline-flex}
+  .page{padding:24px 18px 80px}
+  .topbar{padding:10px 18px}
+  .scrim{position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:35}
+}
+@media (max-width:620px){
+  .search kbd{display:none}
+  .hero h2{font-size:24px}
+  .qrow .id{min-width:52px}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="rail" id="rail">
+    <div class="brand">
+      <h1>Ôn Luyện Frontend</h1>
+      <div class="sub">Senior · 133 câu</div>
+    </div>
+    <nav class="modes" id="modes"></nav>
+    <div class="railsec" id="railsec" hidden>
+      <div class="lbl">Phần</div>
+      <div id="seclist"></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="iconbtn railtoggle" id="railtoggle" aria-label="Mở danh mục">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+      </button>
+      <div class="search">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5L14 14"/></svg>
+        <input id="q" type="search" placeholder="Tìm trong 133 câu hỏi…" autocomplete="off" aria-label="Tìm câu hỏi">
+        <kbd>/</kbd>
+      </div>
+      <div class="tools">
+        <button class="iconbtn" id="export" aria-label="Xuất ghi chú và tiến độ ra file JSON" title="Xuất ghi chú và tiến độ ra file JSON">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 10.5V2M8 2L5 5M8 2l3 3"/><path d="M2.5 10v3a1 1 0 001 1h9a1 1 0 001-1v-3"/></svg>
+        </button>
+        <button class="iconbtn" id="import" aria-label="Nhập lại từ file JSON đã xuất" title="Nhập lại từ file JSON đã xuất">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8.5M8 10.5L5 7.5M8 10.5l3-3"/><path d="M2.5 10v3a1 1 0 001 1h9a1 1 0 001-1v-3"/></svg>
+        </button>
+        <input type="file" id="importfile" accept="application/json,.json" hidden>
+        <button class="iconbtn" id="theme" aria-label="Đổi nền sáng tối">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3.2"/><path d="M8 1v1.6M8 13.4V15M15 8h-1.6M2.6 8H1M12.9 3.1l-1.1 1.1M4.2 11.8l-1.1 1.1M12.9 12.9l-1.1-1.1M4.2 4.2L3.1 3.1"/></svg>
+        </button>
+      </div>
+    </header>
+    <main class="page" id="page"></main>
+  </div>
+</div>
+
+<script>
+/* ===================== dữ liệu nhúng ===================== */
+const MD = { giaoan: __MD_GIAOAN__, playbook: __MD_PLAYBOOK__, algo: __MD_ALGO__ };
+const QUIZ = __QUIZ_DATA__;
+const QUIZ_BY_ID = new Map(QUIZ.map(q => [q.id, q]));
+const QUIZ_TOPICS = [...new Set(QUIZ.map(q => q.topic))];
+
+/* ===================== phân tách giáo án ===================== */
+function parseGiaoAn(md){
+  const out = []; let sec = null, q = null;
+  for (const line of md.split('\n')){
+    const s = /^# (.+)$/.exec(line);
+    const h = /^## (Câu [^:]+):\s*(.*)$/.exec(line);
+    if (s){ sec = {title:s[1], intro:[], questions:[]}; out.push(sec); q = null; continue; }
+    if (h && sec){
+      if (h[1].trim() === 'Câu X'){ q = null; continue; }
+      q = {id:h[1].trim(), title:h[2].trim(), section:sec.title, body:[]};
+      sec.questions.push(q); continue;
+    }
+    if (q) q.body.push(line); else if (sec) sec.intro.push(line);
+  }
+  return out;
+}
+const ALL_SECS = parseGiaoAn(MD.giaoan);
+const SECTIONS = ALL_SECS.filter(s => s.questions.length);
+const DOCSECS = ALL_SECS.filter(s => !s.questions.length).map((s, i) => ({
+  key: 'doc' + i,
+  label: i === 0 ? 'Mở đầu' : s.title.replace(/^Phụ lục:\s*/, 'Phụ lục — '),
+  md: s.intro.join('\n').trim()
+})).filter(d => d.md.length > 40);
+const QUESTIONS = SECTIONS.flatMap(s => s.questions);
+const BY_ID = new Map(QUESTIONS.map(q => [q.id, q]));
+const shortSec = t => t.replace(/^Phần\s*[\d.]+:\s*/,'').replace(/^Phụ lục:\s*/,'Phụ lục ');
+
+/* ===================== markdown ===================== */
+marked.setOptions({gfm:true, breaks:false});
+function render(md){
+  const html = marked.parse(md);
+  const box = document.createElement('div');
+  box.className = 'prose';
+  box.innerHTML = html;
+  box.querySelectorAll('table').forEach(t => {
+    const w = document.createElement('div'); w.className = 'tablewrap';
+    t.parentNode.insertBefore(w, t); w.appendChild(t);
+  });
+  box.querySelectorAll('pre code').forEach(c => {
+    const lang = (c.className.match(/language-([\w-]+)/) || [])[1];
+    if (lang === 'mermaid'){ c.parentElement.className = 'mermaid'; return; }
+    try{
+      if (lang && hljs.getLanguage(lang)) c.innerHTML = hljs.highlight(c.textContent, {language:lang}).value;
+      else c.innerHTML = hljs.highlightAuto(c.textContent).value;
+      c.classList.add('hljs');
+    }catch(e){ /* để nguyên văn bản thuần */ }
+  });
+  return box;
+}
+
+/* ===================== lưu trữ ===================== */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem('fe.'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('fe.'+k, JSON.stringify(v)); }catch(e){} }
+};
+const state = {
+  mode: 'today',
+  section: null,
+  question: null,
+  docsec: null,
+  filter: 'all',
+  query: '',
+  route: LS.get('route', null),
+  status: LS.get('status', {}),
+  notes: LS.get('notes', {}),
+  quizRes: LS.get('quiz', {}),
+  quizPick: LS.get('quizPick', 'all'),
+  quiz: null,
+};
+
+const queue = new Map();
+function laterWrite(key, fn, ms){
+  const prev = queue.get(key); if (prev) clearTimeout(prev);
+  queue.set(key, setTimeout(() => { queue.delete(key); fn(); }, ms));
+}
+function saveQuiz(){ LS.set('quiz', state.quizRes); }
+function saveProgress(){ LS.set('status', state.status); LS.set('route', state.route); }
+function saveNote(qid){ LS.set('notes', state.notes); }
+
+/* ===================== thống kê ===================== */
+const statOf = id => state.status[id] || 'none';
+function tally(list){
+  const t = {known:0, vague:0, none:0};
+  list.forEach(q => t[statOf(q.id)]++);
+  return t;
+}
+const noteCount = () => Object.values(state.notes).filter(t => t && t.trim()).length;
+
+/* ===================== khung ===================== */
+const MODES = [
+  {id:'today',    label:'Hôm nay'},
+  {id:'giaoan',   label:'Giáo án'},
+  {id:'playbook', label:'Playbook'},
+  {id:'quiz',     label:'Trắc nghiệm'},
+  {id:'algo',     label:'Thuật toán'},
+  {id:'notes',    label:'Ghi chú'},
+];
+function drawModes(){
+  const t = tally(QUESTIONS);
+  const nav = document.getElementById('modes');
+  nav.innerHTML = '';
+  MODES.forEach(m => {
+    const b = document.createElement('button');
+    b.className = 'mode'; b.setAttribute('aria-current', state.mode === m.id);
+    const tick = m.id === 'giaoan' ? (t.known + t.vague) + '/' + QUESTIONS.length
+               : m.id === 'quiz'   ? Object.keys(state.quizRes).length + '/' + QUIZ.length
+               : m.id === 'notes'  ? String(noteCount()) : '';
+    b.innerHTML = '<span>' + m.label + '</span>' + (tick ? '<span class="tick">' + tick + '</span>' : '');
+    b.onclick = () => go({mode:m.id, question:null, section:null});
+    nav.appendChild(b);
+  });
+  const rs = document.getElementById('railsec');
+  rs.hidden = state.mode !== 'giaoan';
+  if (!rs.hidden){
+    const list = document.getElementById('seclist');
+    list.innerHTML = '';
+    const all = document.createElement('button');
+    all.className = 'secbtn'; all.setAttribute('aria-current', state.section === null && !state.docsec);
+    all.innerHTML = '<div class="row"><span class="nm">Tất cả</span><span class="ct">' + QUESTIONS.length + '</span></div>';
+    all.onclick = () => go({section:null, question:null, docsec:null});
+    list.appendChild(all);
+    SECTIONS.forEach(s => {
+      const st = tally(s.questions), n = s.questions.length;
+      const b = document.createElement('button');
+      b.className = 'secbtn'; b.setAttribute('aria-current', state.section === s.title);
+      b.innerHTML =
+        '<div class="row"><span class="nm">' + esc(shortSec(s.title)) + '</span><span class="ct">' + n + '</span></div>' +
+        '<div class="bar"><i class="k" style="width:' + (st.known/n*100) + '%"></i><i class="v" style="width:' + (st.vague/n*100) + '%"></i></div>';
+      b.onclick = () => go({section:s.title, question:null, docsec:null});
+      list.appendChild(b);
+    });
+    DOCSECS.forEach(d => {
+      const b = document.createElement('button');
+      b.className = 'secbtn'; b.setAttribute('aria-current', state.docsec === d.key);
+      b.innerHTML = '<div class="row"><span class="nm">' + esc(d.label) + '</span><span class="ct">·</span></div>';
+      b.onclick = () => go({docsec:d.key, section:null, question:null});
+      list.appendChild(b);
+    });
+  }
+}
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function go(patch){
+  Object.assign(state, patch);
+  if (patch.mode && patch.mode !== 'giaoan'){ state.query = ''; state.docsec = null; }
+  if (patch.mode && patch.mode !== 'quiz') state.quiz = null;
+  closeRail();
+  draw();
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+/* ===================== màn hình ===================== */
+function draw(){
+  drawModes();
+  const page = document.getElementById('page');
+  page.innerHTML = '';
+  if (state.question) return page.appendChild(viewQuestion(BY_ID.get(state.question)));
+  if (state.mode === 'giaoan' && state.docsec){
+    const d = DOCSECS.find(x => x.key === state.docsec);
+    return page.appendChild(viewDoc(d ? d.md : ''));
+  }
+  if (state.mode === 'today')    return page.appendChild(viewToday());
+  if (state.mode === 'giaoan')   return page.appendChild(viewList());
+  if (state.mode === 'playbook') return page.appendChild(viewDoc(MD.playbook));
+  if (state.mode === 'quiz')     return page.appendChild(viewQuiz());
+  if (state.mode === 'algo')     return page.appendChild(viewDoc(MD.algo));
+  if (state.mode === 'notes')    return page.appendChild(viewNotes());
+}
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html != null) e.innerHTML = html;
+  return e;
+}
+
+/* ---- Hôm nay ---- */
+const ROUTES = [
+  {id:'2d', t:'Còn 2 ngày', d:'Cấp tốc — 32 câu nền, bỏ Design System và System Design',
+   plan:[['Ngày 1 sáng','Closure, event loop, bộ nhớ','Câu 6','Câu 7','Câu 8','Câu 9','Câu 14','Câu 15','Câu 16','Câu 17','Câu 18'],
+         ['Ngày 1 chiều','Render, memo, chọn loại state','Câu 21','Câu 22','Câu 23','Câu 24','Câu 25','Câu 26','Câu 27','Câu 28','Câu 31','Câu 32','Câu 33'],
+         ['Ngày 2 sáng','Hiệu năng, lưu trữ, bảo mật','Câu 80','Câu 85','Câu 86','Câu 93','Câu 55','Câu 56','Câu 73','Câu 74','Câu 75','Câu 76','Câu 77'],
+         ['Ngày 2 chiều','Đọc Playbook mục 4, 5 rồi viết 6 câu chuyện dự án ở mục 7']]},
+  {id:'1w', t:'Còn 1 tuần', d:'Tiêu chuẩn — đi hết 9 phần, mỗi ngày một mảng',
+   plan:[['Ngày 1–2','JavaScript và React','#Phần 1: JavaScript','#Phần 2: React'],
+         ['Ngày 3','Browser, network, storage','#Phần 3: Browser'],
+         ['Ngày 4','Hiệu năng','#Phần 6: Performance'],
+         ['Ngày 5','Bảo mật và kiến trúc','#Phần 5: Security','#Phần 4: Architecture'],
+         ['Ngày 6','System Design và thuật toán','#Phần 7: System Design'],
+         ['Ngày 7','Engineering, behavioral và Playbook','#Phần 8: Engineering']]},
+  {id:'3w', t:'Còn 3 tuần', d:'Chuyên sâu — thêm follow-up và trắc nghiệm cho từng câu',
+   plan:[['Tuần 1','Nền tảng, mỗi câu tự đặt thêm một follow-up','#Phần 1: JavaScript','#Phần 2: React','#Phần 3: Browser'],
+         ['Tuần 2','Kiến trúc, design system, bảo mật, hiệu năng','#Phần 4: Architecture','#Phần 4.1: Design System','#Phần 5: Security','#Phần 6: Performance'],
+         ['Tuần 3','System Design, engineering, live coding, mock interview','#Phần 7: System Design','#Phần 8: Engineering']]},
+];
+
+function viewToday(){
+  const w = el('div');
+  const t = tally(QUESTIONS), done = t.known + t.vague, pct = Math.round(done / QUESTIONS.length * 100);
+
+  const hero = el('div','hero');
+  hero.innerHTML =
+    '<div class="eyebrow">Phỏng vấn Frontend Senior</div>' +
+    '<h2>' + (done === 0 ? 'Bắt đầu từ đâu cũng được, miễn là bắt đầu' :
+              done === QUESTIONS.length ? 'Đã rà hết 133 câu' :
+              'Đã rà ' + done + ' trên ' + QUESTIONS.length + ' câu') + '</h2>' +
+    '<p>Đánh dấu từng câu là <em>biết rõ</em>, <em>mơ hồ</em> hay <em>chưa biết</em> khi đọc. Ghi chú viết ở cuối mỗi câu và gom lại ở mục Ghi chú.</p>';
+  w.appendChild(hero);
+
+  const cards = el('div','cards');
+  cards.innerHTML =
+    '<div class="card a"><div class="lbl">Tiến độ</div><div class="val">' + pct + '<small>%</small></div><div class="note">' + done + '/' + QUESTIONS.length + ' câu đã rà</div></div>' +
+    '<div class="card k"><div class="lbl">Biết rõ</div><div class="val">' + t.known + '</div><div class="note">không cần đọc lại</div></div>' +
+    '<div class="card v"><div class="lbl">Mơ hồ</div><div class="val">' + t.vague + '</div><div class="note">ưu tiên ôn trước</div></div>' +
+    '<div class="card"><div class="lbl">Ghi chú</div><div class="val">' + noteCount() + '</div><div class="note">câu đã có ghi chú</div></div>';
+  w.appendChild(cards);
+
+  if (t.vague > 0){
+    w.appendChild(el('h3','blk','Ôn lại những câu còn mơ hồ'));
+    const list = el('div','qlist');
+    QUESTIONS.filter(q => statOf(q.id) === 'vague').slice(0, 8).forEach(q => list.appendChild(qrow(q)));
+    w.appendChild(list);
+  }
+
+  w.appendChild(el('h3','blk','Tiến độ theo phần'));
+  const tbl = el('table','progtable');
+  tbl.innerHTML = '<thead><tr><th>Phần</th><th>Câu</th><th style="width:34%">Đã rà</th><th></th></tr></thead>';
+  const tb = el('tbody');
+  SECTIONS.forEach(s => {
+    const st = tally(s.questions), n = s.questions.length;
+    const tr = el('tr');
+    tr.innerHTML =
+      '<td>' + esc(shortSec(s.title)) + '</td>' +
+      '<td class="num">' + n + '</td>' +
+      '<td><div class="wbar"><i class="k" style="width:' + (st.known/n*100) + '%;background:var(--known)"></i><i style="width:' + (st.vague/n*100) + '%;background:var(--vague)"></i></div></td>' +
+      '<td class="num">' + (st.known + st.vague) + '/' + n + '</td>';
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => go({mode:'giaoan', section:s.title, question:null});
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb);
+  w.appendChild(el('div','tablewrap')).appendChild(tbl);
+
+  const bk = el('div','backup');
+  bk.innerHTML = '<div><b>Ghi chú và tiến độ chỉ nằm trong trình duyệt này.</b> ' +
+    'Xoá dữ liệu duyệt web hoặc đổi máy là mất. Thỉnh thoảng bấm nút xuất ở góc phải trên để lưu ra file JSON, ' +
+    'và cất file đó vào repo.</div>';
+  const bkb = el('button', null, 'Xuất ngay');
+  bkb.onclick = exportData;
+  bk.querySelector('div').appendChild(document.createTextNode(' '));
+  bk.querySelector('div').appendChild(bkb);
+  w.appendChild(bk);
+
+  if (DOCSECS.length){
+    w.appendChild(el('h3','blk','Tài liệu nền'));
+    const row = el('div','filters');
+    DOCSECS.forEach(d => {
+      const b = el('button','chip', esc(d.label));
+      b.onclick = () => go({mode:'giaoan', docsec:d.key, section:null, question:null});
+      row.appendChild(b);
+    });
+    w.appendChild(row);
+  }
+
+  w.appendChild(el('h3','blk','Lộ trình theo quỹ thời gian'));
+  const routes = el('div','routes');
+  ROUTES.forEach(r => {
+    const b = el('button','route');
+    b.setAttribute('aria-pressed', state.route === r.id);
+    b.innerHTML = '<div class="t">' + r.t + '</div><div class="d">' + r.d + '</div>';
+    b.onclick = () => { state.route = state.route === r.id ? null : r.id; saveProgress(); draw(); };
+    routes.appendChild(b);
+  });
+  w.appendChild(routes);
+
+  const chosen = ROUTES.find(r => r.id === state.route);
+  if (chosen){
+    const body = el('div','routebody');
+    const tb2 = el('table','progtable');
+    tb2.innerHTML = '<thead><tr><th>Buổi</th><th>Nội dung</th></tr></thead>';
+    const bd = el('tbody');
+    chosen.plan.forEach(row => {
+      const [when, what, ...refs] = row;
+      const tr = el('tr');
+      const cell = el('td');
+      cell.appendChild(document.createTextNode(what));
+      if (refs.length){
+        const p = el('div'); p.style.marginTop = '6px'; p.style.display = 'flex';
+        p.style.flexWrap = 'wrap'; p.style.gap = '6px';
+        refs.forEach(ref => {
+          const a = el('button','chip');
+          if (ref.startsWith('#')){
+            const sec = ref.slice(1);
+            a.textContent = shortSec(sec);
+            a.onclick = () => go({mode:'giaoan', section:sec, question:null});
+          } else {
+            a.textContent = ref;
+            a.onclick = () => go({mode:'giaoan', question:ref});
+          }
+          p.appendChild(a);
+        });
+        cell.appendChild(p);
+      }
+      tr.appendChild(el('td','num', esc(when)));
+      tr.appendChild(cell);
+      bd.appendChild(tr);
+    });
+    tb2.appendChild(bd);
+    body.appendChild(el('div','tablewrap')).appendChild(tb2);
+    w.appendChild(body);
+  }
+  return w;
+}
+
+/* ---- danh sách câu hỏi ---- */
+function qrow(q){
+  const b = el('button','qrow');
+  b.dataset.st = statOf(q.id);
+  const has = state.notes[q.id] && state.notes[q.id].trim();
+  b.innerHTML =
+    '<span class="id">' + esc(q.id.replace(/^Câu\s*/,'')) + '</span>' +
+    '<span class="ttl">' + esc(q.title) + '</span>' +
+    '<span class="tags">' + (has ? '<span class="hasnote">ghi chú</span>' : '') +
+      '<span class="pip" data-st="' + statOf(q.id) + '"></span></span>';
+  b.onclick = () => go({mode:'giaoan', question:q.id});
+  return b;
+}
+function viewList(){
+  const w = el('div');
+  let pool = state.section ? (SECTIONS.find(s => s.title === state.section) || {questions:[]}).questions : QUESTIONS;
+  if (state.filter !== 'all') pool = pool.filter(q => statOf(q.id) === state.filter);
+  const qq = state.query.trim().toLowerCase();
+  if (qq) pool = pool.filter(q => (q.id + ' ' + q.title + ' ' + q.section).toLowerCase().includes(qq));
+
+  const head = el('div','qhead');
+  head.innerHTML = '<h2>' + esc(state.section ? shortSec(state.section) : 'Toàn bộ câu hỏi') + '</h2>' +
+                   '<span class="meta">' + pool.length + ' câu</span>';
+  w.appendChild(head);
+
+  const f = el('div','filters');
+  [['all','Tất cả'],['none','Chưa rà'],['vague','Mơ hồ'],['known','Biết rõ']].forEach(([v, lab]) => {
+    const b = el('button','chip', lab);
+    b.setAttribute('aria-pressed', state.filter === v);
+    b.onclick = () => { state.filter = v; draw(); };
+    f.appendChild(b);
+  });
+  w.appendChild(f);
+
+  if (!pool.length){ w.appendChild(el('div','empty','Không có câu nào khớp. Thử bỏ bớt bộ lọc.')); return w; }
+  const list = el('div','qlist');
+  if (!state.section && !qq && state.filter === 'all'){
+    SECTIONS.forEach(s => {
+      list.appendChild(el('h3','blk', esc(shortSec(s.title))));
+      s.questions.forEach(q => list.appendChild(qrow(q)));
+    });
+  } else pool.forEach(q => list.appendChild(qrow(q)));
+  w.appendChild(list);
+  return w;
+}
+
+/* ---- một câu ---- */
+function viewQuestion(q){
+  const w = el('div','reading');
+  if (!q){ w.appendChild(el('div','empty','Không tìm thấy câu này.')); return w; }
+  const idx = QUESTIONS.indexOf(q);
+
+  const crumb = el('div','crumb');
+  const back = el('button', null, '← Danh sách');
+  back.onclick = () => go({question:null});
+  crumb.appendChild(back);
+  crumb.appendChild(document.createTextNode('·'));
+  const sc = el('button', null, esc(shortSec(q.section)));
+  sc.onclick = () => go({section:q.section, question:null});
+  crumb.appendChild(sc);
+  w.appendChild(crumb);
+
+  w.appendChild(el('div','qid', esc(q.id)));
+  w.appendChild(el('h2','qtitle', esc(q.title)));
+
+  const rate = el('div','rate');
+  rate.appendChild(el('span','lbl','Tự chấm'));
+  [['known','Biết rõ'],['vague','Mơ hồ'],['unknown','Chưa biết']].forEach(([v, lab]) => {
+    const b = el('button','rbtn', lab);
+    b.dataset.v = v;
+    b.setAttribute('aria-pressed', statOf(q.id) === v);
+    b.onclick = () => {
+      if (state.status[q.id] === v) delete state.status[q.id]; else state.status[q.id] = v;
+      saveProgress(); draw();
+    };
+    rate.appendChild(b);
+  });
+  w.appendChild(rate);
+
+  w.appendChild(render(q.body.join('\n')));
+
+  const nb = el('div','notebox');
+  nb.innerHTML = '<div class="nhead"><span class="t">Ghi chú của anh</span><span class="st" id="nst"></span></div>';
+  const ta = el('textarea');
+  ta.placeholder = 'Viết lại bằng lời của mình, ghi chỗ chưa hiểu, hoặc dán ví dụ từ dự án thật…';
+  ta.value = state.notes[q.id] || '';
+  ta.setAttribute('aria-label', 'Ghi chú cho ' + q.id);
+  const st = nb.querySelector('#nst');
+  let tmr = null;
+  ta.oninput = () => {
+    state.notes[q.id] = ta.value;
+    st.textContent = 'đang lưu…';
+    clearTimeout(tmr);
+    tmr = setTimeout(() => { st.textContent = 'đã lưu'; setTimeout(() => st.textContent = '', 1600); }, 950);
+    saveNote(q.id);
+  };
+  nb.appendChild(ta);
+  w.appendChild(nb);
+
+  const nav = el('div','qnav');
+  const prev = QUESTIONS[idx-1], next = QUESTIONS[idx+1];
+  const pb = el('button','navbtn');
+  pb.innerHTML = '<div class="d">Câu trước</div><div class="n">' + (prev ? esc(prev.title) : '—') + '</div>';
+  pb.disabled = !prev; pb.onclick = () => go({question:prev.id});
+  const nx = el('button','navbtn next');
+  nx.innerHTML = '<div class="d">Câu sau</div><div class="n">' + (next ? esc(next.title) : '—') + '</div>';
+  nx.disabled = !next; nx.onclick = () => go({question:next.id});
+  nav.appendChild(pb); nav.appendChild(nx);
+  w.appendChild(nav);
+  return w;
+}
+
+/* ---- tài liệu dài ---- */
+function viewDoc(md){
+  const w = el('div','reading');
+  w.appendChild(render(md));
+  return w;
+}
+
+/* ---- ghi chú ---- */
+function viewNotes(){
+  const w = el('div');
+  const ids = Object.keys(state.notes).filter(k => state.notes[k] && state.notes[k].trim());
+  const head = el('div','qhead');
+  head.innerHTML = '<h2>Ghi chú của anh</h2><span class="meta">' + ids.length + ' câu</span>';
+  w.appendChild(head);
+  if (!ids.length){
+    w.appendChild(el('div','empty','Chưa có ghi chú nào. Mở một câu bất kỳ và viết vào ô cuối trang.'));
+    return w;
+  }
+  ids.sort((a, b) => QUESTIONS.findIndex(q => q.id === a) - QUESTIONS.findIndex(q => q.id === b));
+  ids.forEach(id => {
+    const q = BY_ID.get(id);
+    const c = el('button','notecard');
+    c.innerHTML =
+      '<div class="h"><span class="id">' + esc(id) + '</span><span class="t">' + esc(q ? q.title : '') + '</span></div>' +
+      '<div class="b">' + esc(state.notes[id]) + '</div>';
+    c.onclick = () => go({mode:'giaoan', question:id});
+    w.appendChild(c);
+  });
+  return w;
+}
+
+/* ===================== trắc nghiệm ===================== */
+const qzRes   = id => state.quizRes[id];
+const qzDone  = () => Object.keys(state.quizRes).length;
+const qzRight = () => Object.values(state.quizRes).filter(r => r.ok).length;
+const qzWrongIds = () => QUIZ.filter(q => qzRes(q.id) && !qzRes(q.id).ok).map(q => q.id);
+const qzNewIds   = () => QUIZ.filter(q => !qzRes(q.id)).map(q => q.id);
+function qzPool(){
+  const p = state.quizPick;
+  if (p === 'all')   return QUIZ.map(q => q.id);
+  if (p === 'wrong') return qzWrongIds();
+  if (p === 'new')   return qzNewIds();
+  return QUIZ.filter(q => q.topic === p).map(q => q.id);
+}
+function shuffled(a){
+  const r = a.slice();
+  for (let i = r.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
+  return r;
+}
+function startQuiz(ids, len){
+  const pick = shuffled(ids);
+  state.quiz = {ids: len ? pick.slice(0, len) : pick, i: 0, picked: null, right: 0};
+  draw(); window.scrollTo({top:0, behavior:'instant'});
+}
+
+function viewQuiz(){
+  if (state.quiz) return state.quiz.i >= state.quiz.ids.length ? viewQuizDone() : viewQuizRun();
+
+  const w = el('div');
+  const done = qzDone(), right = qzRight();
+  const head = el('div','qhead');
+  head.innerHTML = '<h2>Trắc nghiệm</h2><span class="meta">' + QUIZ.length + ' câu · ' + QUIZ_TOPICS.length + ' chủ đề</span>';
+  w.appendChild(head);
+
+  const cards = el('div','cards');
+  cards.innerHTML =
+    '<div class="card a"><div class="lbl">Đã làm</div><div class="val">' + done + '<small>/' + QUIZ.length + '</small></div></div>' +
+    '<div class="card k"><div class="lbl">Đúng</div><div class="val">' + right + '</div></div>' +
+    '<div class="card v"><div class="lbl">Sai</div><div class="val">' + (done - right) + '</div><div class="note">nên làm lại</div></div>' +
+    '<div class="card"><div class="lbl">Tỉ lệ đúng</div><div class="val">' + (done ? Math.round(right/done*100) : 0) + '<small>%</small></div></div>';
+  w.appendChild(cards);
+
+  w.appendChild(el('h3','blk','Chọn bộ câu'));
+  const setup = el('div','setup');
+  const picks = [{k:'all', t:'Tất cả chủ đề', ids:QUIZ.map(q=>q.id)}];
+  if (qzWrongIds().length) picks.push({k:'wrong', t:'Câu đã làm sai', ids:qzWrongIds()});
+  if (qzNewIds().length)   picks.push({k:'new',   t:'Câu chưa làm',   ids:qzNewIds()});
+  QUIZ_TOPICS.forEach(tp => picks.push({k:tp, t:tp, ids:QUIZ.filter(q=>q.topic===tp).map(q=>q.id)}));
+
+  picks.forEach(pk => {
+    const d = pk.ids.filter(id => qzRes(id)).length;
+    const r = pk.ids.filter(id => qzRes(id) && qzRes(id).ok).length;
+    const b = el('button','tcard');
+    b.setAttribute('aria-pressed', state.quizPick === pk.k);
+    b.innerHTML = '<div class="t">' + esc(pk.t) + '</div>' +
+      '<div class="s">' + pk.ids.length + ' câu · đã làm ' + d + (d ? ' · đúng ' + Math.round(r/d*100) + '%' : '') + '</div>' +
+      '<div class="tr"><i style="width:' + (r/pk.ids.length*100) + '%;background:var(--known)"></i>' +
+      '<i style="width:' + ((d-r)/pk.ids.length*100) + '%;background:var(--poor)"></i></div>';
+    b.onclick = () => { state.quizPick = pk.k; LS.set('quizPick', pk.k); draw(); };
+    setup.appendChild(b);
+  });
+  w.appendChild(setup);
+
+  const pool = qzPool();
+  w.appendChild(el('h3','blk','Số câu mỗi lượt'));
+  const lens = el('div','filters');
+  [[10,'10 câu'],[20,'20 câu'],[0,'Tất cả ' + pool.length + ' câu']].forEach(function(row){
+    const v = row[0], lab = row[1];
+    if (v && v >= pool.length) return;
+    const b = el('button','chip', lab);
+    b.onclick = () => startQuiz(pool, v);
+    lens.appendChild(b);
+  });
+  if (!pool.length) lens.appendChild(el('div','empty','Bộ này đang trống.'));
+  w.appendChild(lens);
+  return w;
+}
+
+function viewQuizRun(){
+  const s = state.quiz, q = QUIZ_BY_ID.get(s.ids[s.i]);
+  const w = el('div','qz');
+
+  const meta = el('div','qzmeta');
+  meta.innerHTML =
+    '<span class="step">' + (s.i + 1) + ' / ' + s.ids.length + '</span>' +
+    '<span class="track"><i style="width:' + (s.i / s.ids.length * 100) + '%"></i></span>' +
+    '<span class="score">đúng ' + s.right + '</span>';
+  w.appendChild(meta);
+
+  w.appendChild(el('div','qztopic', esc(q.topic) + ' · ' + esc(q.group)));
+  w.appendChild(el('h2','qztitle', esc(q.title)));
+  w.appendChild(render(q.prompt));
+
+  const box = el('div','opts');
+  q.opts.forEach(o => {
+    const b = el('button','opt');
+    b.appendChild(el('span','k', o.k + ')'));
+    const body = el('span','t'); body.appendChild(render(o.t)); b.appendChild(body);
+    if (s.picked){
+      b.disabled = true;
+      if (o.k === q.ans){ b.dataset.r = 'right'; b.appendChild(el('span','mark','đúng')); }
+      else if (o.k === s.picked){ b.dataset.r = 'wrong'; b.appendChild(el('span','mark','đã chọn')); }
+    } else {
+      b.onclick = () => pickAnswer(o.k);
+    }
+    box.appendChild(b);
+  });
+  w.appendChild(box);
+
+  if (s.picked){
+    const ok = s.picked === q.ans;
+    const v = el('div','verdict', ok ? 'Đúng' : 'Chưa đúng — đáp án là ' + q.ans);
+    v.dataset.r = ok ? 'right' : 'wrong';
+    w.appendChild(v);
+    const ex = el('div','expl');
+    ex.appendChild(render(q.expl));
+    w.appendChild(ex);
+
+    const act = el('div','qzactions');
+    const nx = el('button','btn', s.i + 1 >= s.ids.length ? 'Xem kết quả' : 'Câu tiếp →');
+    nx.onclick = nextQuestion;
+    act.appendChild(nx);
+    const stop = el('button','btn ghost','Dừng lượt này');
+    stop.onclick = () => { state.quiz = null; draw(); };
+    act.appendChild(stop);
+    w.appendChild(act);
+  }
+  return w;
+}
+
+function pickAnswer(k){
+  const s = state.quiz, q = QUIZ_BY_ID.get(s.ids[s.i]);
+  if (s.picked) return;
+  s.picked = k;
+  const ok = k === q.ans;
+  if (ok) s.right++;
+  state.quizRes[q.id] = {picked: k, ok: ok, at: Date.now()};
+  saveQuiz();
+  draw();
+}
+function nextQuestion(){
+  state.quiz.i++; state.quiz.picked = null;
+  draw(); window.scrollTo({top:0, behavior:'instant'});
+}
+
+function viewQuizDone(){
+  const s = state.quiz, n = s.ids.length, pct = Math.round(s.right / n * 100);
+  const w = el('div','qz');
+  const wrong = s.ids.filter(id => state.quizRes[id] && !state.quizRes[id].ok);
+
+  const hero = el('div','hero');
+  hero.innerHTML =
+    '<div class="eyebrow">Kết quả lượt này</div>' +
+    '<h2>' + s.right + ' trên ' + n + ' câu · ' + pct + '%</h2>' +
+    '<p>' + (pct >= 80 ? 'Mảng này nắm chắc rồi, chuyển sang chủ đề khác được.' :
+             pct >= 50 ? 'Ổn, nhưng còn chỗ hổng. Làm lại những câu sai bên dưới.' :
+                         'Nên đọc lại lý thuyết của chủ đề này trước khi làm tiếp.') + '</p>';
+  w.appendChild(hero);
+
+  if (wrong.length){
+    w.appendChild(el('h3','blk','Những câu làm sai'));
+    const list = el('div','qlist');
+    wrong.forEach(id => {
+      const q = QUIZ_BY_ID.get(id), r = state.quizRes[id];
+      const b = el('button','qrow');
+      b.dataset.st = 'vague';
+      b.innerHTML = '<span class="id">' + esc(q.topic.slice(0,4)) + '</span>' +
+        '<span class="ttl">' + esc(q.title) + '</span>' +
+        '<span class="tags"><span class="hasnote">chọn ' + r.picked + ' · đúng ' + q.ans + '</span></span>';
+      b.onclick = () => startQuiz([id], 0);
+      list.appendChild(b);
+    });
+    w.appendChild(list);
+  }
+
+  const act = el('div','qzactions');
+  if (wrong.length){
+    const again = el('button','btn','Làm lại ' + wrong.length + ' câu sai');
+    again.onclick = () => startQuiz(wrong, 0);
+    act.appendChild(again);
+  }
+  const back = el('button','btn ghost','Chọn bộ khác');
+  back.onclick = () => { state.quiz = null; draw(); };
+  act.appendChild(back);
+  w.appendChild(act);
+  return w;
+}
+
+/* ===================== sao lưu ===================== */
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const d = el('div','toast', esc(msg));
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 3200);
+}
+function exportData(){
+  const payload = {
+    format: 'on-luyen-frontend', version: 1,
+    exportedAt: new Date().toISOString(),
+    status: state.status, notes: state.notes, quiz: state.quizRes, route: state.route
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = el('a'); a.href = url;
+  a.download = 'on-luyen-frontend-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  const c = Object.keys(state.notes).filter(k => state.notes[k] && state.notes[k].trim()).length;
+  toast('Đã xuất ' + c + ' ghi chú và ' + Object.keys(state.quizRes).length + ' kết quả trắc nghiệm');
+}
+function importData(file){
+  const r = new FileReader();
+  r.onload = () => {
+    let d;
+    try{ d = JSON.parse(r.result); }
+    catch(e){ return toast('File không đọc được — cần đúng file JSON đã xuất từ trang này'); }
+    if (!d || d.format !== 'on-luyen-frontend') return toast('File không đúng định dạng của trang này');
+    let added = 0;
+    if (d.notes)  for (const k in d.notes)  { if (d.notes[k]  !== state.notes[k])  { state.notes[k]  = d.notes[k];  added++; } }
+    if (d.status) for (const k in d.status) { state.status[k] = d.status[k]; }
+    if (d.quiz)   for (const k in d.quiz)   { state.quizRes[k] = d.quiz[k]; }
+    if (d.route) state.route = d.route;
+    LS.set('notes', state.notes); saveProgress(); saveQuiz();
+    draw();
+    toast('Đã nhập xong — ' + added + ' ghi chú được cập nhật');
+  };
+  r.onerror = () => toast('Không đọc được file');
+  r.readAsText(file);
+}
+
+/* ===================== giao diện chung ===================== */
+function applyTheme(t){
+  if (t === 'system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  LS.set('theme', t);
+}
+applyTheme(LS.get('theme', 'system'));
+document.getElementById('theme').onclick = () => {
+  const cur = LS.get('theme', 'system');
+  applyTheme(cur === 'system' ? 'dark' : cur === 'dark' ? 'light' : 'system');
+};
+
+document.getElementById('export').onclick = exportData;
+document.getElementById('import').onclick = () => document.getElementById('importfile').click();
+document.getElementById('importfile').onchange = e => {
+  const f = e.target.files && e.target.files[0];
+  if (f) importData(f);
+  e.target.value = '';
+};
+
+const rail = document.getElementById('rail');
+let scrim = null;
+function closeRail(){ rail.dataset.open = '0'; if (scrim){ scrim.remove(); scrim = null; } }
+document.getElementById('railtoggle').onclick = () => {
+  if (rail.dataset.open === '1') return closeRail();
+  rail.dataset.open = '1';
+  scrim = el('div','scrim'); scrim.onclick = closeRail; document.body.appendChild(scrim);
+};
+
+const qbox = document.getElementById('q');
+let qtmr = null;
+qbox.oninput = () => {
+  clearTimeout(qtmr);
+  qtmr = setTimeout(() => {
+    state.query = qbox.value;
+    if (state.query && (state.mode !== 'giaoan' || state.question)){
+      state.mode = 'giaoan'; state.question = null; state.section = null; state.docsec = null; state.filter = 'all';
+    }
+    draw();
+  }, 140);
+};
+document.addEventListener('keydown', e => {
+  const typing = /^(INPUT|TEXTAREA)$/.test(e.target.tagName);
+  if (e.key === '/' && !typing){ e.preventDefault(); qbox.focus(); qbox.select(); return; }
+  if (e.key === 'Escape'){ if (document.activeElement === qbox){ qbox.blur(); } closeRail(); return; }
+  if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (state.mode === 'quiz' && state.quiz && state.quiz.i < state.quiz.ids.length){
+    const cq = QUIZ_BY_ID.get(state.quiz.ids[state.quiz.i]);
+    if (!state.quiz.picked){
+      const k = ({'1':'A','2':'B','3':'C','4':'D'})[e.key] || (/^[a-dA-D]$/.test(e.key) ? e.key.toUpperCase() : null);
+      if (k && cq.opts.some(o => o.k === k)){ e.preventDefault(); pickAnswer(k); return; }
+    } else if (e.key === 'Enter' || e.key === 'n'){ e.preventDefault(); nextQuestion(); return; }
+  }
+  if (state.question && (e.key === 'j' || e.key === 'k')){
+    const i = QUESTIONS.findIndex(q => q.id === state.question);
+    const n = QUESTIONS[e.key === 'j' ? i+1 : i-1];
+    if (n) go({question:n.id});
+  }
+});
+
+draw();
+</script>
+</body>
+</html>
