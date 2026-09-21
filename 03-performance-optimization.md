@@ -355,6 +355,9 @@ Core Web Vitals (Google's key metrics):
 
 *Note: FID đang được thay thế bởi INP (Interaction to Next Paint) từ March 2024*
 
+**Đánh đổi:**
+Bộ ba này là bản lịch sử: từ tháng 3 năm 2024, **INP đã thay FID** trong Core Web Vitals. Nói "FID" trong phỏng vấn hôm nay sẽ bị hỏi lại ngay. Và cả ba chỉ số đều lấy ở phân vị 75 của lưu lượng thật, nên điểm Lighthouse chạy trên máy anh không phải con số Google dùng để xếp hạng.
+
 **Tham khảo:** [web.dev - Core Web Vitals](https://web.dev/vitals/)
 
 ---
@@ -372,6 +375,9 @@ LCP thresholds:
 - Eliminate render-blocking resources
 - Optimize images
 - Preload important resources
+
+**Đánh đổi:**
+Ngưỡng 2,5 giây đo ở phân vị 75 của người dùng thật, không phải số trên máy dev. Tối ưu vừa chạm ngưỡng rồi dừng là rủi ro: nếu phần lớn người dùng ở mạng chậm, phân vị 75 thật sẽ khác hẳn số anh nhìn thấy. Và LCP chỉ đo đúng phần tử lớn nhất — trang có thể đạt LCP đẹp mà vẫn cảm giác chậm vì nội dung quan trọng khác đến muộn.
 
 **Tham khảo:** [web.dev - LCP](https://web.dev/lcp/)
 
@@ -402,6 +408,9 @@ img {
 </style>
 ```
 
+**Đánh đổi:**
+Đặt kích thước cố định cho ảnh và khung quảng cáo chữa được CLS nhưng tạo khoảng trống khi nội dung chưa về. Đó là đánh đổi có chủ ý: khoảng trống ổn định luôn tốt hơn nội dung nhảy dưới ngón tay người dùng. Dùng `aspect-ratio` thì giữ được chỗ mà vẫn co giãn. Riêng nội dung chèn ngay sau thao tác của người dùng không bị tính vào CLS, nên không cần né.
+
 **Tham khảo:** [web.dev - CLS](https://web.dev/cls/)
 
 ---
@@ -412,6 +421,9 @@ img {
 - **FID:** Measures delay của FIRST interaction only
 - **INP:** Measures responsiveness của ALL interactions throughout page lifecycle
 - INP là metric toàn diện hơn, captures overall interactivity
+
+**Đánh đổi:**
+INP khó đạt hơn FID nhiều, vì nó đo mọi tương tác suốt phiên chứ không chỉ lần đầu — trang qua FID dễ dàng vẫn có thể trượt INP. Cải thiện INP thường phải cắt nhỏ tác vụ dài và hoãn việc không khẩn, tức là đụng vào kiến trúc chứ không phải chỉnh vài chỗ.
 
 **Tham khảo:** [web.dev - INP](https://web.dev/inp/)
 
@@ -433,6 +445,9 @@ TTFB measures time from:
 - Optimize server code
 - Use caching
 - Reduce redirects
+
+**Đánh đổi:**
+TTFB phần lớn nằm ở server và đường truyền nên frontend can thiệp được ít; CDN và cache ở biên là đòn bẩy chính. Nhưng TTFB tốt không đảm bảo LCP tốt: byte đầu về nhanh mà tài nguyên chặn render đến muộn thì người dùng vẫn nhìn trang trắng.
 
 **Tham khảo:** [web.dev - TTFB](https://web.dev/ttfb/)
 
@@ -466,6 +481,9 @@ self.onmessage = (e) => {
 - `requestIdleCallback` cho low-priority tasks
 - Breaking work into chunks với `setTimeout`
 
+**Đánh đổi:**
+Worker chạy ở luồng riêng nên không chặn giao diện, nhưng giao tiếp qua `postMessage` phải sao chép dữ liệu — truyền mảng lớn qua lại có khi tốn hơn chính phép tính. Dùng `Transferable` hoặc `SharedArrayBuffer` thì tránh được sao chép nhưng phức tạp hơn nhiều. Và worker không chạm được DOM, nên mọi kết quả vẫn phải quay về luồng chính để hiển thị.
+
 **Tham khảo:** [MDN - Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
 
 ---
@@ -495,6 +513,9 @@ function createHandler() {
 }
 ```
 
+**Đánh đổi:**
+Closure là công cụ chính để đóng gói trạng thái riêng tư, nên "tránh closure" không phải lời khuyên đúng. Vấn đề chỉ xuất hiện khi closure sống lâu hơn dữ liệu nó giữ — handler gắn vào phần tử tồn tại suốt phiên, hoặc callback trong `setInterval` không bao giờ bị huỷ. Cách chữa là dọn dẹp đúng chỗ, không phải bỏ closure.
+
 **Tham khảo:** [Chrome DevTools - Memory](https://developer.chrome.com/docs/devtools/memory-problems/)
 
 ---
@@ -520,6 +541,9 @@ container.addEventListener('click', (e) => {
   }
 });
 ```
+
+**Đánh đổi:**
+Uỷ quyền sự kiện giảm số listener và tự áp dụng cho cả phần tử thêm sau, nhưng mỗi sự kiện phải chạy qua bước kiểm tra `event.target` — với sự kiện bắn liên tục như `mousemove` thì chi phí đó đáng kể. Và nó không dùng được cho sự kiện không nổi bọt như `focus` hay `blur`, phải thay bằng `focusin` và `focusout`.
 
 ---
 
@@ -553,6 +577,9 @@ requestAnimationFrame(() => {
 });
 ```
 
+**Đánh đổi:**
+`requestAnimationFrame` đồng bộ với nhịp vẽ nên hoạt ảnh mượt và tự dừng khi tab bị ẩn, nhưng code bên trong vẫn chạy trên luồng chính — đặt việc nặng vào là mất khung hình. Với hoạt ảnh thuần chuyển động hoặc mờ dần, CSS transition còn tốt hơn vì trình duyệt đẩy được sang luồng compositor.
+
 **Tham khảo:** [MDN - requestAnimationFrame](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame)
 
 ---
@@ -581,6 +608,9 @@ requestAnimationFrame(() => {
 **Best practices:**
 - `defer` for scripts that depend on DOM
 - `async` for independent scripts (analytics)
+
+**Đánh đổi:**
+`async` tải xong là chạy ngay nên thứ tự giữa các script không đảm bảo — chỉ hợp với script độc lập như đo đạc. `defer` giữ đúng thứ tự và chạy sau khi phân tích HTML xong, hợp với script phụ thuộc nhau. Nhưng cả hai đều không cứu được gì nếu chính script đó là thứ dựng nên nội dung chính: lúc ấy nội dung vẫn đến muộn.
 
 **Tham khảo:** [JavaScript.info - Scripts async defer](https://javascript.info/script-async-defer)
 
@@ -613,6 +643,9 @@ const style = useMemo(() => ({ color: 'red' }), []);
 <Component style={style} />
 ```
 
+**Đánh đổi:**
+Re-render không phải lúc nào cũng là vấn đề. Một component nhẹ render lại 60 lần mỗi giây vẫn có thể nằm gọn trong ngân sách khung hình. Truy tìm và chặn mọi re-render tốn công và làm code khó đọc; chỉ đáng làm khi Profiler chỉ đích danh component đang ăn thời gian.
+
 **Tham khảo:** [React - Performance](https://react.dev/learn/render-and-commit)
 
 ---
@@ -642,6 +675,9 @@ function onRenderCallback(
   console.log({ id, phase, actualDuration });
 }
 ```
+
+**Đánh đổi:**
+Số đo của Profiler lấy ở bản phát triển nên luôn chậm hơn production đáng kể — dùng để so sánh tương đối giữa các component thì tốt, dùng làm con số tuyệt đối thì sai. Bản thân việc bật Profiler cũng thêm chi phí, làm lệch kết quả với những component vốn render rất nhanh.
 
 **Tham khảo:** [React - Profiler](https://react.dev/reference/react/Profiler)
 
@@ -678,6 +714,9 @@ function VirtualList({ items }) {
 - `react-virtuoso` (more features)
 - `@tanstack/react-virtual`
 
+**Đánh đổi:**
+Ảo hoá làm thời gian render gần như không phụ thuộc số dòng, nhưng mất `Ctrl+F` của trình duyệt, gây khó cho trình đọc màn hình, và hỏng khi chiều cao mỗi dòng thay đổi — lúc đó phải đo động và thanh cuộn sẽ nhảy. Dưới khoảng 100 dòng đơn giản thì chi phí phức tạp không đáng.
+
 ---
 
 ### Câu 14: Đáp án D - TTI và FCP
@@ -696,6 +735,9 @@ const Dashboard = lazy(() => import('./Dashboard'));
 // Component-based splitting
 const HeavyChart = lazy(() => import('./HeavyChart'));
 ```
+
+**Đánh đổi:**
+Chia nhỏ cải thiện TTI và FCP nhưng không tự động cải thiện LCP — nếu phần tử lớn nhất là một tấm ảnh thì bundle nhỏ đi chẳng đổi gì. Và chia quá vụn làm tổng thời gian tệ hơn, vì mỗi chunk thêm một lượt đi mạng với độ trễ cộng dồn.
 
 ---
 
@@ -731,6 +773,9 @@ const user = useSelector(state => state.user.name);
 // NOT: useSelector(state => state.user)
 ```
 
+**Đánh đổi:**
+Selector và chuẩn hoá state giảm re-render nhưng làm code khó đọc hơn và thêm một lớp phải bảo trì. Với ứng dụng nhỏ, chi phí đó lớn hơn lợi ích. Chuẩn hoá chỉ thật sự đáng khi cùng một thực thể xuất hiện ở nhiều nơi và phải luôn đồng bộ với nhau.
+
 ---
 
 ## Phần 4: Network & Loading
@@ -753,6 +798,9 @@ const user = useSelector(state => state.user.name);
 <!-- DNS-prefetch: Only DNS lookup -->
 <link rel="dns-prefetch" href="https://cdn.example.com">
 ```
+
+**Đánh đổi:**
+`preload` giành quyền ưu tiên, nên dùng sai chỗ là cướp băng thông của thứ thật sự cần — preload quá nhiều còn tệ hơn không preload gì. `prefetch` thì tải thứ có thể không bao giờ được dùng, tốn dữ liệu của người dùng di động. Chỉ preload thứ chắc chắn cần ngay trên đường hiển thị nội dung chính.
 
 **Tham khảo:** [web.dev - Resource Hints](https://web.dev/preconnect-and-dns-prefetch/)
 
@@ -786,6 +834,9 @@ Image optimization best practices:
 <img src="image.jpg" width="800" height="600" alt="...">
 ```
 
+**Đánh đổi:**
+Ba cách đúng còn lại cũng có giá. Định dạng mới như AVIF nén tốt hơn nhiều nhưng mã hoá chậm và trình duyệt cũ không đọc được, nên luôn phải có dự phòng. `loading="lazy"` tiết kiệm băng thông nhưng đặt nhầm vào ảnh đầu trang thì làm LCP tệ hẳn đi. Ảnh đáp ứng đúng cách đòi sinh nhiều kích thước và quản lý chúng.
+
 ---
 
 ### Câu 18: Đáp án D - Tất cả các đáp án trên
@@ -801,6 +852,9 @@ HTTP/3 adds:
 - QUIC protocol (UDP-based)
 - Better performance on unreliable networks
 - Faster connection establishment
+
+**Đánh đổi:**
+HTTP/2 gộp nhiều request trên một kết nối, nên những thủ thuật cũ như gộp file và chia nhỏ domain trở thành phản tác dụng. Nhưng nó vẫn chịu head-of-line blocking ở tầng TCP: mất một gói là chặn mọi luồng. HTTP/3 chuyển sang QUIC để giải đúng chỗ đó, đổi lại một số mạng doanh nghiệp chặn UDP.
 
 ---
 
@@ -834,6 +888,9 @@ Cache-Control: max-age=31536000, immutable
 Cache-Control: max-age=60, stale-while-revalidate=600
 ```
 
+**Đánh đổi:**
+`Cache-Control: immutable` với thời hạn dài cho tài nguyên có hash trong tên gần như không mất gì. Nhưng với HTML thì ngược lại: cache lâu nghĩa là người dùng giữ bản cũ và tham chiếu tới chunk đã bị xoá, gây lỗi 404 sau mỗi lần deploy. `stale-while-revalidate` là điểm giữa — phục vụ bản cũ ngay rồi làm mới ở nền.
+
 **Tham khảo:** [MDN - Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
 
 ---
@@ -862,6 +919,9 @@ const Dashboard = lazy(() => import('./Dashboard'));
 - `webpack-bundle-analyzer`
 - `source-map-explorer`
 
+**Đánh đổi:**
+Tree shaking chỉ hiệu quả khi thư viện xuất theo ES module và không có tác dụng phụ, mà nhiều thư viện phổ biến không đạt — khai `sideEffects: false` sai sẽ xoá nhầm code cần thiết và lỗi chỉ lộ ra ở production. Phân tích bundle nên chạy trong CI kèm ngưỡng chặn, vì để thủ công thì sẽ không ai chạy.
+
 ---
 
 ## Phần 5: Rendering & Browser
@@ -882,6 +942,9 @@ Critical Rendering Path:
 - Minimize critical resources
 - Minimize critical path length
 - Minimize critical bytes
+
+**Đánh đổi:**
+Nội tuyến CSS quan trọng vào HTML loại bỏ được một lượt chặn render, nhưng làm HTML nặng hơn và phần CSS đó không cache lại được giữa các trang. Đáng làm với trang đích chỉ tải một lần; phản tác dụng với ứng dụng nhiều trang mà người dùng duyệt liên tục.
 
 **Tham khảo:** [web.dev - Critical Rendering Path](https://web.dev/critical-rendering-path/)
 
@@ -911,6 +974,9 @@ const height = element.offsetHeight;
 element.style.transform = `translate(${width}px, ${height}px)`;
 ```
 
+**Đánh đổi:**
+Đổi `transform` thay vì `width` để tránh reflow là đúng, nhưng không phải lúc nào cũng thay được — bố cục thật sự thay đổi thì buộc phải reflow. Cách giảm tổn thất là gom hết thao tác đọc rồi mới gom thao tác ghi, tránh xen kẽ gây layout thrashing, và đọc thuộc tính bố cục càng ít lần càng tốt.
+
 **Tham khảo:** [CSS Triggers](https://csstriggers.com/)
 
 ---
@@ -936,6 +1002,9 @@ CSS Containment isolates subtree:
   contain-intrinsic-size: 0 500px;
 }
 ```
+
+**Đánh đổi:**
+`contain` cho trình duyệt biết có thể bỏ qua phần cây bên ngoài khi tính toán, tiết kiệm đáng kể với danh sách dài. Nhưng `contain: size` bắt phần tử tự khai kích thước và không cho co theo nội dung — đặt nhầm là phần tử sập xuống thành không. Bắt đầu bằng `content` an toàn hơn `strict`.
 
 **Tham khảo:** [web.dev - CSS Containment](https://web.dev/content-visibility/)
 
@@ -964,6 +1033,9 @@ element.style.willChange = 'transform';
 // After animation
 element.style.willChange = 'auto';
 ```
+
+**Đánh đổi:**
+Ba cách dùng đúng còn lại cũng không miễn phí. `will-change` báo trước để trình duyệt tạo lớp riêng, mà mỗi lớp tốn bộ nhớ GPU — rải khắp nơi làm máy yếu hết bộ nhớ và chậm hơn hẳn lúc không dùng. Cách đúng là đặt ngay trước khi hoạt ảnh bắt đầu rồi gỡ ra khi xong; với hoạt ảnh ngắn thì thường không cần.
 
 **Tham khảo:** [MDN - will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/will-change)
 
@@ -995,6 +1067,9 @@ Compositor-only properties:
 }
 ```
 
+**Đánh đổi:**
+`transform` và `opacity` chạy trên luồng compositor nên mượt cả khi luồng chính đang bận, nhưng phần tử bị đẩy lên lớp riêng sẽ tốn bộ nhớ và có thể bị mờ chữ trên một số màn hình. Và không phải hiệu ứng nào cũng diễn đạt được bằng hai thuộc tính này — đổi màu nền hay bóng đổ thì không.
+
 ---
 
 ### Câu 26: Đáp án D - 50ms
@@ -1018,6 +1093,9 @@ observer.observe({ type: 'longtask', buffered: true });
 - Break up long tasks
 - Use Web Workers
 - `requestIdleCallback` for non-critical work
+
+**Đánh đổi:**
+Cắt tác vụ dài thành nhiều mẩu ngắn cải thiện khả năng phản hồi nhưng làm tổng thời gian dài hơn, vì mỗi lần nhường luồng là một lần tốn chi phí lập lịch. Đây là đổi thông lượng lấy độ mượt — đúng khi người dùng đang chờ tương tác, sai khi đó là việc nền không ai nhìn.
 
 **Tham khảo:** [web.dev - Long Tasks](https://web.dev/optimize-long-tasks/)
 
@@ -1054,6 +1132,9 @@ images.forEach(img => observer.observe(img));
 - Analytics (element visibility)
 - Animations on scroll
 
+**Đánh đổi:**
+Rẻ hơn hẳn so với nghe sự kiện cuộn vì nó chạy ngoài luồng chính, nhưng callback là bất đồng bộ nên không dùng được khi cần phản ứng đồng bộ theo vị trí cuộn. Và `rootMargin` đặt quá hẹp thì ảnh lazy chỉ bắt đầu tải đúng lúc người dùng nhìn tới, tức là vẫn thấy khoảng trống.
+
 **Tham khảo:** [MDN - Intersection Observer](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 
 ---
@@ -1087,6 +1168,9 @@ self.addEventListener('fetch', (event) => {
 });
 ```
 
+**Đánh đổi:**
+Cache First cho tốc độ tốt nhất nhưng người dùng có thể thấy nội dung cũ vô thời hạn nếu không có cơ chế làm mới — chỉ dùng cho tài nguyên có hash trong tên. Với dữ liệu thay đổi, Network First hoặc Stale While Revalidate đúng hơn. Chọn sai chiến lược cho sai loại tài nguyên là lỗi hay gặp nhất khi làm service worker.
+
 **Tham khảo:** [web.dev - Service Worker Caching](https://web.dev/service-worker-caching-and-http-caching/)
 
 ---
@@ -1118,6 +1202,9 @@ Font loading issues:
    optional - use font only if already cached
 */
 ```
+
+**Đánh đổi:**
+`font-display: swap` tránh được khoảng chữ vô hình nhưng gây nhảy chữ khi font thật về — đó là đánh đổi trực tiếp giữa CLS và thời gian thấy nội dung. `optional` bỏ hẳn font nếu về chậm, ổn định nhất nhưng có người dùng không bao giờ thấy font thương hiệu. Preload font quan trọng và dùng `size-adjust` cho font dự phòng sẽ giảm được cú nhảy.
 
 **Tham khảo:** [web.dev - Font best practices](https://web.dev/font-best-practices/)
 
@@ -1154,6 +1241,9 @@ Performance Budget examples:
 - bundlesize
 - webpack performance hints
 - SpeedCurve
+
+**Đánh đổi:**
+Ngân sách chỉ có tác dụng khi nó chặn được merge — đặt ngưỡng rồi chỉ cảnh báo thì sau vài tuần sẽ không ai để ý nữa. Nhưng đặt quá chặt làm CI đỏ liên tục và đội sẽ tìm cách vô hiệu hoá. Cách dùng được: lấy mức hiện tại cộng một khoảng nhỏ làm ngưỡng, rồi siết dần theo thời gian.
 
 **Tham khảo:** [web.dev - Performance Budgets](https://web.dev/performance-budgets-101/)
 
