@@ -166,4 +166,5 @@ Chạy cùng với `tools/e2e.mjs` và `tools/check-script-safety.mjs` sau mỗi
 - Không viết lại 133 câu giáo án hiện có
 - Không đụng vào 245 câu trắc nghiệm
 - Không làm bản tiếng Anh cho phần này cho tới khi phần A xong
-- Không thêm câu chỉ để đủ số lượng: thà 60 câu đạt tiêu chí còn hơn 80 câu có câu viết hụt
+- Không thêm câu chỉ để đủ số lượng: thà 58 câu đạt đủ bảy tiêu chí ở mục "Thế nào là xong"
+  còn hơn 72 câu mà có câu viết hụt
